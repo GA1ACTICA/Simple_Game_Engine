@@ -1,33 +1,35 @@
-import java.awt.*;
+import java.awt.Dimension;
 import javax.swing.*;
 
-public class Game extends Canvas {
+public class Game {
 
     // window rules
     static int width = 800;
     static int height = 600;
 
+    static Keys keys = new Keys();
+    static JFrame frame = new JFrame("Game_Title");
+    static GameState gs = new GameState();
+    static GamePanel panel = new GamePanel(gs);
+    static GameUpdate gu = new GameUpdate(keys, gs, panel);
+
     // Main Method
     public static void main(String args[]) {
 
-        JFrame frame = new JFrame("Game_Title");
-        Game canvas = new Game();
-        GameState gs = new GameState();
-        Keys keys = new Keys();
+        panel.addKeyListener(keys);
+        panel.setFocusable(true);
+        panel.requestFocus();
+        panel.setPreferredSize(new Dimension(800, 600));
+        panel.setBackground(gs.backgroundColor);
 
-        canvas.addKeyListener(keys);
-        canvas.setFocusable(true);
-        canvas.requestFocus();
-
-        frame.add(canvas);
+        frame.add(panel);
+        frame.pack();
+        frame.setVisible(true);
+        frame.add(panel);
         frame.setSize(width, height);
         frame.setVisible(true);
         frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        canvas.setBackground(Color.WHITE);
-
-        GameUpdate gu = new GameUpdate(canvas, keys, gs);
-        gu.init();
 
         Thread thread = new Thread(gu);
         thread.start();
