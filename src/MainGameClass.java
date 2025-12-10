@@ -5,8 +5,9 @@ public class MainGameClass implements Drawable {
     Keys keys;
     GameState gs;
 
-    MainGameClass(Keys keys) {
+    MainGameClass(Keys keys, GameState gs) {
         this.keys = keys;
+        this.gs = gs;
     }
 
     @Override
