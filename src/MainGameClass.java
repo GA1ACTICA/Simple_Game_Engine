@@ -22,4 +22,10 @@ public class MainGameClass implements Drawable {
         g.drawString("Hello", 200, 300);
 
     }
+
+    public void updateGameLogic() {
+        int i = 0;
+        i++;
+        System.out.println(i);
+    }
 }

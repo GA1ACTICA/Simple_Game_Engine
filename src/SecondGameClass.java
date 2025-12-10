@@ -23,4 +23,9 @@ public class SecondGameClass implements Drawable {
         g.drawString("World!", 200, 350);
 
     }
+
+    public void updateGameLogic() {
+
+    }
+
 }
