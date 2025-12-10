@@ -42,6 +42,9 @@ public class GameUpdate implements Runnable {
 
                 // here you can update the game logic
 
+                mgc.updateGameLogic();
+                sgc.updateGameLogic();
+
                 lastUpdateTime = currentTime;
             }
 

@@ -6,6 +6,7 @@ public class GameState {
     // for you game that should also be accesable in other classes
 
     public boolean debug = false; // example, also used in Keys.java
-    public int exampleUpdateInterval = 750;
-    Color backgroundColor = Color.WHITE;
+
+    public float exampleUpdateInterval = 16.66f; // ≈60fps
+    public Color backgroundColor = Color.WHITE;
 }
