@@ -21,9 +21,9 @@ public class GameUpdate implements Runnable {
         this.gs = gs;
         this.keys = keys;
         this.panel = panel;
-        this.mgc = new MainGameClass(keys);
-        this.sgc = new SecondGameClass(keys);
         this.gs = new GameState();
+        this.mgc = new MainGameClass(keys, gs);
+        this.sgc = new SecondGameClass(keys, gs);
     }
 
     @Override

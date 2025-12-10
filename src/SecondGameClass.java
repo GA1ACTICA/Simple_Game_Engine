@@ -5,8 +5,10 @@ public class SecondGameClass implements Drawable {
     Keys keys;
     GameState gs;
 
-    SecondGameClass(Keys keys) {
+    SecondGameClass(Keys keys, GameState gs) {
         this.keys = keys;
+        this.gs = gs;
+
     }
 
     @Override
