@@ -1,11 +1,14 @@
+package Game;
+
 import java.awt.*;
+import GameEngine.*;
 
 public class MainGameClass implements Drawable {
 
     Keys keys;
     GameState gs;
 
-    MainGameClass(Keys keys, GameState gs) {
+    public MainGameClass(Keys keys, GameState gs) {
         this.keys = keys;
         this.gs = gs;
     }
@@ -19,13 +22,11 @@ public class MainGameClass implements Drawable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        g.drawString("Hello", 200, 300);
+        g.drawString("Hello", gs.x1 + 300, gs.y1 + 275);
 
     }
 
     public void updateGameLogic() {
-        int i = 0;
-        i++;
-        System.out.println(i);
+
     }
 }

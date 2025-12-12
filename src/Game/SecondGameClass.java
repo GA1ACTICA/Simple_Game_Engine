@@ -1,11 +1,17 @@
+package Game;
+
 import java.awt.*;
+
+import GameEngine.Drawable;
+import GameEngine.GameState;
+import GameEngine.Keys;
 
 public class SecondGameClass implements Drawable {
 
     Keys keys;
     GameState gs;
 
-    SecondGameClass(Keys keys, GameState gs) {
+    public SecondGameClass(Keys keys, GameState gs) {
         this.keys = keys;
         this.gs = gs;
 
@@ -20,7 +26,7 @@ public class SecondGameClass implements Drawable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        g.drawString("World!", 200, 350);
+        g.drawString("World!", gs.x1 + 300, gs.y1 + 325);
 
     }
 
