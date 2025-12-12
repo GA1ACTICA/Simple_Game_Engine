@@ -1,15 +1,19 @@
-import java.awt.*;
+package GameEngine;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import Game.*;
+
 public class GameUpdate implements Runnable {
 
-    Keys keys;
-    GameState gs;
-    Graphics2D g;
-    GamePanel panel;
-    MainGameClass mgc;
-    SecondGameClass sgc;
+    @SuppressWarnings("unused")
+    private final Keys keys; // if you want to have logic for menus or other classes in the loop below you
+                             // also have acces to key inputs eventhough they are not used in this example
+    private final GameState gs;
+    private final GamePanel panel;
+    private final MainGameClass mgc;
+    private final SecondGameClass sgc;
 
     public static List<Drawable> drawables = new ArrayList<>();
 
@@ -21,7 +25,6 @@ public class GameUpdate implements Runnable {
         this.gs = gs;
         this.keys = keys;
         this.panel = panel;
-        this.gs = new GameState();
         this.mgc = new MainGameClass(keys, gs);
         this.sgc = new SecondGameClass(keys, gs);
     }
@@ -46,6 +49,12 @@ public class GameUpdate implements Runnable {
                 sgc.updateGameLogic();
 
                 lastUpdateTime = currentTime;
+
+                gs.width = panel.getWidth();
+                gs.height = panel.getHeight();
+
+                gs.x1 = (gs.width - 800) / 2;
+                gs.y1 = (gs.height - 600) / 2;
             }
 
             panel.repaint();
