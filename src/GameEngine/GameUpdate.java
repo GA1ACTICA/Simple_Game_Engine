@@ -3,16 +3,22 @@ package GameEngine;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+
+import AdvancedRendering.AdvancedGraphics;
+import AdvancedRendering.Menu.GameButtonScaling;
+import AdvancedRendering.Menu.MenuContet.GameButton;
+import AdvancedRendering.Menu.MenuContet.GameMenu;
 import Game.*;
 
 public class GameUpdate implements Runnable {
 
-    @SuppressWarnings("unused")
-    private final Keys keys; // if you want to have logic for menus or other classes in the loop below you
-                             // also have acces to key inputs eventhough they are not used in this example
+    private final Mouse mouse;
     private final GameState gs;
+    private final GameMenu menu;
     private final GamePanel panel;
     private final MainGameClass mgc;
+    private final EngineTools tools;
     private final SecondGameClass sgc;
 
     public static List<Drawable> drawables = new ArrayList<>();
@@ -21,11 +27,22 @@ public class GameUpdate implements Runnable {
     long lastUpdateTime;
     long currentTime;
 
-    public GameUpdate(Keys keys, GameState gs, GamePanel panel) {
+    public GameUpdate(
+            Keys keys,
+            Mouse mouse,
+            GameState gs,
+            GamePanel panel,
+            JFrame frame,
+            GameMenu menu,
+            AdvancedGraphics ag,
+            GameButton button,
+            EngineTools tools) {
         this.gs = gs;
-        this.keys = keys;
+        this.menu = menu;
+        this.mouse = mouse;
         this.panel = panel;
-        this.mgc = new MainGameClass(keys, gs);
+        this.tools = tools;
+        this.mgc = new MainGameClass(keys, gs, menu, button, tools);
         this.sgc = new SecondGameClass(keys, gs);
     }
 
@@ -34,6 +51,7 @@ public class GameUpdate implements Runnable {
 
         drawables.add(mgc);
         drawables.add(sgc);
+        drawables.add(menu);
 
         lastUpdateTime = System.currentTimeMillis();
 
@@ -55,12 +73,16 @@ public class GameUpdate implements Runnable {
 
                 gs.x1 = (gs.width - 800) / 2;
                 gs.y1 = (gs.height - 600) / 2;
+
+                mouse.deltaReset();
+                tools.updateFPS();
             }
 
             panel.repaint();
+            // firts I put tools.updateFPS(); here
 
             try {
-                Thread.sleep(10);
+                Thread.sleep(1);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
