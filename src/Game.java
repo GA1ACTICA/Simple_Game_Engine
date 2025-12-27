@@ -1,35 +1,59 @@
 import java.awt.Dimension;
 import javax.swing.*;
 
+import AdvancedRendering.AdvancedGraphics;
+import AdvancedRendering.Menu.MenuContet.GameButton;
+import AdvancedRendering.Menu.MenuContet.GameMenu;
 import GameEngine.*;
 
 public class Game {
 
+    static final GameState state = new GameState();
+
+    static final GamePanel panel = new GamePanel(state);
     static final JFrame frame = new JFrame("Game_Title");
-    static final GameState gs = new GameState();
-    static final GamePanel panel = new GamePanel(gs);
-    static final Keys keys = new Keys(gs);
-    static final GameUpdate gu = new GameUpdate(keys, gs, panel);
 
-    // Main Method
-    public static void main(String args[]) {
+    static final Keys keys = new Keys(state);
+    static final Mouse mouse = new Mouse(state);
+    static final GameButton button = new GameButton(panel);
+    static final GameMenu menu = new GameMenu(state, panel);
+    static final EngineTools tools = new EngineTools(state);
+    static final AdvancedGraphics ag = new AdvancedGraphics(state);
 
-        panel.addKeyListener(keys);
+    static final GameUpdate gu = new GameUpdate(keys,
+            mouse,
+            state,
+            panel,
+            frame,
+            menu,
+            ag,
+            button,
+            tools);
+
+    public static void main(String[] args) {
+
+        panel.setButton(button);
+        tools.setGameUpdate(gu);
+
+        // PANEL setup
+        panel.setLayout(null);
+        panel.setPreferredSize(new Dimension(state.width, state.height));
+        panel.setBackground(state.backgroundColor);
         panel.setFocusable(true);
-        panel.requestFocus();
-        panel.setPreferredSize(new Dimension(gs.width, gs.height));
-        panel.setBackground(gs.backgroundColor);
 
-        frame.add(panel);
+        // Add listeners
+        panel.addKeyListener(keys);
+        panel.addMouseListener(mouse);
+        panel.addMouseMotionListener(mouse);
+        panel.addMouseWheelListener(mouse);
+
+        // FRAME setup
+        frame.setContentPane(panel);
         frame.pack();
-        frame.setVisible(true);
-        frame.add(panel);
-        frame.setSize(gs.width, gs.height);
-        frame.setVisible(true);
         frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
 
-        Thread thread = new Thread(gu);
-        thread.start();
+        new Thread(gu).start();
     }
 }

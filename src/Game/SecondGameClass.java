@@ -20,13 +20,13 @@ public class SecondGameClass implements Drawable {
     @Override
     public void draw(Graphics g) {
 
-        // here you can draw
+        // here you can draw graphics
 
-        Font stringFont = new Font("SansSerif", Font.PLAIN, 50);
+        Font stringFont = new Font("SansSerif", Font.PLAIN, 75);
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        g.drawString("World!", gs.x1 + 300, gs.y1 + 325);
+        g.drawString("World!", 500, 575);
 
     }
 
