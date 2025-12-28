@@ -1,14 +1,9 @@
-package AdvancedRendering.Menu.MenuContet;
+package AdvancedRendering.uiRendering.Menu;
 
 import java.awt.*;
-import java.util.List;
-import java.util.ArrayList;
 
-import javax.swing.JButton;
-import javax.swing.JPanel;
-
-import AdvancedRendering.Menu.GameButtonScaling;
 import GameEngine.*;
+import GameEngine.Interfaces.Drawable;
 
 public class GameMenu implements Drawable {
 
@@ -44,13 +39,11 @@ public class GameMenu implements Drawable {
         Color backgroundColor = Color.WHITE;
         Image backgroundImage = null;
 
-        private final GameState gs;
-        private JButton button;
-        private final GamePanel panel;
+        @SuppressWarnings("unused")
+        private final GameState state;
 
-        public GameMenu(GameState gs, GamePanel panel) {
-                this.gs = gs;
-                this.panel = panel;
+        public GameMenu(GameState state, GamePanel panel) {
+                this.state = state;
         }
 
         @Override
@@ -254,20 +247,10 @@ public class GameMenu implements Drawable {
 
         public void show() {
                 show = true;
-                if (this.button != null) {
-                        this.button.setVisible(true);
-
-                }
-
         }
 
         public void hide() {
                 show = false;
-
-                if (this.button != null) {
-                        this.button.setVisible(false);
-                }
-
         }
 
 }

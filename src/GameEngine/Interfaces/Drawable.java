@@ -1,4 +1,4 @@
-package GameEngine;
+package GameEngine.Interfaces;
 
 import java.awt.Graphics;
 

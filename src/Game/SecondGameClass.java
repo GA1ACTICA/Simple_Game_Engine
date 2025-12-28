@@ -2,18 +2,20 @@ package Game;
 
 import java.awt.*;
 
-import GameEngine.Drawable;
+import AdvancedRendering.worldRendering.AdvancedGraphics;
 import GameEngine.GameState;
-import GameEngine.Keys;
+import GameEngine.Interfaces.Drawable;
+import GameEngine.Interfaces.Updatable;
 
-public class SecondGameClass implements Drawable {
+public class SecondGameClass implements Drawable, Updatable {
 
-    Keys keys;
-    GameState gs;
+    @SuppressWarnings("unused")
+    private final GameState state;
+    private final AdvancedGraphics advanced;
 
-    public SecondGameClass(Keys keys, GameState gs) {
-        this.keys = keys;
-        this.gs = gs;
+    public SecondGameClass(GameState state, AdvancedGraphics advanced) {
+        this.advanced = advanced;
+        this.state = state;
 
     }
 
@@ -26,12 +28,13 @@ public class SecondGameClass implements Drawable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        g.drawString("World!", 500, 575);
+        advanced.centerAlignedString(g, 500, 575, "World!", stringFont);
 
     }
 
-    public void updateGameLogic() {
-
+    @Override
+    public void update() {
+        // here you update game logic
     }
 
 }

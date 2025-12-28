@@ -5,8 +5,6 @@ import java.awt.event.KeyListener;
 
 public class Keys implements KeyListener {
 
-    private final GameState gs;
-
     public int keyCodePressed;
     public char keyNamePressed;
 
@@ -16,8 +14,10 @@ public class Keys implements KeyListener {
     public int keyCodeTyped;
     public char keyNameTyped;
 
-    public Keys(GameState gs) {
-        this.gs = gs;
+    private final GameState state;
+
+    public Keys(GameState state) {
+        this.state = state;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class Keys implements KeyListener {
         keyCodePressed = e.getKeyCode();
         keyNamePressed = e.getKeyChar();
 
-        if (gs.debugVerbose) {
+        if (state.debugVerbose) {
             System.out.println("keyCodePressed: " + keyCodePressed + '\n');
             System.out.println("keyNamePressed: " + keyNamePressed + '\n');
         }
@@ -37,7 +37,7 @@ public class Keys implements KeyListener {
         keyCodeReleased = e.getKeyCode();
         keyNameReleased = e.getKeyChar();
 
-        if (gs.debugVerbose) {
+        if (state.debugVerbose) {
             System.out.println("keyCodeReleased: " + keyCodeReleased + '\n');
             System.out.println("keyNameReleased: " + keyNameReleased + '\n');
             System.out.println("");
@@ -50,7 +50,7 @@ public class Keys implements KeyListener {
         keyCodeTyped = e.getKeyCode();
         keyNameTyped = e.getKeyChar();
 
-        if (gs.debugVerbose) {
+        if (state.debugVerbose) {
             System.out.println("keyCodeTyped: " + keyCodeTyped + '\n');
             System.out.println("keyNameTyped: " + keyNameTyped + '\n');
             System.out.println("");
