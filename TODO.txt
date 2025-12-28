@@ -4,8 +4,6 @@ add custom textfeilds
 
 reimplement custom buttons
 
-add better text alignment options
-
-add mouse listener
-
 add special key event (on key pressed...) {... }
+
+change origin for 0, 0 to bottom left corner

@@ -2,33 +2,24 @@ package Game;
 
 import java.awt.*;
 
-import javax.swing.JButton;
-
-import AdvancedRendering.Menu.MenuContet.GameButton;
-import AdvancedRendering.Menu.MenuContet.GameMenu;
+import AdvancedRendering.uiRendering.Menu.GameMenu;
+import AdvancedRendering.uiRendering.Misc.FPSCounter;
+import AdvancedRendering.worldRendering.AdvancedGraphics;
 import GameEngine.*;
+import GameEngine.Interfaces.Drawable;
+import GameEngine.Interfaces.Updatable;
 
-public class MainGameClass implements Drawable {
+public class MainGameClass implements Drawable, Updatable {
 
-    Keys keys;
-    GameState gs;
-    GameButton button;
-    EngineTools tools;
+    @SuppressWarnings("unused")
+    private final GameState state;
+    private final FPSCounter fps;
+    private final AdvancedGraphics advanced;
 
-    public MainGameClass(Keys keys, GameState gs, GameMenu menu, GameButton button, EngineTools tools) {
-        this.keys = keys;
-        this.button = button;
-        this.tools = tools;
-        this.gs = gs;
-
-        // this is an example on how you can create a menu and button
-        JButton test = button.addButton(500, 500, 30, 30, 30, "test");
-        button.setButtonColor(test, new Color(255, 0, 0), null);
-        menu.show();
-
-        JButton test2 = button.addButton(1500, 300, 100, 30, 30, "test");
-        button.setButtonColor(test2, new Color(255, 255, 0), null);
-        menu.show();
+    public MainGameClass(GameState state, GameMenu menu, FPSCounter fps, AdvancedGraphics advanced) {
+        this.advanced = advanced;
+        this.fps = fps;
+        this.state = state;
     }
 
     @Override
@@ -40,13 +31,14 @@ public class MainGameClass implements Drawable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        g.drawString("Hello", 500, 500);
+        advanced.centerAlignedString(g, 500, 500, "Hello", stringFont);
 
-        tools.drawFPS(g);
-
+        fps.setEnabled(true);
+        fps.setColor(Color.RED);
     }
 
-    public void updateGameLogic() {
-
+    @Override
+    public void update() {
+        // here you update game logic
     }
 }

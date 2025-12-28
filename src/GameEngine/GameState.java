@@ -10,7 +10,7 @@ public class GameState {
     public boolean debug = false;
     public boolean debugVerbose = false; // used in Keys.java and Mouse.java
 
-    public float exampleUpdateInterval = 125f; // ≈60fps expressed in milliseconds
+    public float exampleUpdateInterval = 16.66f; // ≈60fps expressed in milliseconds
     public Color backgroundColor = Color.WHITE;
 
     // first used to set window dimension and then later used for windown scaling

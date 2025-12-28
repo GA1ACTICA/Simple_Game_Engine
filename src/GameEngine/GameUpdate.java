@@ -5,23 +5,31 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
-import AdvancedRendering.AdvancedGraphics;
-import AdvancedRendering.Menu.GameButtonScaling;
-import AdvancedRendering.Menu.MenuContet.GameButton;
-import AdvancedRendering.Menu.MenuContet.GameMenu;
+import AdvancedRendering.uiRendering.Menu.GameMenu;
+import AdvancedRendering.uiRendering.Misc.FPSCounter;
+import AdvancedRendering.worldRendering.AdvancedGraphics;
 import Game.*;
+import GameEngine.Interfaces.Drawable;
+import GameEngine.Interfaces.Updatable;
 
 public class GameUpdate implements Runnable {
 
     private final Mouse mouse;
-    private final GameState gs;
+    private final GameState state;
     private final GameMenu menu;
     private final GamePanel panel;
     private final MainGameClass mgc;
+    @SuppressWarnings("unused")
     private final EngineTools tools;
     private final SecondGameClass sgc;
+    private final FPSCounter fps;
 
-    public static List<Drawable> drawables = new ArrayList<>();
+    // rendering lists
+    public static List<Drawable> worldDrawables = new ArrayList<>();
+    public static List<Drawable> uiDrawables = new ArrayList<>();
+
+    // update list
+    List<Updatable> updatables = new ArrayList<>();
 
     boolean running = true;
     long lastUpdateTime;
@@ -30,28 +38,38 @@ public class GameUpdate implements Runnable {
     public GameUpdate(
             Keys keys,
             Mouse mouse,
-            GameState gs,
+            GameState state,
             GamePanel panel,
             JFrame frame,
             GameMenu menu,
-            AdvancedGraphics ag,
-            GameButton button,
+            AdvancedGraphics advanced,
             EngineTools tools) {
-        this.gs = gs;
+        this.state = state;
         this.menu = menu;
         this.mouse = mouse;
         this.panel = panel;
         this.tools = tools;
-        this.mgc = new MainGameClass(keys, gs, menu, button, tools);
-        this.sgc = new SecondGameClass(keys, gs);
+        this.fps = new FPSCounter();
+        this.mgc = new MainGameClass(state, menu, fps, advanced);
+        this.sgc = new SecondGameClass(state, advanced);
     }
 
     @Override
     public void run() {
 
-        drawables.add(mgc);
-        drawables.add(sgc);
-        drawables.add(menu);
+        // worldDrawables list
+        worldDrawables.add(mgc);
+        worldDrawables.add(sgc);
+        worldDrawables.add(menu);
+
+        // uiDrawables list
+        uiDrawables.add(fps);
+
+        // updatables list
+        updatables.add(mgc);
+        updatables.add(sgc);
+        updatables.add(fps);
+        updatables.add(mouse);
 
         lastUpdateTime = System.currentTimeMillis();
 
@@ -59,27 +77,17 @@ public class GameUpdate implements Runnable {
 
             currentTime = System.currentTimeMillis();
 
-            if (currentTime - lastUpdateTime >= gs.exampleUpdateInterval) {
+            if (currentTime - lastUpdateTime >= state.exampleUpdateInterval) {
 
-                // here you can update the game logic
-
-                mgc.updateGameLogic();
-                sgc.updateGameLogic();
+                // update all updatables
+                for (Updatable u : updatables) {
+                    u.update();
+                }
 
                 lastUpdateTime = currentTime;
-
-                gs.width = panel.getWidth();
-                gs.height = panel.getHeight();
-
-                gs.x1 = (gs.width - 800) / 2;
-                gs.y1 = (gs.height - 600) / 2;
-
-                mouse.deltaReset();
-                tools.updateFPS();
             }
 
             panel.repaint();
-            // firts I put tools.updateFPS(); here
 
             try {
                 Thread.sleep(1);

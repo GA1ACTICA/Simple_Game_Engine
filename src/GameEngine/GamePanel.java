@@ -3,29 +3,23 @@ package GameEngine;
 import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
-import AdvancedRendering.Menu.GameButtonScaling;
-import AdvancedRendering.Menu.MenuContet.GameButton;
-import AdvancedRendering.Menu.MenuContet.GameMenu;
+import GameEngine.Interfaces.Drawable;
 
 import java.awt.*;
 
 public class GamePanel extends JPanel {
 
-    private final GameState gs;
-    private GameButton button;
+    // logical space dimension
 
-    // LOGICAL space
     public final int logicalWidth = 1000;
     public final int logicalHeight = 1000;
 
-    public GamePanel(GameState gs) {
-        this.gs = gs;
+    private final GameState state;
+
+    public GamePanel(GameState state) {
+        this.state = state;
 
         setDoubleBuffered(true);
-    }
-
-    public void setButton(GameButton button) {
-        this.button = button;
     }
 
     // rendering engine
@@ -33,19 +27,13 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g;
+        Graphics2D g2d = (Graphics2D) g.create();
 
-        // Save transform
         AffineTransform old = g2d.getTransform();
 
         double scaleX = getWidth() / (double) logicalWidth;
         double scaleY = getHeight() / (double) logicalHeight;
         double scale = Math.min(scaleX, scaleY);
-
-        // Draw buttons in LOGICAL space
-        for (GameButtonScaling button : button.getButtons()) {
-            button.updateBounds(scaleX, scaleY, getWidth(), getHeight());
-        }
 
         // Center + scale
         g2d.translate(
@@ -53,16 +41,20 @@ public class GamePanel extends JPanel {
                 (getHeight() - logicalHeight * scale) / 2);
         g2d.scale(scale, scale);
 
-        // Draw background in LOGICAL space
-        g2d.setColor(gs.backgroundColor);
+        g2d.setColor(state.backgroundColor);
         g2d.fillRect(0, 0, logicalWidth, logicalHeight);
 
-        // Draw game objects
-        for (Drawable d : GameUpdate.drawables) {
+        // Draw game objects in world space
+        for (Drawable d : GameUpdate.worldDrawables) {
             d.draw(g2d);
         }
 
         // Restore transform
         g2d.setTransform(old);
+
+        // Draw game objects in UI space
+        for (Drawable d : GameUpdate.uiDrawables) {
+            d.draw(g2d);
+        }
     }
 }

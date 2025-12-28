@@ -1,9 +1,8 @@
 import java.awt.Dimension;
 import javax.swing.*;
 
-import AdvancedRendering.AdvancedGraphics;
-import AdvancedRendering.Menu.MenuContet.GameButton;
-import AdvancedRendering.Menu.MenuContet.GameMenu;
+import AdvancedRendering.uiRendering.Menu.GameMenu;
+import AdvancedRendering.worldRendering.AdvancedGraphics;
 import GameEngine.*;
 
 public class Game {
@@ -15,10 +14,9 @@ public class Game {
 
     static final Keys keys = new Keys(state);
     static final Mouse mouse = new Mouse(state);
-    static final GameButton button = new GameButton(panel);
     static final GameMenu menu = new GameMenu(state, panel);
     static final EngineTools tools = new EngineTools(state);
-    static final AdvancedGraphics ag = new AdvancedGraphics(state);
+    static final AdvancedGraphics advanced = new AdvancedGraphics(state);
 
     static final GameUpdate gu = new GameUpdate(keys,
             mouse,
@@ -26,14 +24,10 @@ public class Game {
             panel,
             frame,
             menu,
-            ag,
-            button,
+            advanced,
             tools);
 
     public static void main(String[] args) {
-
-        panel.setButton(button);
-        tools.setGameUpdate(gu);
 
         // PANEL setup
         panel.setLayout(null);

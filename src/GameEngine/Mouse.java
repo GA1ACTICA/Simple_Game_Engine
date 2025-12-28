@@ -1,10 +1,10 @@
 package GameEngine;
 
-import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 
-public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener {
+import GameEngine.Interfaces.Updatable;
+
+public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener, Updatable {
 
     public boolean leftDown;
     public boolean rightDown;
@@ -20,10 +20,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     public float mouseWheelDelta;
 
-    GameState gs;
+    private final GameState state;
 
-    public Mouse(GameState gs) {
-        this.gs = gs;
+    public Mouse(GameState state) {
+        this.state = state;
     }
 
     // MouseMotionListener
@@ -47,7 +47,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         lastX = x;
         lastY = y;
 
-        if (gs.debugVerbose) {
+        if (state.debugVerbose) {
             System.out.println("MouseMovedToX: " + x);
             System.out.println("MouseMovedToY: " + y + '\n');
 
@@ -66,25 +66,21 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     @Override
     public void mouseEntered(MouseEvent e) {
         onScreen = true;
-
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
         onScreen = false;
-
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         setButton(e.getButton(), true);
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         setButton(e.getButton(), false);
-
     }
 
     private void setButton(int button, boolean down) {
@@ -94,7 +90,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
             case MouseEvent.BUTTON3 -> rightDown = down;
         }
 
-        if (gs.debugVerbose) {
+        if (state.debugVerbose) {
             System.out.println("IsLeftPreesed: " + leftDown);
             System.out.println("IsRightPreesed: " + rightDown);
             System.out.println("IsMiddlePreesed: " + middleDown + '\n');
@@ -107,19 +103,17 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         float delta = (float) e.getPreciseWheelRotation();
 
         mouseWheelDelta += delta;
-
     }
 
-    public void deltaReset() {
-
-        if (gs.debugVerbose) {
+    @Override
+    public void update() {
+        if (state.debugVerbose) {
             System.out.println("MouseWheelDelta: " + mouseWheelDelta + '\n');
         }
 
         deltaX = 0;
         deltaY = 0;
         mouseWheelDelta = 0;
-
     }
 
 }
