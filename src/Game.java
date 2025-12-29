@@ -3,7 +3,9 @@ import javax.swing.*;
 
 import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
-import GameEngine.*;
+import Game.GameState;
+import GameEngine.GameUpdate;
+import GameEngine.EngineModules.*;
 
 public class Game {
 

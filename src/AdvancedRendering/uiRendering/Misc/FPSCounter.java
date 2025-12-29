@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
-import GameEngine.Interfaces.Drawable;
-import GameEngine.Interfaces.Updatable;
+import GameEngine.Interfaces.*;
 
-public class FPSCounter implements Drawable, Updatable {
+public class FPSCounter implements UIDrawable, Updatable {
 
     private boolean enabled = false;
 

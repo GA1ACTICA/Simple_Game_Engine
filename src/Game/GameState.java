@@ -1,4 +1,4 @@
-package GameEngine;
+package Game;
 
 import java.awt.Color;
 
@@ -15,8 +15,8 @@ public class GameState {
 
     // first used to set window dimension and then later used for windown scaling
     // and drawing alignment
-    public int width = 800;
-    public int height = 800;
+    public int width = 1000;
+    public int height = 1000;
 
     public int x1 = 0;
     public int y1 = 0;

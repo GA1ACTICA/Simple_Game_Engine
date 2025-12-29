@@ -3,7 +3,6 @@ package Game;
 import java.awt.*;
 
 import AdvancedRendering.worldRendering.AdvancedGraphics;
-import GameEngine.GameState;
 import GameEngine.Interfaces.Drawable;
 import GameEngine.Interfaces.Updatable;
 
@@ -28,7 +27,7 @@ public class SecondGameClass implements Drawable, Updatable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        advanced.centerAlignedString(g, 500, 575, "World!", stringFont);
+        advanced.centerAlignedString(g, 500, 575, "World!");
 
     }
 

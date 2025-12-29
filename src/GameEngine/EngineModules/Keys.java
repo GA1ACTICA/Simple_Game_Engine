@@ -1,7 +1,9 @@
-package GameEngine;
+package GameEngine.EngineModules;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import Game.GameState;
 
 public class Keys implements KeyListener {
 

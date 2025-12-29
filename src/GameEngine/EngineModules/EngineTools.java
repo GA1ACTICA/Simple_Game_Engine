@@ -1,8 +1,10 @@
-package GameEngine;
+package GameEngine.EngineModules;
 
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
+
+import Game.GameState;
 
 public class EngineTools {
 
