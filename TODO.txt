@@ -4,6 +4,8 @@ add custom textfeilds
 
 reimplement custom buttons
 
-add special key event (on key pressed...) {... }
+checkbox
 
-change origin for 0, 0 to bottom left corner
+slider 
+
+add special key event (on key pressed...) {... }

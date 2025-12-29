@@ -2,7 +2,8 @@ package AdvancedRendering.uiRendering.Menu;
 
 import java.awt.*;
 
-import GameEngine.*;
+import Game.GameState;
+import GameEngine.EngineModules.GamePanel;
 import GameEngine.Interfaces.Drawable;
 
 public class GameMenu implements Drawable {

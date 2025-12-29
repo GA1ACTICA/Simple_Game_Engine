@@ -1,7 +1,8 @@
-package GameEngine;
+package GameEngine.EngineModules;
 
 import java.awt.event.*;
 
+import Game.GameState;
 import GameEngine.Interfaces.Updatable;
 
 public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener, Updatable {

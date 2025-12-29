@@ -5,9 +5,7 @@ import java.awt.*;
 import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
-import GameEngine.*;
-import GameEngine.Interfaces.Drawable;
-import GameEngine.Interfaces.Updatable;
+import GameEngine.Interfaces.*;
 
 public class MainGameClass implements Drawable, Updatable {
 
@@ -31,7 +29,7 @@ public class MainGameClass implements Drawable, Updatable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        advanced.centerAlignedString(g, 500, 500, "Hello", stringFont);
+        advanced.centerAlignedString(g, 500, 500, "Hello");
 
         fps.setEnabled(true);
         fps.setColor(Color.RED);

@@ -1,8 +1,9 @@
-package GameEngine;
+package GameEngine.EngineModules;
 
 import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
+import Game.GameState;
 import GameEngine.Interfaces.Drawable;
 
 import java.awt.*;
@@ -15,11 +16,16 @@ public class GamePanel extends JPanel {
     public final int logicalHeight = 1000;
 
     private final GameState state;
+    private GameContext context;
 
     public GamePanel(GameState state) {
         this.state = state;
 
         setDoubleBuffered(true);
+    }
+
+    public void setGameContex(GameContext contex) {
+        this.context = contex;
     }
 
     // rendering engine
@@ -45,7 +51,7 @@ public class GamePanel extends JPanel {
         g2d.fillRect(0, 0, logicalWidth, logicalHeight);
 
         // Draw game objects in world space
-        for (Drawable d : GameUpdate.worldDrawables) {
+        for (Drawable d : context.getWorldDrawables()) {
             d.draw(g2d);
         }
 
@@ -53,7 +59,7 @@ public class GamePanel extends JPanel {
         g2d.setTransform(old);
 
         // Draw game objects in UI space
-        for (Drawable d : GameUpdate.uiDrawables) {
+        for (Drawable d : context.getUiDrawables()) {
             d.draw(g2d);
         }
     }
