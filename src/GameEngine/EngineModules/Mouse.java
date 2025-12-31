@@ -117,4 +117,40 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         mouseWheelDelta = 0;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public boolean getLeftDown() {
+        return leftDown;
+    }
+
+    public boolean getMiddleDown() {
+        return middleDown;
+    }
+
+    public boolean getRightDown() {
+        return rightDown;
+    }
+
+    public boolean getOnScreen() {
+        return onScreen;
+    }
+
+    public int getDeltaX() {
+        return deltaX;
+    }
+
+    public int getDeltaY() {
+        return deltaY;
+    }
+
+    public float getMouseWheelDelta() {
+        return mouseWheelDelta;
+    }
+
 }

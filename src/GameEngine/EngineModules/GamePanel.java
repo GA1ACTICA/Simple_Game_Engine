@@ -11,7 +11,6 @@ import java.awt.*;
 public class GamePanel extends JPanel {
 
     // logical space dimension
-
     public final int logicalWidth = 1000;
     public final int logicalHeight = 1000;
 
@@ -62,5 +61,7 @@ public class GamePanel extends JPanel {
         for (Drawable d : context.getUiDrawables()) {
             d.draw(g2d);
         }
+
+        g2d.dispose();
     }
 }
