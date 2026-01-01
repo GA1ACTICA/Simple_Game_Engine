@@ -12,9 +12,9 @@ import GameEngine.Interfaces.Updatable;
 
 public class GameUpdate implements Runnable {
 
-    boolean running = true;
-    long lastUpdateTime;
-    long currentTime;
+    private boolean running = true;
+    private long lastUpdateTime;
+    private long currentTime;
 
     private final GameState state;
     private final GamePanel panel;
@@ -36,6 +36,7 @@ public class GameUpdate implements Runnable {
         panel.setGameContex(context);
 
         // constructors from engine
+        GameFactory.create(mouse, context);
         FPSCounter fps = GameFactory.create(new FPSCounter(), context);
 
         // constructors for menu
