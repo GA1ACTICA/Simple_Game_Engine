@@ -11,11 +11,12 @@ public class Game {
 
     static final GameState state = new GameState();
 
-    static final GamePanel panel = new GamePanel(state);
+    static final EnginePanel panel = new EnginePanel(state);
     static final JFrame frame = new JFrame("Game_Title");
+    static final EngineContext context = new EngineContext();
 
     static final Keys keys = new Keys(state);
-    static final Mouse mouse = new Mouse(state);
+    static final Mouse mouse = new Mouse(state, context);
     static final GameMenu menu = new GameMenu(state, panel);
     static final EngineTools tools = new EngineTools(state);
     static final AdvancedGraphics advanced = new AdvancedGraphics(state);
@@ -27,7 +28,8 @@ public class Game {
             frame,
             menu,
             advanced,
-            tools);
+            tools,
+            context);
 
     public static void main(String[] args) {
 

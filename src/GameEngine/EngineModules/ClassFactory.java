@@ -2,8 +2,8 @@ package GameEngine.EngineModules;
 
 import GameEngine.Interfaces.*;
 
-public class GameFactory {
-    public static <T> T create(T obj, GameContext ctx) {
+public class ClassFactory {
+    public static <T> T create(T obj, EngineContext ctx) {
         if (obj instanceof Drawable d) {
             if (obj instanceof UIDrawable) {
                 ctx.getUiDrawables().add(d);

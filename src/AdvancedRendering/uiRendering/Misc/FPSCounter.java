@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 
+import GameEngine.EngineModules.ClassFactory;
+import GameEngine.EngineModules.EngineContext;
 import GameEngine.Interfaces.*;
 
 public class FPSCounter implements UIDrawable, Updatable {
@@ -18,6 +20,10 @@ public class FPSCounter implements UIDrawable, Updatable {
     private int y = 25;
     private Font font = new Font("Arial", Font.PLAIN, 25);
     private Color color = Color.BLACK;
+
+    public FPSCounter(EngineContext context) {
+        ClassFactory.create(this, context);
+    }
 
     /**
      * 

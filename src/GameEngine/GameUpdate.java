@@ -2,6 +2,7 @@ package GameEngine;
 
 import javax.swing.JFrame;
 
+import AdvancedRendering.uiRendering.Button.OvalButton;
 import AdvancedRendering.uiRendering.Button.RectButton;
 import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
@@ -17,31 +18,30 @@ public class GameUpdate implements Runnable {
     private long currentTime;
 
     private final GameState state;
-    private final GamePanel panel;
-    private final GameContext context;
+    private final EnginePanel panel;
+    private final EngineContext context;
 
     public GameUpdate(
             Keys keys,
             Mouse mouse,
             GameState state,
-            GamePanel panel,
+            EnginePanel panel,
             JFrame frame,
             GameMenu menu,
             AdvancedGraphics advanced,
-            EngineTools tools) {
+            EngineTools tools,
+            EngineContext context) {
         this.state = state;
         this.panel = panel;
+        this.context = context;
 
-        this.context = new GameContext();
         panel.setGameContex(context);
 
         // constructors from engine
-        GameFactory.create(mouse, context);
-        FPSCounter fps = GameFactory.create(new FPSCounter(), context);
+        FPSCounter fps = new FPSCounter(context);
 
         // constructors for menu
-        RectButton b = new RectButton(mouse, 50, 50, 50, 50);
-        GameFactory.create(b, context);
+        RectButton b = new OvalButton(mouse, context, 50, 50, 200, 200);
 
         b.onClick(() -> {
             System.out.println("test");
@@ -50,8 +50,8 @@ public class GameUpdate implements Runnable {
         b.show();
 
         // constructors for game
-        GameFactory.create(new MainGameClass(state, menu, fps, advanced), context);
-        GameFactory.create(new SecondGameClass(state, advanced), context);
+        ClassFactory.create(new MainGameClass(state, menu, fps, advanced), context);
+        ClassFactory.create(new SecondGameClass(state, advanced), context);
 
     }
 

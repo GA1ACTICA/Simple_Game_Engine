@@ -23,7 +23,8 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     private final GameState state;
 
-    public Mouse(GameState state) {
+    public Mouse(GameState state, EngineContext context) {
+        ClassFactory.create(this, context);
         this.state = state;
     }
 
