@@ -6,26 +6,34 @@ import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.Shape;
 
+import GameEngine.EngineModules.ClassFactory;
+import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
 
 public class RectButton implements UIDrawable, Updatable {
 
-    int x, y, width, height;
-    boolean show = false;
+    private int x, y, width, height;
+    private boolean show = false;
 
-    Shape shape;
-    Color color = Color.GREEN;
-    Color hoverColor = Color.RED;
+    public Shape shape;
+    private Color color = Color.GREEN;
+    private Color hoverColor = Color.RED;
 
-    boolean inside;
-    boolean wasPressed;
+    private boolean inside;
+    private boolean wasPressed;
 
     private Runnable action;
     private Mouse mouse;
 
-    public RectButton(Mouse mouse, int x, int y, int width, int height) {
+    public RectButton(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
+        ClassFactory.create(this, context);
+
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.mouse = mouse;
         this.shape = new Rectangle2D.Float(x, y, width, height);
     }
@@ -44,6 +52,22 @@ public class RectButton implements UIDrawable, Updatable {
 
     public void setHoverColor(Color hoveColor) {
         this.hoverColor = hoveColor;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
     @Override

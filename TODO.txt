@@ -6,6 +6,8 @@ reimplement custom buttons
 
 checkbox
 
+anit-aliasing?
+
 slider 
 
 add special key event (on key pressed...) {... }

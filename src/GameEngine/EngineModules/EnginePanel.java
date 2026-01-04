@@ -8,22 +8,22 @@ import GameEngine.Interfaces.Drawable;
 
 import java.awt.*;
 
-public class GamePanel extends JPanel {
+public class EnginePanel extends JPanel {
 
     // logical space dimension
     public final int logicalWidth = 1000;
     public final int logicalHeight = 1000;
 
     private final GameState state;
-    private GameContext context;
+    private EngineContext context;
 
-    public GamePanel(GameState state) {
+    public EnginePanel(GameState state) {
         this.state = state;
 
         setDoubleBuffered(true);
     }
 
-    public void setGameContex(GameContext contex) {
+    public void setGameContex(EngineContext contex) {
         this.context = contex;
     }
 

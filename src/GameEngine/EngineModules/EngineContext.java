@@ -6,7 +6,7 @@ import java.util.List;
 import GameEngine.Interfaces.Drawable;
 import GameEngine.Interfaces.Updatable;
 
-public class GameContext {
+public class EngineContext {
     private final List<Drawable> worldDrawables = new ArrayList<>();
     private final List<Updatable> updatables = new ArrayList<>();
     private final List<Drawable> uiDrawables = new ArrayList<>();

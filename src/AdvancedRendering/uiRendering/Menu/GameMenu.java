@@ -3,7 +3,7 @@ package AdvancedRendering.uiRendering.Menu;
 import java.awt.*;
 
 import Game.GameState;
-import GameEngine.EngineModules.GamePanel;
+import GameEngine.EngineModules.EnginePanel;
 import GameEngine.Interfaces.Drawable;
 
 public class GameMenu implements Drawable {
@@ -43,7 +43,7 @@ public class GameMenu implements Drawable {
         @SuppressWarnings("unused")
         private final GameState state;
 
-        public GameMenu(GameState state, GamePanel panel) {
+        public GameMenu(GameState state, EnginePanel panel) {
                 this.state = state;
         }
 
