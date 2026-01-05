@@ -11,3 +11,22 @@ anit-aliasing?
 slider 
 
 add special key event (on key pressed...) {... }
+
+
+
+
+
+
+remove later...
+
+Summary of Best Shapes for Custom Buttons:
+
+RoundRectangle2D: Great for rounded corner buttons.
+
+Ellipse2D: Perfect for circular or oval buttons.
+
+Polygon: Best for custom polygonal shapes (e.g., triangle, hexagon).
+
+GeneralPath: Most flexible for creating complex or custom shapes.
+
+Rectangle2D: Simple and traditional for basic rectangular buttons.

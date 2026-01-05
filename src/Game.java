@@ -18,8 +18,8 @@ public class Game {
     static final Keys keys = new Keys(state);
     static final Mouse mouse = new Mouse(state, context);
     static final GameMenu menu = new GameMenu(state, panel);
-    static final EngineTools tools = new EngineTools(state);
-    static final AdvancedGraphics advanced = new AdvancedGraphics(state);
+    static final EngineTools tools = new EngineTools();
+    static final AdvancedGraphics advanced = new AdvancedGraphics();
 
     static final GameUpdate gu = new GameUpdate(keys,
             mouse,

@@ -3,16 +3,7 @@ package AdvancedRendering.worldRendering;
 import java.awt.Font;
 import java.awt.Graphics;
 
-import Game.GameState;
-
 public class AdvancedGraphics {
-
-    @SuppressWarnings("unused")
-    private final GameState state;
-
-    public AdvancedGraphics(GameState state) {
-        this.state = state;
-    }
 
     public void centerAlignedString(Graphics g, int x, int y, String str) {
 

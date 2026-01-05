@@ -43,6 +43,9 @@ public class GameUpdate implements Runnable {
         // constructors for menu
         RectButton b = new OvalButton(mouse, context, 50, 50, 200, 200);
 
+        b.setImage(tools.getImage("test.png"));
+        b.setHoverImage(tools.getImage("test2.png"));
+
         b.onClick(() -> {
             System.out.println("test");
         });

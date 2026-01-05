@@ -4,16 +4,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
-import Game.GameState;
-
 public class EngineTools {
-
-    @SuppressWarnings("unused")
-    private final GameState state;
-
-    public EngineTools(GameState state) {
-        this.state = state;
-    }
 
     /**
      * 
@@ -21,7 +12,7 @@ public class EngineTools {
      * @return
      */
     public Image getImage(String filePathFromProject) {
-        Image image = new ImageIcon(getClass().getResource("../" + filePathFromProject)).getImage();
+        Image image = new ImageIcon(getClass().getResource(filePathFromProject)).getImage();
         return image;
     }
 

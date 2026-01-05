@@ -3,6 +3,7 @@ package AdvancedRendering.uiRendering.Button;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.awt.Shape;
 
@@ -18,8 +19,12 @@ public class RectButton implements UIDrawable, Updatable {
     private boolean show = false;
 
     public Shape shape;
+
     private Color color = Color.GREEN;
     private Color hoverColor = Color.RED;
+
+    private Image image;
+    private Image hoverImage;
 
     private boolean inside;
     private boolean wasPressed;
@@ -54,6 +59,14 @@ public class RectButton implements UIDrawable, Updatable {
         this.hoverColor = hoveColor;
     }
 
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    public void setHoverImage(Image hoverImage) {
+        this.hoverImage = hoverImage;
+    }
+
     public int getX() {
         return x;
     }
@@ -77,14 +90,31 @@ public class RectButton implements UIDrawable, Updatable {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        if (inside)
+        // Draw color background
+        if (inside && hoverColor == null) {
             g2d.setColor(hoverColor);
-        else
-            g2d.setColor(color);
+            g2d.fill(shape);
 
-        g2d.fill(shape);
+        } else if (color == null) {
+            g2d.setColor(color);
+            g2d.fill(shape);
+        }
+
+        // Draw image background
+        if (image != null)
+            g2d.setClip(shape); // Clip the image to the shape of the button
+
+        // Draw the image scaled to fit the button's bounds
+        if (inside && hoverImage != null)
+            g2d.drawImage(hoverImage, x, y, width, height, null);
+        else
+            g2d.drawImage(image, x, y, width, height, null);
     }
 
+    /**
+     * 
+     * @param action
+     */
     public void onClick(Runnable action) {
         this.action = action;
 
@@ -112,5 +142,4 @@ public class RectButton implements UIDrawable, Updatable {
             }
         }
     }
-
 }
