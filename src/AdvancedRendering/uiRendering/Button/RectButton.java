@@ -91,24 +91,25 @@ public class RectButton implements UIDrawable, Updatable {
         Graphics2D g2d = (Graphics2D) g;
 
         // Draw color background
-        if (inside && hoverColor == null) {
+        if (inside && hoverImage == null) {
             g2d.setColor(hoverColor);
             g2d.fill(shape);
 
-        } else if (color == null) {
+        } else if (image == null) {
             g2d.setColor(color);
             g2d.fill(shape);
         }
 
         // Draw image background
-        if (image != null)
+        if (image != null) {
             g2d.setClip(shape); // Clip the image to the shape of the button
 
-        // Draw the image scaled to fit the button's bounds
-        if (inside && hoverImage != null)
-            g2d.drawImage(hoverImage, x, y, width, height, null);
-        else
-            g2d.drawImage(image, x, y, width, height, null);
+            // Draw the image scaled to fit the button's bounds
+            if (inside && hoverImage != null)
+                g2d.drawImage(hoverImage, x, y, width, height, null);
+            else
+                g2d.drawImage(image, x, y, width, height, null);
+        }
     }
 
     /**

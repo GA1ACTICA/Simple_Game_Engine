@@ -2,8 +2,6 @@ package GameEngine;
 
 import javax.swing.JFrame;
 
-import AdvancedRendering.uiRendering.Button.OvalButton;
-import AdvancedRendering.uiRendering.Button.RectButton;
 import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
@@ -41,16 +39,6 @@ public class GameUpdate implements Runnable {
         FPSCounter fps = new FPSCounter(context);
 
         // constructors for menu
-        RectButton b = new OvalButton(mouse, context, 50, 50, 200, 200);
-
-        b.setImage(tools.getImage("test.png"));
-        b.setHoverImage(tools.getImage("test2.png"));
-
-        b.onClick(() -> {
-            System.out.println("test");
-        });
-
-        b.show();
 
         // constructors for game
         ClassFactory.create(new MainGameClass(state, menu, fps, advanced), context);
