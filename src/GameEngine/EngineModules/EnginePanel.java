@@ -40,6 +40,8 @@ public class EnginePanel extends JPanel {
         double scaleY = getHeight() / (double) logicalHeight;
         double scale = Math.min(scaleX, scaleY);
 
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         // Center + scale
         g2d.translate(
                 (getWidth() - logicalWidth * scale) / 2,

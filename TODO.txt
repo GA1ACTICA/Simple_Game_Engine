@@ -2,15 +2,13 @@ add java documentation
 
 add custom textfeilds
 
-reimplement custom buttons
-
 checkbox
-
-anit-aliasing?
 
 slider 
 
 add special key event (on key pressed...) {... }
+
+image / shapes manipulation
 
 
 
