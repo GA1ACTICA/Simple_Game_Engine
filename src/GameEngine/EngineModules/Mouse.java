@@ -1,5 +1,6 @@
 package GameEngine.EngineModules;
 
+import java.awt.Point;
 import java.awt.event.*;
 
 import Game.GameState;
@@ -124,6 +125,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     public int getY() {
         return y;
+    }
+
+    public Point getPoint() {
+        return new Point(x, y);
     }
 
     public boolean getLeftDown() {

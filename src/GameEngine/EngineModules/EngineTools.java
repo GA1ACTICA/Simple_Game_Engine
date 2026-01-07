@@ -2,11 +2,48 @@ package GameEngine.EngineModules;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 
 public class EngineTools {
+
+    /**
+     * 
+     * @param pointOne
+     * 
+     * @param pointTwo
+     * 
+     * @return
+     */
+    public static double pythagoras(Point pointOne, Point pointTwo) {
+
+        double deltaX = pointTwo.getX() - pointOne.getX();
+        double deltaY = pointTwo.getY() - pointOne.getY();
+
+        return Math.hypot(deltaX, deltaY);
+    }
+
+    /**
+     * 
+     * @param x1
+     * 
+     * @param y1
+     * 
+     * @param x2
+     * 
+     * @param y2
+     * 
+     * @return
+     */
+    public static double pythagoras(int x1, int y1, int x2, int y2) {
+
+        double deltaX = x2 - x1;
+        double deltaY = y2 - y1;
+
+        return Math.hypot(deltaX, deltaY);
+    }
 
     /**
      * Get an image from the specified file path.
@@ -91,5 +128,42 @@ public class EngineTools {
         g2d.dispose();
 
         return rotatedImage;
+    }
+
+    /**
+     * Fixes a Point to a line between Point one and two and moves acording to a
+     * refrence position elsewhere. That Point could for example be a mouse
+     * position.
+     * 
+     * @param refrence
+     * 
+     * @param pointOne
+     * 
+     * @param pointTwo
+     * 
+     * @return
+     */
+    public static Point fixToLine(Point refrence, Point pointOne, Point pointTwo) {
+        double deltaX = pointTwo.x - pointOne.x;
+        double deltaY = pointTwo.y - pointOne.y;
+
+        double mx = refrence.x - pointOne.x;
+        double my = refrence.y - pointOne.y;
+
+        double lengthSquared = deltaX * deltaX + deltaY * deltaY;
+
+        // Start and end are the same point
+        if (lengthSquared == 0)
+            return new Point(pointOne.x, pointOne.y);
+
+        double progress = (mx * deltaX + my * deltaY) / lengthSquared;
+
+        // Fix "progress" inbetween point one and two
+        progress = Math.max(0, Math.min(1, progress));
+
+        int pointX = (int) Math.round(pointOne.x + progress * deltaX);
+        int pointY = (int) Math.round(pointOne.y + progress * deltaY);
+
+        return new Point(pointX, pointY);
     }
 }
