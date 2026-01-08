@@ -29,7 +29,12 @@ public class RoundRectButton extends RectButton {
     public RoundRectButton(Mouse mouse, EngineContext context, int x, int y, int width, int height, int arcWidth,
             int arcHeight) {
         super(mouse, context, x, y, width, height);
-        this.shape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+
+        this.baseShape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
+
     }
 
     /**
@@ -55,7 +60,11 @@ public class RoundRectButton extends RectButton {
         int height = (int) bottomRight.getY();
 
         super(mouse, context, x, y, width, height);
-        this.shape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+        this.baseShape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
+
     }
 
     /**
@@ -81,7 +90,12 @@ public class RoundRectButton extends RectButton {
         int y = (int) middle.getY() - height / 2;
 
         super(mouse, context, x, y, width, height);
-        this.shape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+
+        this.baseShape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
+
     }
 
 }

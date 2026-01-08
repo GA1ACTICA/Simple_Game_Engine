@@ -1,6 +1,7 @@
 package GameEngine.EngineModules;
 
 import java.awt.geom.AffineTransform;
+
 import javax.swing.*;
 
 import Game.GameState;
@@ -17,6 +18,8 @@ public class EnginePanel extends JPanel {
     private final GameState state;
     private EngineContext context;
 
+    private boolean exceptionReported;
+
     public EnginePanel(GameState state) {
         this.state = state;
 
@@ -32,38 +35,53 @@ public class EnginePanel extends JPanel {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics2D g2d = (Graphics2D) g.create();
+        try {
 
-        AffineTransform old = g2d.getTransform();
+            Graphics2D g2d = (Graphics2D) g.create();
 
-        double scaleX = getWidth() / (double) logicalWidth;
-        double scaleY = getHeight() / (double) logicalHeight;
-        double scale = Math.min(scaleX, scaleY);
+            AffineTransform old = g2d.getTransform();
 
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            double scaleX = getWidth() / (double) logicalWidth;
+            double scaleY = getHeight() / (double) logicalHeight;
+            double scale = Math.min(scaleX, scaleY);
 
-        // Center + scale
-        g2d.translate(
-                (getWidth() - logicalWidth * scale) / 2,
-                (getHeight() - logicalHeight * scale) / 2);
-        g2d.scale(scale, scale);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-        g2d.setColor(state.backgroundColor);
-        g2d.fillRect(0, 0, logicalWidth, logicalHeight);
+            // Center + scale
+            g2d.translate(
+                    (getWidth() - logicalWidth * scale) / 2,
+                    (getHeight() - logicalHeight * scale) / 2);
+            g2d.scale(scale, scale);
 
-        // Draw game objects in world space
-        for (Drawable d : context.getWorldDrawables()) {
-            d.draw(g2d);
+            g2d.setColor(state.backgroundColor);
+            g2d.fillRect(0, 0, logicalWidth, logicalHeight);
+
+            // Draw game objects in world space
+            for (Drawable d : context.getWorldDrawables()) {
+                d.draw(g2d);
+            }
+
+            // Restore transform
+            g2d.setTransform(old);
+
+            // Draw game objects in UI space
+            for (Drawable d : context.getUiDrawables()) {
+                d.draw(g2d);
+            }
+
+            g2d.dispose();
+
+        } catch (Throwable t) {
+
+            if (!exceptionReported) {
+                exceptionReported = true;
+                t.printStackTrace();
+            }
+            // Skip rendering this frame
         }
 
-        // Restore transform
-        g2d.setTransform(old);
-
-        // Draw game objects in UI space
-        for (Drawable d : context.getUiDrawables()) {
-            d.draw(g2d);
-        }
-
-        g2d.dispose();
     }
 }

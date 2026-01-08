@@ -1,12 +1,9 @@
 package GameEngine;
 
-import java.awt.Point;
-
 import javax.swing.JFrame;
 
 import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
-import AdvancedRendering.uiRendering.Slider.Slider;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
 import Game.*;
 import GameEngine.EngineModules.*;
@@ -42,9 +39,6 @@ public class GameUpdate implements Runnable {
         FPSCounter fps = new FPSCounter(context);
 
         // constructors for menu
-
-        Slider slider = new Slider(mouse, context, new Point(100, 50), new Point(100, 500));
-        slider.show();
 
         // constructors for game
         ClassFactory.create(new MainGameClass(state, menu, fps, advanced), context);

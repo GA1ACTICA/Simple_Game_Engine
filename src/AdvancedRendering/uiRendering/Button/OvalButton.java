@@ -24,7 +24,11 @@ public class OvalButton extends RectButton {
      */
     public OvalButton(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
         super(mouse, context, x, y, width, height);
-        this.shape = new Ellipse2D.Float(x, y, width, height);
+
+        this.baseShape = new Ellipse2D.Float(x, y, width, height);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
 
     }
 
@@ -46,7 +50,11 @@ public class OvalButton extends RectButton {
         int height = (int) bottomRight.getY();
 
         super(mouse, context, x, y, width, height);
-        this.shape = new Ellipse2D.Float(x, y, width, height);
+
+        this.baseShape = new Ellipse2D.Float(x, y, width, height);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
 
     }
 
@@ -68,7 +76,11 @@ public class OvalButton extends RectButton {
         int y = (int) middle.getY() - height / 2;
 
         super(mouse, context, x, y, width, height);
-        this.shape = new Ellipse2D.Float(x, y, width, height);
+
+        this.baseShape = new Ellipse2D.Float(x, y, width, height);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
 
     }
 
@@ -89,7 +101,11 @@ public class OvalButton extends RectButton {
         int y = (int) middle.getY() - radius;
 
         super(mouse, context, x, y, radius * 2, radius * 2);
-        this.shape = new Ellipse2D.Float(x, y, radius * 2, radius * 2);
+
+        this.baseShape = new Ellipse2D.Float(x, y, radius * 2, radius * 2);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
 
     }
 
