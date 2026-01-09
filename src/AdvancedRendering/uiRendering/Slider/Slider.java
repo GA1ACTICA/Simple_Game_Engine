@@ -10,11 +10,11 @@ import java.awt.geom.Line2D;
 import AdvancedRendering.uiRendering.Button.RectButton;
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EngineTools;
 import GameEngine.EngineModules.Mouse;
-import GameEngine.EngineModules.Records.SliderInformation;
+import GameEngine.EngineModules.EngineTools.MathTools;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
+import GameEngine.Records.SliderInformation;
 
 public class Slider implements UIDrawable, Updatable {
 
@@ -70,7 +70,7 @@ public class Slider implements UIDrawable, Updatable {
 
     public double getLength() {
 
-        double length = EngineTools.pythagoras(pointOne, pointTwo);
+        double length = MathTools.pythagoras(pointOne, pointTwo);
 
         return length;
     }
@@ -224,10 +224,10 @@ public class Slider implements UIDrawable, Updatable {
         if (holding) {
 
             // Update "sliderProcentage"
-            sliderPercentage = EngineTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).progress() * 100;
+            sliderPercentage = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).progress() * 100;
 
             // Update "handle" position
-            handle.setMiddle(EngineTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).point());
+            handle.setMiddle(MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).point());
 
         }
     }
