@@ -120,7 +120,61 @@ public class Slider implements UIDrawable, Updatable {
         // Sets the handle at the correct x and y even if the new handles constructor
         // was wrong
         setPercentage(getPercentage());
+
+        // Update handle angle if a custom angle is not set
+        if (handleAngle == Math.toDegrees(Math.atan2(
+                pointTwo.y - pointOne.y,
+                pointTwo.x - pointOne.x)) - 90)
+            handle.setRotation(handleAngle);
+
+    }
+
+    public void setHandleAngle(double angle) {
+        handleAngle = angle;
         handle.setRotation(handleAngle);
+
+    }
+
+    public void setSliderValue(int value) {
+        setPercentage((double) value / sliderMax * 100);
+    }
+
+    public void setSliderMax(int sliderMax) {
+        this.sliderMax = sliderMax;
+    }
+
+    public void setSliderMin(int sliderMin) {
+        this.sliderMin = sliderMin;
+    }
+
+    public void setSliderWidth(int sliderWidth) {
+        this.sliderWidth = sliderWidth;
+    }
+
+    public void setSliderPoints(Point pointOne, Point pointTwo) {
+
+        // Update handle angle if a custom angle is not set
+        if (handleAngle == Math.toDegrees(Math.atan2(
+                this.pointTwo.y - this.pointOne.y,
+                this.pointTwo.x - this.pointOne.x)) - 90) {
+
+            handleAngle = Math.toDegrees(Math.atan2(
+                    pointTwo.y - pointOne.y,
+                    pointTwo.x - pointOne.x)) - 90;
+
+            handle.setRotation(handleAngle);
+
+        }
+
+        this.pointOne = pointOne;
+        this.pointTwo = pointTwo;
+
+        setPercentage(getPercentage());
+
+    }
+
+    public void setSliderColor(Color sliderColor) {
+        this.sliderColor = sliderColor;
     }
 
     public void setPercentage(double percentage) {

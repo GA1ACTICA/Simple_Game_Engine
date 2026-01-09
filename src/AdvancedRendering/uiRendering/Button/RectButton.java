@@ -86,8 +86,8 @@ public class RectButton implements UIDrawable, Updatable {
 
         x = (int) topLeft.getX();
         y = (int) topLeft.getY();
-        width = (int) bottomRight.getX();
-        height = (int) bottomRight.getY();
+        width = (int) bottomRight.getX() - (int) topLeft.getX();
+        height = (int) bottomRight.getY() - (int) topLeft.getY();
         this.mouse = mouse;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
