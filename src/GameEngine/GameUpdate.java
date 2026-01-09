@@ -45,11 +45,13 @@ public class GameUpdate implements Runnable {
         // constructors for menu
         Slider slider = new Slider(mouse, context, new Point(100, 100), new Point(200, 300));
         slider.show();
-        slider.setHandleAngle(90);
         slider.setSliderMax(1024);
+        slider.getHandle().setHoverImage(EngineTools.getImage("recources/images/test.png"));
 
         RectButton button = new RectButton(mouse, context, new Point(450, 450), new Point(500, 500));
         button.show();
+        button.setImage(EngineTools.getImage("recources/images/test.png"));
+
         button.onClick(() -> {
             slider.setSliderPoints(new Point(100, 100), new Point(300, 300));
             System.out.println(slider.getSliderValue());

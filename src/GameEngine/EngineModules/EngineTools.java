@@ -1,16 +1,21 @@
 package GameEngine.EngineModules;
 
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Shape;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
 import javax.swing.ImageIcon;
 
 import GameEngine.EngineModules.Records.FixResult;
+import GameEngine.Interfaces.MaskPainter;
 
 public class EngineTools {
 
@@ -255,5 +260,65 @@ public class EngineTools {
         int pointY = (int) Math.round(pointOne.y + progress * deltaY);
 
         return new FixResult(new Point(pointX, pointY), progress);
+    }
+
+    /**
+     * work in progress
+     * 
+     * @param mask
+     * 
+     * @param width
+     * 
+     * @param height
+     * 
+     * @param painter
+     * 
+     * @return
+     * 
+     * @throws NullPointerException if {@code mask} is {@code null}
+     */
+    public static BufferedImage createMask(
+            Shape mask,
+            int width,
+            int height,
+            MaskPainter painter) {
+
+        Objects.requireNonNull(mask, "mask must not be null");
+
+        BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // Get Graphics2D from the new image
+        Graphics2D g2d = buffer.createGraphics();
+
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+        Shape localMask = mask;
+
+        // Transform mask from "world space" to "local space"
+        if (mask.getBounds2D().getX() != 0 || mask.getBounds().getY() != 0) {
+
+            Rectangle2D boundingBox = mask.getBounds2D();
+
+            // Translate to "local space" x: 0 -> getX() y: 0 -> getY()
+            AffineTransform transform = AffineTransform.getTranslateInstance(-boundingBox.getX(), -boundingBox.getY());
+
+            localMask = transform.createTransformedShape(mask);
+        }
+
+        // Paint mask alpha
+        g2d.setComposite(AlphaComposite.Src);
+        g2d.setColor(Color.WHITE);
+        g2d.fill(localMask);
+
+        // Mask content
+        g2d.setComposite(AlphaComposite.SrcIn);
+        painter.paint(g2d);
+
+        g2d.dispose();
+
+        return buffer;
     }
 }
