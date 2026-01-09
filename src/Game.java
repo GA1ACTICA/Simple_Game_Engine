@@ -1,7 +1,6 @@
 import java.awt.Dimension;
 import javax.swing.*;
 
-import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
 import Game.GameState;
 import GameEngine.GameUpdate;
@@ -17,8 +16,6 @@ public class Game {
 
     static final Keys keys = new Keys(state);
     static final Mouse mouse = new Mouse(state, context);
-    static final GameMenu menu = new GameMenu(state, panel);
-    static final EngineTools tools = new EngineTools();
     static final AdvancedGraphics advanced = new AdvancedGraphics();
 
     static final GameUpdate gu = new GameUpdate(keys,
@@ -26,9 +23,7 @@ public class Game {
             state,
             panel,
             frame,
-            menu,
             advanced,
-            tools,
             context);
 
     public static void main(String[] args) {
