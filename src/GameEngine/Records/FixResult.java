@@ -1,12 +1,12 @@
-package GameEngine.EngineModules.Records;
+package GameEngine.Records;
 
-import GameEngine.EngineModules.EngineTools;
+import GameEngine.EngineModules.EngineTools.MathTools;
 
 import java.awt.Point;
 
 /**
  * The {@code FixResult} record encapsulates the result of the
- * {@link EngineTools#fixToLine(Point, Point, Point)
+ * {@link MathTools#fixToLine(Point, Point, Point)
  * fixToLine(Point, Point, Point)}
  * method.
  * <p>

@@ -1,4 +1,4 @@
-package GameEngine.EngineModules.Records;
+package GameEngine.Records;
 
 /**
  * The {@code SliderInfromation} class is used to encapsulate the values of the

@@ -2,7 +2,6 @@ package Game;
 
 import java.awt.*;
 
-import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
 import GameEngine.Interfaces.*;
@@ -14,7 +13,7 @@ public class MainGameClass implements Drawable, Updatable {
     private final FPSCounter fps;
     private final AdvancedGraphics advanced;
 
-    public MainGameClass(GameState state, GameMenu menu, FPSCounter fps, AdvancedGraphics advanced) {
+    public MainGameClass(GameState state, FPSCounter fps, AdvancedGraphics advanced) {
         this.advanced = advanced;
         this.fps = fps;
         this.state = state;

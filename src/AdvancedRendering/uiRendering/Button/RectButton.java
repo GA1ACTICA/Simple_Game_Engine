@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EngineTools;
 import GameEngine.EngineModules.Mouse;
+import GameEngine.EngineModules.EngineTools.GraphicTools;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
 
@@ -225,7 +225,7 @@ public class RectButton implements UIDrawable, Updatable {
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawin inside
-        EngineTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
+        GraphicTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
             if (image == null) {
@@ -235,7 +235,7 @@ public class RectButton implements UIDrawable, Updatable {
 
             // Draw if image is set
             if (image != null) {
-                BufferedImage buffer = EngineTools.createMask(
+                BufferedImage buffer = GraphicTools.createMask(
                         baseShape,
                         width,
                         height,
@@ -256,7 +256,7 @@ public class RectButton implements UIDrawable, Updatable {
             // Draw if hoverImage is set
             if (inside && hoverImage != null) {
 
-                BufferedImage buffer = EngineTools.createMask(
+                BufferedImage buffer = GraphicTools.createMask(
                         baseShape,
                         width,
                         height,
