@@ -1,12 +1,10 @@
 package AdvancedRendering.uiRendering.Button;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
@@ -24,7 +22,7 @@ public class RectButton implements UIDrawable, Updatable {
 
     private int x, y, width, height;
     private double angle = 0;
-    private boolean show = false;
+    protected boolean show = false;
 
     protected RectangularShape baseShape;
     protected Shape rotatedShape;
@@ -36,11 +34,12 @@ public class RectButton implements UIDrawable, Updatable {
     private Image hoverImage;
 
     public boolean inside;
-    private boolean wasPressed;
+    protected boolean wasPressed;
     private boolean insideOveride = false;
 
-    private Runnable action;
-    private final Mouse mouse;
+    protected Runnable clickAction;
+    protected Runnable hoverAction; // look into this
+    protected final Mouse mouse;
 
     /**
      * 
@@ -214,7 +213,7 @@ public class RectButton implements UIDrawable, Updatable {
      * @param action
      */
     public void onClick(Runnable action) {
-        this.action = action;
+        this.clickAction = action;
 
     }
 
@@ -225,38 +224,53 @@ public class RectButton implements UIDrawable, Updatable {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // Create off-screen BufferImage for the button
-        BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D bg2d = buffer.createGraphics();
-
-        bg2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        bg2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-        // Set baseShape to BufferedImage cordinate space
-        baseShape.setFrame(0, 0, width, height);
-
-        if (inside && hoverImage == null)
-            bg2d.setColor(hoverColor);
-        else if (image == null)
-            bg2d.setColor(color);
-        else
-            bg2d.setColor(new Color(0, 0, 0, 0));
-
-        bg2d.fill(baseShape);
-
-        // Mask and draw image
-        bg2d.setComposite(AlphaComposite.SrcIn);
-
-        if (inside && hoverImage != null)
-            bg2d.drawImage(hoverImage, 0, 0, width, height, null);
-        else if (image != null)
-            bg2d.drawImage(image, 0, 0, width, height, null);
-
-        bg2d.dispose();
-
+        // Rotate everything drawin inside
         EngineTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
-            g2d.drawImage(buffer, x, y, null);
+
+            // Draw if the image is not set
+            if (image == null) {
+                g2d.setColor(color);
+                g2d.fill(baseShape);
+            }
+
+            // Draw if image is set
+            if (image != null) {
+                BufferedImage buffer = EngineTools.createMask(
+                        baseShape,
+                        width,
+                        height,
+                        gMask -> {
+
+                            gMask.drawImage(image, 0, 0, width, height, null);
+                        });
+                g2d.drawImage(buffer, x, y, null);
+
+            }
+
+            // Draw if the hoverImage is not set and inside is true
+            if (inside && hoverImage == null) {
+                g2d.setColor(hoverColor);
+                g2d.fill(baseShape);
+            }
+
+            // Draw if hoverImage is set
+            if (inside && hoverImage != null) {
+
+                BufferedImage buffer = EngineTools.createMask(
+                        baseShape,
+                        width,
+                        height,
+                        gMask -> {
+
+                            gMask.drawImage(hoverImage, 0, 0, width, height, null);
+
+                        });
+                g2d.drawImage(buffer, x, y, null);
+
+            }
+
         });
+
     }
 
     @Override
@@ -271,8 +285,8 @@ public class RectButton implements UIDrawable, Updatable {
             wasPressed = false;
 
             // Run action if one is set
-            if (inside && action != null)
-                action.run();
+            if (inside && clickAction != null)
+                clickAction.run();
 
         }
 
