@@ -114,7 +114,7 @@ public class GraphicTools {
         // Restore original transform
         g2d.setTransform(oldTransform);
 
-        g2d.dispose();
+        // DO NOT DISPOSE GRAPHICS!!!
     }
 
     /**
