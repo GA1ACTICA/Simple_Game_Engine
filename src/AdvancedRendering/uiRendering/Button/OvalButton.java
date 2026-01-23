@@ -6,7 +6,7 @@ import java.awt.geom.Ellipse2D;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 
-public class OvalButton extends RectButton {
+public class OvalButton extends AbstractRectButton {
 
     /**
      * 
