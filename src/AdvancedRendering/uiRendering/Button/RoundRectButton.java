@@ -6,7 +6,7 @@ import java.awt.geom.RoundRectangle2D;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 
-public class RoundRectButton extends RectButton {
+public class RoundRectButton extends AbstractRectButton {
 
     /**
      * 

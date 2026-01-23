@@ -1,4 +1,4 @@
-package AdvancedRendering.uiRendering.Button;
+package AdvancedRendering.uiRendering.CheckBox;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -18,28 +18,33 @@ import GameEngine.EngineModules.EngineTools.GraphicTools;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
 
-public class RectButton implements UIDrawable, Updatable {
+public class AbstractRectCheckbox implements UIDrawable, Updatable {
 
     private int x, y, width, height;
     private double angle = 0;
-    protected boolean show = false;
+    private boolean show = false;
 
     protected RectangularShape baseShape;
     protected Shape rotatedShape;
 
     private Color color = Color.GREEN;
     private Color hoverColor = Color.RED;
+    private Color toggleColor = Color.ORANGE;
 
     private Image image;
     private Image hoverImage;
+    private Image toggleImage;
 
-    public boolean inside;
-    protected boolean wasPressed;
+    private boolean inside;
+    private boolean wasPressed;
     private boolean insideOveride = false;
 
-    protected Runnable clickAction;
-    protected Runnable hoverAction; // look into this
-    protected final Mouse mouse;
+    private Runnable clickAction;
+    // private Runnable hoverAction; // TODO: look into this
+    private final Mouse mouse;
+
+    private boolean toggled;
+    private boolean showHover;
 
     /**
      * 
@@ -55,7 +60,7 @@ public class RectButton implements UIDrawable, Updatable {
      * 
      * @param height
      */
-    public RectButton(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
+    public AbstractRectCheckbox(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
         ClassFactory.create(this, context);
 
         this.x = x;
@@ -80,7 +85,7 @@ public class RectButton implements UIDrawable, Updatable {
      * 
      * @param bottomRight
      */
-    public RectButton(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
+    public AbstractRectCheckbox(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
         ClassFactory.create(this, context);
 
         x = (int) topLeft.getX();
@@ -107,7 +112,7 @@ public class RectButton implements UIDrawable, Updatable {
      * 
      * @param height
      */
-    public RectButton(Mouse mouse, EngineContext context, Point middle, int width, int height) {
+    public AbstractRectCheckbox(Mouse mouse, EngineContext context, Point middle, int width, int height) {
         ClassFactory.create(this, context);
 
         x = (int) middle.getX() - width / 2;
@@ -168,6 +173,10 @@ public class RectButton implements UIDrawable, Updatable {
         this.hoverColor = hoveColor;
     }
 
+    public void setToggleColor(Color toggleColor) {
+        this.toggleColor = toggleColor;
+    }
+
     public void setImage(Image image) {
         this.image = image;
     }
@@ -176,11 +185,19 @@ public class RectButton implements UIDrawable, Updatable {
         this.hoverImage = hoverImage;
     }
 
+    public void setToggleImage(Image toggleImage) {
+        this.toggleImage = toggleImage;
+    }
+
     public void setInsideOveride(boolean isInside) {
         insideOveride = isInside;
 
         if (isInside)
             inside = isInside;
+    }
+
+    public void setShowHover(boolean showHover) {
+        this.showHover = showHover;
     }
 
     public int getX() {
@@ -228,13 +245,15 @@ public class RectButton implements UIDrawable, Updatable {
         GraphicTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if (image == null) {
+            if ((image == null && !inside) ||
+                    (image == null && !showHover && !toggled)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if (image != null) {
+            if ((image != null && !inside) ||
+                    (image != null && !showHover && !toggled)) {
                 BufferedImage buffer = GraphicTools.createMask(
                         baseShape,
                         width,
@@ -247,14 +266,36 @@ public class RectButton implements UIDrawable, Updatable {
 
             }
 
+            // Draw if the toggelImage is not set
+            if ((image == null && !inside && toggled) ||
+                    (image == null && toggled && !showHover)) {
+                g2d.setColor(toggleColor);
+                g2d.fill(baseShape);
+            }
+
+            // Draw if toggleImage is set
+            if ((image != null && !inside && toggled) ||
+                    (image != null && toggled && !showHover)) {
+                BufferedImage buffer = GraphicTools.createMask(
+                        baseShape,
+                        width,
+                        height,
+                        gMask -> {
+
+                            gMask.drawImage(toggleImage, 0, 0, width, height, null);
+                        });
+                g2d.drawImage(buffer, x, y, null);
+
+            }
+
             // Draw if the hoverImage is not set and inside is true
-            if (inside && hoverImage == null) {
+            if (showHover && inside && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if (inside && hoverImage != null) {
+            if (showHover && inside && hoverImage != null) {
 
                 BufferedImage buffer = GraphicTools.createMask(
                         baseShape,
@@ -283,6 +324,9 @@ public class RectButton implements UIDrawable, Updatable {
 
         if (wasPressed && !mouse.getLeftDown()) {
             wasPressed = false;
+
+            toggled = !toggled;
+            System.out.println(toggled);
 
             // Run action if one is set
             if (inside && clickAction != null)

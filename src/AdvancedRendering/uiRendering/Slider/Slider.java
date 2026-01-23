@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 
-import AdvancedRendering.uiRendering.Button.RectButton;
+import AdvancedRendering.uiRendering.Button.AbstractRectButton;
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
@@ -37,7 +37,7 @@ public class Slider implements UIDrawable, Updatable {
 
     private boolean holding;
 
-    private RectButton handle;
+    private AbstractRectButton handle;
     private final Mouse mouse;
 
     public Slider(Mouse mouse, EngineContext context, Point pointOne, Point pointTwo) {
@@ -48,7 +48,7 @@ public class Slider implements UIDrawable, Updatable {
 
         Point middle = new Point(((pointOne.x + pointTwo.x) / 2), ((pointOne.y + pointTwo.y) / 2));
 
-        handle = new RectButton(mouse, context, middle,
+        handle = new AbstractRectButton(mouse, context, middle,
                 handleWidth, handleHeight);
 
         handleAngle = Math.toDegrees(Math.atan2(
@@ -106,7 +106,7 @@ public class Slider implements UIDrawable, Updatable {
         return sliderColor;
     }
 
-    public RectButton getHandle() {
+    public AbstractRectButton getHandle() {
         return handle;
     }
 
@@ -114,7 +114,7 @@ public class Slider implements UIDrawable, Updatable {
         return handleAngle;
     }
 
-    public void setHandle(RectButton handle) {
+    public void setHandle(AbstractRectButton handle) {
         this.handle = handle;
 
         // Sets the handle at the correct x and y even if the new handles constructor
