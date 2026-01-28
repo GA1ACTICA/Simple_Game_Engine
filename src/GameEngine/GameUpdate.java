@@ -1,11 +1,7 @@
 package GameEngine;
 
-import java.awt.Color;
-import java.awt.Point;
-
 import javax.swing.JFrame;
 
-import AdvancedRendering.uiRendering.CheckBox.AbstractRectCheckbox;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
 import Game.*;
@@ -40,10 +36,6 @@ public class GameUpdate implements Runnable {
         FPSCounter fps = new FPSCounter(context);
 
         // constructors for menu
-        AbstractRectCheckbox boxx = new AbstractRectCheckbox(mouse, context, new Point(100, 100), new Point(200, 200));
-        boxx.setShowHover(false);
-        boxx.show();
-
         // constructors for game
         ClassFactory.create(new MainGameClass(state, fps, advanced), context);
         ClassFactory.create(new SecondGameClass(state, advanced), context);

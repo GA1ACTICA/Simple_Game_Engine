@@ -3,14 +3,15 @@ package AdvancedRendering.uiRendering.Misc;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Point;
 
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.Interfaces.*;
 
-public class FPSCounter implements UIDrawable, Updatable {
+public class FPSCounter implements UIDrawable, Updatable, MenuInterface {
 
-    private boolean enabled = false;
+    private boolean show = false;
 
     private int frames = 0;
     private int fps = 0;
@@ -25,52 +26,37 @@ public class FPSCounter implements UIDrawable, Updatable {
         ClassFactory.create(this, context);
     }
 
-    /**
-     * 
-     * @param enabled
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    @Override
+    public void show() {
+        show = true;
     }
 
-    /**
-     * 
-     * @return
-     */
-    public boolean isEnabled() {
-        return enabled;
+    @Override
+    public void hide() {
+        show = false;
     }
 
-    /**
-     * 
-     * @param color
-     */
     public void setColor(Color color) {
         this.color = color;
     }
 
-    /**
-     * 
-     * @param font
-     */
     public void setFont(Font font) {
         this.font = font;
     }
-
-    /**
-     * 
-     * @param x
-     * @param y
-     */
 
     public void setPos(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+    public void setPos(Point position) {
+        this.x = position.x;
+        this.y = position.y;
+    }
+
     @Override
     public void draw(Graphics g) {
-        if (!enabled)
+        if (!show)
             return;
 
         g.setFont(font);
@@ -80,7 +66,7 @@ public class FPSCounter implements UIDrawable, Updatable {
 
     @Override
     public void update() {
-        if (!enabled)
+        if (!show)
             return;
 
         frames++;

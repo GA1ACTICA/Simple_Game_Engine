@@ -30,7 +30,7 @@ public class MainGameClass implements Drawable, Updatable {
         g.setColor(Color.BLACK);
         advanced.centerAlignedString(g, 500, 500, "Hello");
 
-        fps.setEnabled(true);
+        fps.show();
         fps.setColor(Color.RED);
     }
 

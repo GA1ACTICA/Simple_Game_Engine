@@ -15,10 +15,11 @@ import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.EngineModules.EngineTools.GraphicTools;
+import GameEngine.Interfaces.MenuInterface;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
 
-public class AbstractRectButton implements UIDrawable, Updatable {
+public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface {
 
     private int x, y, width, height;
     private double angle = 0;
@@ -122,10 +123,12 @@ public class AbstractRectButton implements UIDrawable, Updatable {
 
     }
 
+    @Override
     public void show() {
         show = true;
     }
 
+    @Override
     public void hide() {
         show = false;
     }
@@ -281,7 +284,7 @@ public class AbstractRectButton implements UIDrawable, Updatable {
         if (inside && mouse.getLeftDown() && !wasPressed)
             wasPressed = true;
 
-        if (wasPressed && !mouse.getLeftDown()) {
+        if (wasPressed && !mouse.getLeftDown() && inside) {
             wasPressed = false;
 
             // Run action if one is set
