@@ -11,7 +11,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-import GameEngine.Interfaces.MaskPainter;
+import GameEngine.Interfaces.InterfacePainter;
 
 public class GraphicTools {
 
@@ -42,9 +42,11 @@ public class GraphicTools {
 
         // Calculate the new image size after rotation
         int newWidth = (int) Math.floor(
-                width * Math.abs(Math.cos(Math.toRadians(angle))) + height * Math.abs(Math.sin(Math.toRadians(angle))));
+                width * Math.abs(Math.cos(Math.toRadians(angle)))
+                        + height * Math.abs(Math.sin(Math.toRadians(angle))));
         int newHeight = (int) Math.floor(
-                width * Math.abs(Math.sin(Math.toRadians(angle))) + height * Math.abs(Math.cos(Math.toRadians(angle))));
+                width * Math.abs(Math.sin(Math.toRadians(angle)))
+                        + height * Math.abs(Math.cos(Math.toRadians(angle))));
 
         BufferedImage rotatedImage = new BufferedImage(newWidth, newHeight, image.getType());
 
@@ -136,7 +138,7 @@ public class GraphicTools {
             Shape mask,
             int width,
             int height,
-            MaskPainter painter) {
+            InterfacePainter painter) {
 
         Objects.requireNonNull(mask, "mask must not be null");
 
@@ -158,7 +160,8 @@ public class GraphicTools {
             Rectangle2D boundingBox = mask.getBounds2D();
 
             // Translate to "local space" x: 0 -> getX() y: 0 -> getY()
-            AffineTransform transform = AffineTransform.getTranslateInstance(-boundingBox.getX(), -boundingBox.getY());
+            AffineTransform transform = AffineTransform.getTranslateInstance(-boundingBox.getX(),
+                    -boundingBox.getY());
 
             localMask = transform.createTransformedShape(mask);
         }

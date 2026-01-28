@@ -15,10 +15,11 @@ import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.EngineModules.EngineTools.GraphicTools;
+import GameEngine.Interfaces.MenuInterface;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
 
-public class AbstractRectCheckbox implements UIDrawable, Updatable {
+public class AbstractRectCheckbox implements UIDrawable, Updatable, MenuInterface {
 
     private int x, y, width, height;
     private double angle = 0;
@@ -39,12 +40,13 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable {
     private boolean wasPressed;
     private boolean insideOveride = false;
 
-    private Runnable clickAction;
-    // private Runnable hoverAction; // TODO: look into this
+    private Runnable onClickAction;
+    private Runnable onToggleTrueAction;
+    private Runnable onToggleFalseAction;
     private final Mouse mouse;
 
     private boolean toggled;
-    private boolean showHover;
+    private boolean showHover = false;
 
     /**
      * 
@@ -127,10 +129,12 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable {
 
     }
 
+    @Override
     public void show() {
         show = true;
     }
 
+    @Override
     public void hide() {
         show = false;
     }
@@ -229,9 +233,17 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable {
      * 
      * @param action
      */
-    public void onClick(Runnable action) {
-        this.clickAction = action;
+    public void onClick(Runnable onClickAction) {
+        this.onClickAction = onClickAction;
 
+    }
+
+    public void onToggleTrue(Runnable onToggleTrueAction) {
+        this.onToggleTrueAction = onToggleTrueAction;
+    }
+
+    public void onToggleFalse(Runnable onToggleFalseAction) {
+        this.onToggleFalseAction = onToggleFalseAction;
     }
 
     @Override
@@ -322,16 +334,19 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable {
         if (inside && mouse.getLeftDown() && !wasPressed)
             wasPressed = true;
 
-        if (wasPressed && !mouse.getLeftDown()) {
+        if (wasPressed && !mouse.getLeftDown() && inside) {
             wasPressed = false;
 
             toggled = !toggled;
-            System.out.println(toggled);
 
             // Run action if one is set
-            if (inside && clickAction != null)
-                clickAction.run();
+            if (inside && onClickAction != null)
+                onClickAction.run();
 
+            if (toggled && onToggleTrueAction != null)
+                onToggleTrueAction.run();
+            else if (!toggled && onToggleFalseAction != null)
+                onToggleFalseAction.run();
         }
 
         // Hitbox detection for the "rotatedShape"

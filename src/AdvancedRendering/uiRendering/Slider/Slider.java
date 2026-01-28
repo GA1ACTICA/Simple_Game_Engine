@@ -12,11 +12,12 @@ import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.EngineModules.EngineTools.MathTools;
+import GameEngine.Interfaces.MenuInterface;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
 import GameEngine.Records.SliderInformation;
 
-public class Slider implements UIDrawable, Updatable {
+public class Slider implements UIDrawable, Updatable, MenuInterface {
 
     boolean show = false;
 
@@ -58,11 +59,13 @@ public class Slider implements UIDrawable, Updatable {
         handle.setRotation(handleAngle);
     }
 
+    @Override
     public void show() {
         show = true;
         handle.show();
     }
 
+    @Override
     public void hide() {
         show = false;
         handle.hide();
