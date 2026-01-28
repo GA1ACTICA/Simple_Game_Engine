@@ -23,6 +23,7 @@ public class OvalButton extends AbstractRectButton {
      * @param height
      */
     public OvalButton(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
+
         super(mouse, context, x, y, width, height);
 
         this.baseShape = new Ellipse2D.Float(x, y, width, height);
@@ -46,8 +47,8 @@ public class OvalButton extends AbstractRectButton {
 
         int x = (int) topLeft.getX();
         int y = (int) topLeft.getY();
-        int width = (int) bottomRight.getX();
-        int height = (int) bottomRight.getY();
+        int width = (int) bottomRight.getX() - (int) topLeft.getX();
+        int height = (int) bottomRight.getY() - (int) topLeft.getY();
 
         super(mouse, context, x, y, width, height);
 
