@@ -1,8 +1,8 @@
 package GameEngine.Records;
 
-import GameEngine.EngineModules.EngineTools.MathTools;
-
 import java.awt.Point;
+
+import Utils.MathTools;
 
 /**
  * The {@code FixResult} record encapsulates the result of the

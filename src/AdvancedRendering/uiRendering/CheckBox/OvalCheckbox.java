@@ -6,7 +6,7 @@ import java.awt.geom.Ellipse2D;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 
-public class OvalCheckbox extends AbstractRectCheckbox {
+public class OvalCheckbox extends RectCheckbox {
 
     public OvalCheckbox(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
 

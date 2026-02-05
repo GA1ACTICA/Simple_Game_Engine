@@ -2,21 +2,12 @@ package Game;
 
 import java.awt.*;
 
-import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.worldRendering.AdvancedGraphics;
 import GameEngine.Interfaces.*;
 
 public class MainGameClass implements Drawable, Updatable {
 
-    @SuppressWarnings("unused")
-    private final GameState state;
-    private final FPSCounter fps;
-    private final AdvancedGraphics advanced;
-
-    public MainGameClass(GameState state, FPSCounter fps, AdvancedGraphics advanced) {
-        this.advanced = advanced;
-        this.fps = fps;
-        this.state = state;
+    public MainGameClass() {
     }
 
     @Override
@@ -28,10 +19,8 @@ public class MainGameClass implements Drawable, Updatable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        advanced.centerAlignedString(g, 500, 500, "Hello");
+        AdvancedGraphics.centerAlignedString(g, 500, 500, "Hello");
 
-        fps.show();
-        fps.setColor(Color.RED);
     }
 
     @Override

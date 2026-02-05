@@ -1,4 +1,4 @@
-package GameEngine.EngineModules.EngineTools;
+package Utils;
 
 import java.awt.Point;
 import java.util.Objects;

@@ -7,15 +7,15 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Line2D;
 
-import AdvancedRendering.uiRendering.Button.AbstractRectButton;
+import AdvancedRendering.uiRendering.Button.RectButton;
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
-import GameEngine.EngineModules.EngineTools.MathTools;
 import GameEngine.Interfaces.MenuInterface;
 import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
 import GameEngine.Records.SliderInformation;
+import Utils.MathTools;
 
 public class Slider implements UIDrawable, Updatable, MenuInterface {
 
@@ -38,7 +38,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
     private boolean holding;
 
-    private AbstractRectButton handle;
+    private RectButton handle;
     private final Mouse mouse;
 
     public Slider(Mouse mouse, EngineContext context, Point pointOne, Point pointTwo) {
@@ -49,7 +49,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
         Point middle = new Point(((pointOne.x + pointTwo.x) / 2), ((pointOne.y + pointTwo.y) / 2));
 
-        handle = new AbstractRectButton(mouse, context, middle,
+        handle = new RectButton(mouse, context, middle,
                 handleWidth, handleHeight);
 
         handleAngle = Math.toDegrees(Math.atan2(
@@ -109,7 +109,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         return sliderColor;
     }
 
-    public AbstractRectButton getHandle() {
+    public RectButton getHandle() {
         return handle;
     }
 
@@ -117,7 +117,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         return handleAngle;
     }
 
-    public void setHandle(AbstractRectButton handle) {
+    public void setHandle(RectButton handle) {
         this.handle = handle;
 
         // Sets the handle at the correct x and y even if the new handles constructor

@@ -3,7 +3,7 @@ package GameEngine.EngineModules;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import Game.GameState;
+import Game.Configs.GameState.GameState;
 
 public class Keys implements KeyListener {
 
@@ -27,7 +27,7 @@ public class Keys implements KeyListener {
         keyCodePressed = e.getKeyCode();
         keyNamePressed = e.getKeyChar();
 
-        if (state.debugVerbose) {
+        if (state.data().debugVerbose) {
             System.out.println("keyCodePressed: " + keyCodePressed + '\n');
             System.out.println("keyNamePressed: " + keyNamePressed + '\n');
         }
@@ -39,7 +39,7 @@ public class Keys implements KeyListener {
         keyCodeReleased = e.getKeyCode();
         keyNameReleased = e.getKeyChar();
 
-        if (state.debugVerbose) {
+        if (state.data().debugVerbose) {
             System.out.println("keyCodeReleased: " + keyCodeReleased + '\n');
             System.out.println("keyNameReleased: " + keyNameReleased + '\n');
             System.out.println("");
@@ -52,7 +52,7 @@ public class Keys implements KeyListener {
         keyCodeTyped = e.getKeyCode();
         keyNameTyped = e.getKeyChar();
 
-        if (state.debugVerbose) {
+        if (state.data().debugVerbose) {
             System.out.println("keyCodeTyped: " + keyCodeTyped + '\n');
             System.out.println("keyNameTyped: " + keyNameTyped + '\n');
             System.out.println("");

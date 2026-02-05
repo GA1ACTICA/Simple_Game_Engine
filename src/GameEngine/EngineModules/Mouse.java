@@ -3,7 +3,7 @@ package GameEngine.EngineModules;
 import java.awt.Point;
 import java.awt.event.*;
 
-import Game.GameState;
+import Game.Configs.GameState.GameState;
 import GameEngine.Interfaces.Updatable;
 
 public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener, Updatable {
@@ -22,7 +22,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     public float mouseWheelDelta;
 
-    private final GameState state;
+    private GameState state;
 
     public Mouse(GameState state, EngineContext context) {
         ClassFactory.create(this, context);
@@ -50,7 +50,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         lastX = x;
         lastY = y;
 
-        if (state.debugVerbose) {
+        if (state.data().debugVerbose) {
             System.out.println("MouseMovedToX: " + x);
             System.out.println("MouseMovedToY: " + y + '\n');
 
@@ -93,7 +93,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
             case MouseEvent.BUTTON3 -> rightDown = down;
         }
 
-        if (state.debugVerbose) {
+        if (state.data().debugVerbose) {
             System.out.println("IsLeftPreesed: " + leftDown);
             System.out.println("IsRightPreesed: " + rightDown);
             System.out.println("IsMiddlePreesed: " + middleDown + '\n');
@@ -110,7 +110,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     @Override
     public void update() {
-        if (state.debugVerbose) {
+        if (state.data().debugVerbose) {
             System.out.println("MouseWheelDelta: " + mouseWheelDelta + '\n');
         }
 
@@ -158,5 +158,4 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     public float getMouseWheelDelta() {
         return mouseWheelDelta;
     }
-
 }

@@ -11,15 +11,13 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.Mouse;
-import GameEngine.EngineModules.EngineTools.GraphicTools;
-import GameEngine.Interfaces.MenuInterface;
-import GameEngine.Interfaces.UIDrawable;
-import GameEngine.Interfaces.Updatable;
+import GameEngine.EngineModules.*;
+import GameEngine.Interfaces.*;
+import GameEngine.Interfaces.MenuInterface.*;
+import Utils.GraphicTools;
 
-public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface {
+public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
+        MenuSetHoverVisual, MenuSetImage, MenuSetColor {
 
     private int x, y, width, height;
     private double angle = 0;
@@ -56,7 +54,7 @@ public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface 
      * 
      * @param height
      */
-    public AbstractRectButton(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
+    public RectButton(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
         ClassFactory.create(this, context);
 
         this.x = x;
@@ -81,7 +79,7 @@ public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface 
      * 
      * @param bottomRight
      */
-    public AbstractRectButton(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
+    public RectButton(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
         ClassFactory.create(this, context);
 
         x = (int) topLeft.getX();
@@ -108,7 +106,7 @@ public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface 
      * 
      * @param height
      */
-    public AbstractRectButton(Mouse mouse, EngineContext context, Point middle, int width, int height) {
+    public RectButton(Mouse mouse, EngineContext context, Point middle, int width, int height) {
         ClassFactory.create(this, context);
 
         x = (int) middle.getX() - width / 2;
@@ -133,6 +131,34 @@ public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface 
         show = false;
     }
 
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        this.x = position.x;
+        this.y = position.y;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    @Override
+    public void changePosition(int x, int y) {
+        this.x += x;
+        this.y += y;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    @Override
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
@@ -141,12 +167,24 @@ public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface 
         updateRotatedShape();
     }
 
-    public void setPosition(int x, int y) {
-        this.x = x;
-        this.y = y;
-        baseShape.setFrame(x, y, width, height);
+    @Override
+    public void setColor(Color color) {
+        this.color = color;
+    }
 
-        updateRotatedShape();
+    @Override
+    public void setHoverColor(Color hoveColor) {
+        this.hoverColor = hoveColor;
+    }
+
+    @Override
+    public void setImage(Image image) {
+        this.image = image;
+    }
+
+    @Override
+    public void setHoverImage(Image hoverImage) {
+        this.hoverImage = hoverImage;
     }
 
     public void setMiddle(Point middle) {
@@ -161,22 +199,6 @@ public class AbstractRectButton implements UIDrawable, Updatable, MenuInterface 
         this.angle = angle;
 
         updateRotatedShape();
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public void setHoverColor(Color hoveColor) {
-        this.hoverColor = hoveColor;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public void setHoverImage(Image hoverImage) {
-        this.hoverImage = hoverImage;
     }
 
     public void setInsideOveride(boolean isInside) {

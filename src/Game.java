@@ -1,8 +1,7 @@
 import java.awt.Dimension;
 import javax.swing.*;
 
-import AdvancedRendering.worldRendering.AdvancedGraphics;
-import Game.GameState;
+import Game.Configs.GameState.GameState;
 import GameEngine.GameUpdate;
 import GameEngine.EngineModules.*;
 
@@ -10,28 +9,26 @@ public class Game {
 
     static final GameState state = new GameState();
 
-    static final EnginePanel panel = new EnginePanel(state);
-    static final JFrame frame = new JFrame("Game_Title");
     static final EngineContext context = new EngineContext();
+    static final EnginePanel panel = new EnginePanel(state, context);
+    static final JFrame frame = new JFrame("Game_Title");
 
     static final Keys keys = new Keys(state);
     static final Mouse mouse = new Mouse(state, context);
-    static final AdvancedGraphics advanced = new AdvancedGraphics();
 
     static final GameUpdate gu = new GameUpdate(keys,
             mouse,
             state,
             panel,
             frame,
-            advanced,
             context);
 
     public static void main(String[] args) {
 
         // PANEL setup
         panel.setLayout(null);
-        panel.setPreferredSize(new Dimension(state.width, state.height));
-        panel.setBackground(state.backgroundColor);
+        panel.setPreferredSize(new Dimension(state.data().width, state.data().height));
+        panel.setBackground(state.data().backgroundColor);
         panel.setFocusable(true);
 
         // Add listeners

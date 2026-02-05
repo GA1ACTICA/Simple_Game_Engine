@@ -4,7 +4,7 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import Game.GameState;
+import Game.Configs.GameState.GameState;
 import GameEngine.Interfaces.Drawable;
 
 import java.awt.*;
@@ -15,19 +15,16 @@ public class EnginePanel extends JPanel {
     public final int logicalWidth = 1000;
     public final int logicalHeight = 1000;
 
-    private final GameState state;
+    private GameState state;
     private EngineContext context;
 
     private boolean exceptionReported;
 
-    public EnginePanel(GameState state) {
+    public EnginePanel(GameState state, EngineContext context) {
         this.state = state;
+        this.context = context;
 
         setDoubleBuffered(true);
-    }
-
-    public void setGameContex(EngineContext contex) {
-        this.context = contex;
     }
 
     // rendering engine
@@ -56,7 +53,7 @@ public class EnginePanel extends JPanel {
                     (getHeight() - logicalHeight * scale) / 2);
             g2d.scale(scale, scale);
 
-            g2d.setColor(state.backgroundColor);
+            g2d.setColor(state.data().backgroundColor);
             g2d.fillRect(0, 0, logicalWidth, logicalHeight);
 
             // Draw game objects in world space

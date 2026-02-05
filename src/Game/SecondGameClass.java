@@ -8,14 +8,7 @@ import GameEngine.Interfaces.Updatable;
 
 public class SecondGameClass implements Drawable, Updatable {
 
-    @SuppressWarnings("unused")
-    private final GameState state;
-    private final AdvancedGraphics advanced;
-
-    public SecondGameClass(GameState state, AdvancedGraphics advanced) {
-        this.advanced = advanced;
-        this.state = state;
-
+    public SecondGameClass() {
     }
 
     @Override
@@ -27,7 +20,7 @@ public class SecondGameClass implements Drawable, Updatable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        advanced.centerAlignedString(g, 500, 575, "World!");
+        AdvancedGraphics.centerAlignedString(g, 500, 575, "World!");
 
     }
 

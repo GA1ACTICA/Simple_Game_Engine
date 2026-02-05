@@ -1,4 +1,4 @@
-package GameEngine.EngineModules.EngineTools;
+package Utils;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

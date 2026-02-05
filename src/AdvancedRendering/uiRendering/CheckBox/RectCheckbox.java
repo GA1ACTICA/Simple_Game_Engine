@@ -14,12 +14,13 @@ import java.awt.image.BufferedImage;
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
-import GameEngine.EngineModules.EngineTools.GraphicTools;
 import GameEngine.Interfaces.MenuInterface;
-import GameEngine.Interfaces.UIDrawable;
-import GameEngine.Interfaces.Updatable;
+import GameEngine.Interfaces.MenuInterface.*;
+import GameEngine.Interfaces.*;
+import Utils.GraphicTools;
 
-public class AbstractRectCheckbox implements UIDrawable, Updatable, MenuInterface {
+public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
+        MenuSetHoverVisual, MenuSetImage, MenuSetColor {
 
     private int x, y, width, height;
     private double angle = 0;
@@ -62,7 +63,7 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable, MenuInterfac
      * 
      * @param height
      */
-    public AbstractRectCheckbox(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
+    public RectCheckbox(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
         ClassFactory.create(this, context);
 
         this.x = x;
@@ -87,7 +88,7 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable, MenuInterfac
      * 
      * @param bottomRight
      */
-    public AbstractRectCheckbox(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
+    public RectCheckbox(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
         ClassFactory.create(this, context);
 
         x = (int) topLeft.getX();
@@ -114,7 +115,7 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable, MenuInterfac
      * 
      * @param height
      */
-    public AbstractRectCheckbox(Mouse mouse, EngineContext context, Point middle, int width, int height) {
+    public RectCheckbox(Mouse mouse, EngineContext context, Point middle, int width, int height) {
         ClassFactory.create(this, context);
 
         x = (int) middle.getX() - width / 2;
@@ -150,6 +151,24 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable, MenuInterfac
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        this.x = position.x;
+        this.y = position.y;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    @Override
+    public void changePosition(int x, int y) {
+        this.x += x;
+        this.y += y;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
@@ -363,4 +382,5 @@ public class AbstractRectCheckbox implements UIDrawable, Updatable, MenuInterfac
         transform.rotate(Math.toRadians(angle), middle.x, middle.y);
         rotatedShape = transform.createTransformedShape(baseShape);
     }
+
 }

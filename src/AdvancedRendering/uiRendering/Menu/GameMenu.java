@@ -4,26 +4,41 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import AdvancedRendering.worldRendering.AdvancedGraphics;
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
-import GameEngine.Interfaces.Drawable;
-import GameEngine.Interfaces.InterfacePainter;
-import GameEngine.Interfaces.MenuInterface;
-import GameEngine.Interfaces.Updatable;
 
-public class GameMenu implements Drawable, Updatable, MenuInterface {
+import GameEngine.Interfaces.*;
+import GameEngine.Interfaces.MenuInterface.*;
+
+public class GameMenu implements UIDrawable, Updatable, MenuInterface, MenuSetSize, MenuSetPosition {
 
     private boolean show;
 
+    private int x = 100;
+    private int y = 100;
+    private int width = 200;
+    private int height = 200;
+
     private List<MenuInterface> items = new ArrayList<>();
+    private EngineContext context;
 
     private InterfacePainter customDrawAction = (gDraw) -> {
-        gDraw.setColor(Color.GRAY);
-        gDraw.fillRect(100, 100, 500, 400);
+        gDraw.setColor(new Color(10, 10, 10, 125));
+        gDraw.fillRect(x, y, width, height);
+
+        gDraw.setColor(Color.BLACK);
+        gDraw.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        AdvancedGraphics.centerAlignedString(gDraw, x + width / 2, (int) (y + height * 0.2),
+                "This is a menu");
     };
 
     public GameMenu(EngineContext context) {
+        this.context = context;
         ClassFactory.create(this, context);
+    };
+
+    public GameMenu() {
     };
 
     @Override
@@ -44,13 +59,61 @@ public class GameMenu implements Drawable, Updatable, MenuInterface {
         }
     }
 
+    @Override
+    public void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        for (MenuInterface item : items) {
+            if (item instanceof MenuSetSize r) {
+                r.setSize(width, height);
+            }
+        }
+    }
+
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+
+        for (MenuInterface item : items) {
+            if (item instanceof MenuSetPosition r) {
+                r.setPosition(x, y);
+            }
+        }
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        x = position.x;
+        y = position.y;
+
+        for (MenuInterface item : items) {
+            if (item instanceof MenuSetPosition r) {
+                r.setPosition(position);
+            }
+        }
+    }
+
+    @Override
+    public void changePosition(int x, int y) {
+        this.x += x;
+        this.y += y;
+
+        for (MenuInterface item : items) {
+            if (item instanceof MenuSetPosition r) {
+                r.changePosition(x, y);
+            }
+        }
+    }
+
     public void add(MenuInterface item) {
         items.add(item);
     }
 
     @Override
     public void draw(Graphics g) {
-        if (!show)
+        if (!show || context == null)
             return;
 
         Graphics2D g2d = (Graphics2D) g;
@@ -60,9 +123,8 @@ public class GameMenu implements Drawable, Updatable, MenuInterface {
 
     @Override
     public void update() {
-        if (!show)
+        if (!show || context == null)
             return;
 
     }
-
 }

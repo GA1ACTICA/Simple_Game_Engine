@@ -7,9 +7,10 @@ import java.awt.Point;
 
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
+import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
 
-public class FPSCounter implements UIDrawable, Updatable, MenuInterface {
+public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetColor {
 
     private boolean show = false;
 
@@ -36,22 +37,31 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface {
         show = false;
     }
 
+    @Override
+    public void setPosition(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    @Override
+    public void setPosition(Point position) {
+        this.x = position.x;
+        this.y = position.y;
+    }
+
+    @Override
+    public void changePosition(int x, int y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
     public void setFont(Font font) {
         this.font = font;
-    }
-
-    public void setPos(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void setPos(Point position) {
-        this.x = position.x;
-        this.y = position.y;
     }
 
     @Override

@@ -5,7 +5,7 @@ import java.awt.Graphics;
 
 public class AdvancedGraphics {
 
-    public void centerAlignedString(Graphics g, int x, int y, String str) {
+    public static void centerAlignedString(Graphics g, int x, int y, String str) {
 
         Font font = g.getFont();
         g.getFontMetrics(font).getHeight();

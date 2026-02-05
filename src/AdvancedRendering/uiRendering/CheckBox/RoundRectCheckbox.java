@@ -6,7 +6,7 @@ import java.awt.geom.RoundRectangle2D;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.Mouse;
 
-public class RoundRectCheckbox extends AbstractRectCheckbox {
+public class RoundRectCheckbox extends RectCheckbox {
 
     public RoundRectCheckbox(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight, int arcWidth,
             int arcHeight) {
