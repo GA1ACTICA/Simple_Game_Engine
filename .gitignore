@@ -1,8 +1,6 @@
 bin/
 src/recources/
 
-*.txt
-
 # Compiled class file
 *.class
 
@@ -16,7 +14,7 @@ src/recources/
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.nar
 *.ear
