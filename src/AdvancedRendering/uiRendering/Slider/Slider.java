@@ -10,6 +10,7 @@ import java.awt.geom.Line2D;
 import AdvancedRendering.uiRendering.Button.RectButton;
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
+import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.MenuInterface;
 import GameEngine.Interfaces.UIDrawable;
@@ -41,7 +42,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     private RectButton handle;
     private final Mouse mouse;
 
-    public Slider(Mouse mouse, EngineContext context, Point pointOne, Point pointTwo) {
+    public Slider(EngineContext context, EnginePanel panel, Mouse mouse, Point pointOne, Point pointTwo) {
         ClassFactory.create(this, context);
         this.mouse = mouse;
         this.pointOne = pointOne;
@@ -49,7 +50,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
         Point middle = new Point(((pointOne.x + pointTwo.x) / 2), ((pointOne.y + pointTwo.y) / 2));
 
-        handle = new RectButton(mouse, context, middle,
+        handle = new RectButton(context, panel, mouse, middle,
                 handleWidth, handleHeight);
 
         handleAngle = Math.toDegrees(Math.atan2(

@@ -8,23 +8,23 @@ import GameEngine.Interfaces.Updatable;
 
 public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener, Updatable {
 
-    public boolean leftDown;
-    public boolean rightDown;
-    public boolean middleDown;
+    private boolean leftDown;
+    private boolean rightDown;
+    private boolean middleDown;
 
-    public boolean onScreen;
+    private boolean onScreen;
 
-    public int x, y;
+    private int x, y;
 
     private int lastX, lastY;
 
-    public int deltaX, deltaY;
+    private int deltaX, deltaY;
 
-    public float mouseWheelDelta;
+    private float mouseWheelDelta;
 
     private GameState state;
 
-    public Mouse(GameState state, EngineContext context) {
+    public Mouse(GameState state, EngineContext context, EnginePanel panel) {
         ClassFactory.create(this, context);
         this.state = state;
     }
@@ -117,14 +117,6 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         deltaX = 0;
         deltaY = 0;
         mouseWheelDelta = 0;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
     }
 
     public Point getPoint() {

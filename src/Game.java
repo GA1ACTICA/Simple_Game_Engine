@@ -14,7 +14,7 @@ public class Game {
     static final JFrame frame = new JFrame("Game_Title");
 
     static final Keys keys = new Keys(state);
-    static final Mouse mouse = new Mouse(state, context);
+    static final Mouse mouse = new Mouse(state, context, panel);
 
     static final GameUpdate gu = new GameUpdate(keys,
             mouse,

@@ -1,6 +1,7 @@
 package AdvancedRendering.uiRendering.Button;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -14,7 +15,8 @@ import java.awt.image.BufferedImage;
 import GameEngine.EngineModules.*;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.MenuInterface.*;
-import Utils.GraphicTools;
+import Utils.CustomCursor;
+import Utils.GraphicsTools;
 
 public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
         MenuSetHoverVisual, MenuSetImage, MenuSetColor {
@@ -33,12 +35,18 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
     private Image hoverImage;
 
     public boolean inside;
+    private boolean insideCache;
     private boolean wasPressed;
-    private boolean insideOveride = false;
+    private boolean isInsideOverride;
 
     private Runnable clickAction;
     // private Runnable hoverAction; // TODO: look into this
-    private final Mouse mouse;
+
+    private Mouse mouse;
+    private EnginePanel panel;
+
+    private boolean notAllowedCursor;
+    private CustomCursor notAllowed;
 
     /**
      * 
@@ -54,18 +62,16 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
      * 
      * @param height
      */
-    public RectButton(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
-        ClassFactory.create(this, context);
+    public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
 
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
         this.mouse = mouse;
+        this.panel = panel;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
+        this(context);
 
     }
 
@@ -79,18 +85,16 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
      * 
      * @param bottomRight
      */
-    public RectButton(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
-        ClassFactory.create(this, context);
+    public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
         x = (int) topLeft.getX();
         y = (int) topLeft.getY();
         width = (int) bottomRight.getX() - (int) topLeft.getX();
         height = (int) bottomRight.getY() - (int) topLeft.getY();
         this.mouse = mouse;
+        this.panel = panel;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
+        this(context);
 
     }
 
@@ -106,19 +110,28 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
      * 
      * @param height
      */
-    public RectButton(Mouse mouse, EngineContext context, Point middle, int width, int height) {
-        ClassFactory.create(this, context);
+    public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
 
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
         this.width = width;
         this.height = height;
         this.mouse = mouse;
+        this.panel = panel;
+
+        this(context);
+
+    }
+
+    private RectButton(EngineContext context) {
+        ClassFactory.create(this, context);
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
+        notAllowed = new CustomCursor(panel, mouse);
+        notAllowed.loadCursor("GameEngine/Assets/Cursors/not-allowed.png");
     }
 
     @Override
@@ -173,8 +186,8 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
     }
 
     @Override
-    public void setHoverColor(Color hoveColor) {
-        this.hoverColor = hoveColor;
+    public void setHoverColor(Color hoverColor) {
+        this.hoverColor = hoverColor;
     }
 
     @Override
@@ -201,11 +214,8 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         updateRotatedShape();
     }
 
-    public void setInsideOveride(boolean isInside) {
-        insideOveride = isInside;
-
-        if (isInside)
-            inside = isInside;
+    public void setInsideOveride(boolean isInsideOverride) {
+        this.isInsideOverride = isInsideOverride;
     }
 
     public int getX() {
@@ -250,17 +260,17 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawin inside
-        GraphicTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
+        GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if (image == null && !inside) {
+            if (image == null && !(inside || isInsideOverride)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if (image != null && !inside) {
-                BufferedImage buffer = GraphicTools.createMask(
+            if (image != null && !(inside || isInsideOverride)) {
+                BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
                         width,
                         height,
@@ -273,15 +283,15 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
             }
 
             // Draw if the hoverImage is not set and inside is true
-            if (inside && hoverImage == null) {
+            if ((inside || isInsideOverride) && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if (inside && hoverImage != null) {
+            if ((inside || isInsideOverride) && hoverImage != null) {
 
-                BufferedImage buffer = GraphicTools.createMask(
+                BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
                         width,
                         height,
@@ -295,6 +305,10 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
             }
 
         });
+
+        if (notAllowedCursor) {
+            notAllowed.paint(g);
+        }
 
     }
 
@@ -310,14 +324,39 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
             wasPressed = false;
 
             // Run action if one is set
-            if (inside && clickAction != null)
+            if (inside && clickAction != null && !isInsideOverride)
                 clickAction.run();
 
         }
 
+        // Only update if inside has changed
+        if (insideCache != inside) {
+
+            // NotAllowed cursor
+            if (inside && isInsideOverride) {
+                notAllowedCursor = true;
+                notAllowed.hideCursor();
+            } else {
+                notAllowedCursor = false;
+                notAllowed.showCursor();
+            }
+
+            // DefaultCursor
+            if (!inside && !isInsideOverride) {
+                notAllowedCursor = false;
+                panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
+
+            // HandCursor
+            if (inside && !isInsideOverride) {
+                notAllowedCursor = false;
+                panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
+        }
+
         // Hitbox detection for the "rotatedShape"
-        if (!insideOveride)
-            inside = rotatedShape.contains(mouse.getX(), mouse.getY());
+        insideCache = inside;
+        inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
     // Call updateRotatedShape everytime the position, size or rotation changes

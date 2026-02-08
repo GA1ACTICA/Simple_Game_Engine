@@ -6,11 +6,10 @@ import java.awt.Point;
 import javax.swing.JFrame;
 
 import AdvancedRendering.uiRendering.Button.RectButton;
-import AdvancedRendering.uiRendering.Menu.GameMenu;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
+import AdvancedRendering.uiRendering.TextField.TextField;
 import Game.*;
 import Game.Configs.GameState.GameState;
-import Game.Configs.GameState.GameStateData;
 import GameEngine.EngineModules.*;
 import GameEngine.Interfaces.Updatable;
 
@@ -46,18 +45,13 @@ public class GameUpdate implements Runnable {
         ClassFactory.create(new MainGameClass(), context);
         ClassFactory.create(new SecondGameClass(), context);
 
-        RectButton b = new RectButton(mouse, context, new Point(100, 100), new Point(200, 200));
+        TextField text = new TextField(context, panel, mouse, keys, new Point(100, 100), new Point(900, 150));
+        text.setColor(Color.GRAY);
+        text.show();
 
-        GameMenu menu = new GameMenu();
-        menu.add(b);
-        menu.show();
-
-        b.onClick(() -> {
-            state.exportJSON(new GameStateData(), "conf.json");
-            menu.hide();
-            // state.importJSON(GameStateData.class, "conf.json");
-        });
-
+        RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(550, 550));
+        b.show();
+        b.setInsideOveride(true);
     }
 
     @Override

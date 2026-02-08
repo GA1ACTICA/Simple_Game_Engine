@@ -11,12 +11,12 @@ public class FileTools {
     /**
      * Get an image from the specified file path.
      * 
-     * @param filePathFromProject Path to the image file, relative to the project
-     *                            resources.
+     * @param path Path to the image file, relative to the project
+     *             resources.
      * @return The Image loaded from the given file path.
      */
-    public static Image getImage(String filePathFromProject) {
-        Image image = new ImageIcon(FileTools.class.getClassLoader().getResource(filePathFromProject)).getImage();
+    public static Image getImage(String path) {
+        Image image = new ImageIcon(FileTools.class.getClassLoader().getResource(path)).getImage();
         return image;
     }
 
@@ -27,9 +27,9 @@ public class FileTools {
      *                            resources.
      * @return The BufferedImage loaded from the given file path.
      */
-    public static BufferedImage getBufferedImage(String filePathFromProject) {
+    public static BufferedImage getBufferedImage(String filePathFromProject, int type) {
 
-        BufferedImage image = convertToBufferedImage(getImage(filePathFromProject));
+        BufferedImage image = convertToBufferedImage(getImage(filePathFromProject), type);
 
         return image;
     }
@@ -40,7 +40,7 @@ public class FileTools {
      * 
      * @return The casted BufferedImage
      */
-    public static BufferedImage convertToBufferedImage(Image image) {
+    public static BufferedImage convertToBufferedImage(Image image, int type) {
 
         if (image instanceof BufferedImage) {
             return (BufferedImage) image;
@@ -48,7 +48,7 @@ public class FileTools {
 
         // Create a BufferedImage with the same width and height as the original image
         BufferedImage bufferedImage = new BufferedImage(image.getWidth(null), image.getHeight(null),
-                BufferedImage.TYPE_INT_ARGB);
+                type);
 
         // Draw the original image onto the BufferedImage using Graphics2D
         Graphics2D g2d = bufferedImage.createGraphics();

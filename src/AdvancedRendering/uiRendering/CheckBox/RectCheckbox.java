@@ -13,11 +13,11 @@ import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
+import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Mouse;
-import GameEngine.Interfaces.MenuInterface;
 import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
-import Utils.GraphicTools;
+import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
         MenuSetHoverVisual, MenuSetImage, MenuSetColor {
@@ -40,11 +40,14 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     private boolean inside;
     private boolean wasPressed;
     private boolean insideOveride = false;
+    private boolean overide;
 
     private Runnable onClickAction;
     private Runnable onToggleTrueAction;
     private Runnable onToggleFalseAction;
+
     private final Mouse mouse;
+    private EnginePanel panel;
 
     private boolean toggled;
     private boolean showHover = false;
@@ -63,7 +66,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * 
      * @param height
      */
-    public RectCheckbox(Mouse mouse, EngineContext context, int x, int y, int width, int height) {
+    public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
         ClassFactory.create(this, context);
 
         this.x = x;
@@ -71,6 +74,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.width = width;
         this.height = height;
         this.mouse = mouse;
+        this.panel = panel;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
@@ -88,7 +92,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * 
      * @param bottomRight
      */
-    public RectCheckbox(Mouse mouse, EngineContext context, Point topLeft, Point bottomRight) {
+    public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
         ClassFactory.create(this, context);
 
         x = (int) topLeft.getX();
@@ -96,6 +100,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         width = (int) bottomRight.getX() - (int) topLeft.getX();
         height = (int) bottomRight.getY() - (int) topLeft.getY();
         this.mouse = mouse;
+        this.panel = panel;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
@@ -115,7 +120,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * 
      * @param height
      */
-    public RectCheckbox(Mouse mouse, EngineContext context, Point middle, int width, int height) {
+    public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
         ClassFactory.create(this, context);
 
         x = (int) middle.getX() - width / 2;
@@ -123,6 +128,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.width = width;
         this.height = height;
         this.mouse = mouse;
+        this.panel = panel;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
@@ -273,19 +279,19 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawin inside
-        GraphicTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
+        GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if ((image == null && !inside) ||
+            if ((image == null && !(inside || overide)) ||
                     (image == null && !showHover && !toggled)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if ((image != null && !inside) ||
+            if ((image != null && !(inside || overide)) ||
                     (image != null && !showHover && !toggled)) {
-                BufferedImage buffer = GraphicTools.createMask(
+                BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
                         width,
                         height,
@@ -298,16 +304,16 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the toggelImage is not set
-            if ((image == null && !inside && toggled) ||
+            if ((image == null && !(inside || overide) && toggled) ||
                     (image == null && toggled && !showHover)) {
                 g2d.setColor(toggleColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if toggleImage is set
-            if ((image != null && !inside && toggled) ||
+            if ((image != null && !(inside || overide) && toggled) ||
                     (image != null && toggled && !showHover)) {
-                BufferedImage buffer = GraphicTools.createMask(
+                BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
                         width,
                         height,
@@ -320,15 +326,15 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the hoverImage is not set and inside is true
-            if (showHover && inside && hoverImage == null) {
+            if (showHover && (inside || overide) && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if (showHover && inside && hoverImage != null) {
+            if (showHover && (inside || overide) && hoverImage != null) {
 
-                BufferedImage buffer = GraphicTools.createMask(
+                BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
                         width,
                         height,
@@ -370,7 +376,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
         // Hitbox detection for the "rotatedShape"
         if (!insideOveride)
-            inside = rotatedShape.contains(mouse.getX(), mouse.getY());
+            inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
     // Call updateRotatedShape everytime the position, size or rotation changes

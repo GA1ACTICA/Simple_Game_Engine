@@ -21,7 +21,6 @@ public class GameMenu implements UIDrawable, Updatable, MenuInterface, MenuSetSi
     private int height = 200;
 
     private List<MenuInterface> items = new ArrayList<>();
-    private EngineContext context;
 
     private InterfacePainter customDrawAction = (gDraw) -> {
         gDraw.setColor(new Color(10, 10, 10, 125));
@@ -34,7 +33,6 @@ public class GameMenu implements UIDrawable, Updatable, MenuInterface, MenuSetSi
     };
 
     public GameMenu(EngineContext context) {
-        this.context = context;
         ClassFactory.create(this, context);
     };
 
@@ -113,7 +111,7 @@ public class GameMenu implements UIDrawable, Updatable, MenuInterface, MenuSetSi
 
     @Override
     public void draw(Graphics g) {
-        if (!show || context == null)
+        if (!show)
             return;
 
         Graphics2D g2d = (Graphics2D) g;
@@ -123,7 +121,7 @@ public class GameMenu implements UIDrawable, Updatable, MenuInterface, MenuSetSi
 
     @Override
     public void update() {
-        if (!show || context == null)
+        if (!show)
             return;
 
     }
