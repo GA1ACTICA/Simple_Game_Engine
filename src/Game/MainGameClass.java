@@ -4,6 +4,7 @@ import java.awt.*;
 
 import AdvancedRendering.worldRendering.AdvancedGraphics;
 import GameEngine.Interfaces.*;
+import GameEngine.Interfaces.Drawables.Drawable;
 
 public class MainGameClass implements Drawable, Updatable {
 

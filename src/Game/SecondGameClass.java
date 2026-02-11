@@ -3,8 +3,8 @@ package Game;
 import java.awt.*;
 
 import AdvancedRendering.worldRendering.AdvancedGraphics;
-import GameEngine.Interfaces.Drawable;
 import GameEngine.Interfaces.Updatable;
+import GameEngine.Interfaces.Drawables.Drawable;
 
 public class SecondGameClass implements Drawable, Updatable {
 

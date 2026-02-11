@@ -17,6 +17,7 @@ import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
+import GameEngine.Interfaces.Drawables.UIDrawable;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,

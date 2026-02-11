@@ -13,8 +13,8 @@ import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.MenuInterface;
-import GameEngine.Interfaces.UIDrawable;
 import GameEngine.Interfaces.Updatable;
+import GameEngine.Interfaces.Drawables.UIDrawable;
 import GameEngine.Records.SliderInformation;
 import Utils.MathTools;
 
@@ -58,6 +58,8 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
                 pointTwo.x - pointOne.x)) - 90;
 
         handle.setRotation(handleAngle);
+
+        handle.isHandle = true;
     }
 
     @Override
@@ -214,7 +216,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         if (!show)
             return;
 
-        if (handle.inside && mouse.getLeftDown() && !holding) {
+        if (handle.inside && mouse.getLeftDown() && !holding && !handle.isInsideOverride) {
             holding = true;
             handle.setInsideOveride(true);
         }

@@ -21,6 +21,7 @@ import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Keys;
 import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.*;
+import GameEngine.Interfaces.Drawables.UIDrawable;
 
 public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetSize, MenuSetPosition, MenuSetColor,
         MenuSetImage, MenuSetHoverVisual {

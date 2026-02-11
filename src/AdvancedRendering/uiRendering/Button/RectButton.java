@@ -14,6 +14,7 @@ import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.*;
 import GameEngine.Interfaces.*;
+import GameEngine.Interfaces.Drawables.UIDrawable;
 import GameEngine.Interfaces.MenuInterface.*;
 import Utils.CustomCursor;
 import Utils.GraphicsTools;
@@ -35,9 +36,10 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
     private Image hoverImage;
 
     public boolean inside;
+    public boolean isHandle;
     private boolean insideCache;
     private boolean wasPressed;
-    private boolean isInsideOverride;
+    public boolean isInsideOverride;
 
     private Runnable clickAction;
     // private Runnable hoverAction; // TODO: look into this
@@ -45,7 +47,6 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
     private Mouse mouse;
     private EnginePanel panel;
 
-    private boolean notAllowedCursor;
     private CustomCursor notAllowed;
 
     /**
@@ -130,7 +131,7 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
-        notAllowed = new CustomCursor(panel, mouse);
+        notAllowed = new CustomCursor(panel, mouse, context);
         notAllowed.loadCursor("GameEngine/Assets/Cursors/not-allowed.png");
     }
 
@@ -242,7 +243,7 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
      * This lets you run code when the button is pressed with the method:
      * 
      * <p>
-     * {@code onClick(() -> {});}
+     * onClick(() -> {});
      * <p>
      * 
      * @param action
@@ -305,11 +306,6 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
             }
 
         });
-
-        if (notAllowedCursor) {
-            notAllowed.paint(g);
-        }
-
     }
 
     @Override
@@ -317,41 +313,31 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         if (!show)
             return;
 
-        if (inside && mouse.getLeftDown() && !wasPressed)
+        if (!wasPressed && mouse.getLeftDown() && inside)
             wasPressed = true;
 
-        if (wasPressed && !mouse.getLeftDown() && inside) {
+        if (wasPressed && !mouse.getLeftDown()) {
             wasPressed = false;
 
-            // Run action if one is set
-            if (inside && clickAction != null && !isInsideOverride)
-                clickAction.run();
+            updateCursor();
+
+            if (inside) {
+
+                // Run action if one is set
+                if (inside && clickAction != null && !isInsideOverride)
+                    clickAction.run();
+            }
 
         }
 
         // Only update if inside has changed
         if (insideCache != inside) {
 
-            // NotAllowed cursor
-            if (inside && isInsideOverride) {
-                notAllowedCursor = true;
-                notAllowed.hideCursor();
-            } else {
-                notAllowedCursor = false;
-                notAllowed.showCursor();
-            }
+            updateCursor();
 
-            // DefaultCursor
-            if (!inside && !isInsideOverride) {
-                notAllowedCursor = false;
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            }
+            if (isHandle)
+                panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 
-            // HandCursor
-            if (inside && !isInsideOverride) {
-                notAllowedCursor = false;
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            }
         }
 
         // Hitbox detection for the "rotatedShape"
@@ -367,5 +353,24 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
 
         transform.rotate(Math.toRadians(angle), middle.x, middle.y);
         rotatedShape = transform.createTransformedShape(baseShape);
+    }
+
+    private void updateCursor() {
+        // NotAllowed cursor
+        if (inside && isInsideOverride) {
+            notAllowed.showCursor();
+        } else {
+            notAllowed.hideCursor();
+        }
+
+        // DefaultCursor
+        if (!inside && !isInsideOverride) {
+            panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+
+        // HandCursor
+        if (inside && !isInsideOverride) {
+            panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
     }
 }

@@ -9,6 +9,7 @@ import GameEngine.EngineModules.ClassFactory;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
+import GameEngine.Interfaces.Drawables.UIDrawable;
 
 public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetColor {
 

@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
 import Game.Configs.GameState.GameState;
-import GameEngine.Interfaces.Drawable;
+import GameEngine.Interfaces.Drawables.Drawable;
 
 import java.awt.*;
 
@@ -65,15 +65,19 @@ public class EnginePanel extends JPanel {
             g2d.fillRect(0, 0, logicalWidth, logicalHeight);
 
             // Draw game objects in world space
-            for (Drawable d : context.getWorldDrawables()) {
-                d.draw(g2d);
+            for (RenderEntry entry : context.getWorldDrawables()) {
+                entry.drawable.draw(g2d);
             }
 
             // Restore transform
             g2d.setTransform(old);
 
             // Draw game objects in UI space
-            for (Drawable d : context.getUiDrawables()) {
+            for (RenderEntry entry : context.getUiDrawables()) {
+                entry.drawable.draw(g2d);
+            }
+
+            for (Drawable d : context.getCursorDrawables()) {
                 d.draw(g2d);
             }
 

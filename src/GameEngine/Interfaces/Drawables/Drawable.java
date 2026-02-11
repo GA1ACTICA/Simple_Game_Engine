@@ -1,4 +1,4 @@
-package GameEngine.Interfaces;
+package GameEngine.Interfaces.Drawables;
 
 import java.awt.Graphics;
 
