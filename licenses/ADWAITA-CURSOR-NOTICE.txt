@@ -1,6 +1,6 @@
 Adwaita Cursor Asset
 
-This project includes one PNG cursor asset originally from the
+This project includes PNG cursor assets originally from the
 GNOME Adwaita Icon Theme repository:
 
   https://github.com/GNOME/adwaita-icon-theme
@@ -14,11 +14,6 @@ Copyright (c) The GNOME Project Contributors
 License:
   GNU Lesser General Public License version 3.0
   https://www.gnu.org/licenses/lgpl-3.0.html
-
-OR
-
-  Creative Commons Attribution-ShareAlike 3.0
-  https://creativecommons.org/licenses/by-sa/3.0/
 
 This notice and the applicable license text must be included
 with any distribution of this software.
