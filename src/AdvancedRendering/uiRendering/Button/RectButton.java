@@ -47,7 +47,7 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
     private Mouse mouse;
     private EnginePanel panel;
 
-    private CustomCursor notAllowed;
+    public CustomCursor notAllowed;
 
     /**
      * 
@@ -253,6 +253,9 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
 
     }
 
+    // TODO: fix seperate color for disabeled
+    // TODO: change name for insideOvertide to disable
+
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -321,10 +324,10 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
 
             updateCursor();
 
-            if (inside) {
+            if (inside && !isInsideOverride) {
 
                 // Run action if one is set
-                if (inside && clickAction != null && !isInsideOverride)
+                if (inside && clickAction != null)
                     clickAction.run();
             }
 
@@ -333,10 +336,13 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         // Only update if inside has changed
         if (insideCache != inside) {
 
-            updateCursor();
-
-            if (isHandle)
+            if (!isHandle)
+                updateCursor();
+            System.out.println("test");
+            if ((isHandle && inside) || (isHandle && mouse.getLeftDown()))
                 panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            else if (isHandle)
+                panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
         }
 

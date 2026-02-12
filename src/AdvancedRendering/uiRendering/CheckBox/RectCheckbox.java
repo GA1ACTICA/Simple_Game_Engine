@@ -1,6 +1,7 @@
 package AdvancedRendering.uiRendering.CheckBox;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -18,6 +19,7 @@ import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
+import Utils.CustomCursor;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
@@ -38,20 +40,23 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     private Image hoverImage;
     private Image toggleImage;
 
-    private boolean inside;
+    public boolean inside;
+    public boolean isHandle;
+    private boolean insideCache;
     private boolean wasPressed;
-    private boolean insideOveride = false;
-    private boolean overide;
+    public boolean isInsideOverride;
 
     private Runnable onClickAction;
     private Runnable onToggleTrueAction;
     private Runnable onToggleFalseAction;
 
-    private final Mouse mouse;
+    private Mouse mouse;
     private EnginePanel panel;
 
     private boolean toggled;
     private boolean showHover = false;
+
+    public CustomCursor notAllowed;
 
     /**
      * 
@@ -68,7 +73,6 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * @param height
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
-        ClassFactory.create(this, context);
 
         this.x = x;
         this.y = y;
@@ -77,10 +81,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.mouse = mouse;
         this.panel = panel;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
-
+        this(context);
     }
 
     /**
@@ -94,7 +95,6 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * @param bottomRight
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
-        ClassFactory.create(this, context);
 
         x = (int) topLeft.getX();
         y = (int) topLeft.getY();
@@ -103,10 +103,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.mouse = mouse;
         this.panel = panel;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
-
+        this(context);
     }
 
     /**
@@ -122,7 +119,6 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * @param height
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
-        ClassFactory.create(this, context);
 
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
@@ -131,10 +127,18 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.mouse = mouse;
         this.panel = panel;
 
+        this(context);
+    }
+
+    private RectCheckbox(EngineContext context) {
+        ClassFactory.create(this, context);
+
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
+        notAllowed = new CustomCursor(panel, mouse, context);
+        notAllowed.loadCursor("GameEngine/Assets/Cursors/not-allowed.png");
     }
 
     @Override
@@ -219,11 +223,8 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.toggleImage = toggleImage;
     }
 
-    public void setInsideOveride(boolean isInside) {
-        insideOveride = isInside;
-
-        if (isInside)
-            inside = isInside;
+    public void setInsideOveride(boolean isInsideOverride) {
+        this.isInsideOverride = isInsideOverride;
     }
 
     public void setShowHover(boolean showHover) {
@@ -272,6 +273,9 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.onToggleFalseAction = onToggleFalseAction;
     }
 
+    // TODO: fix seperate color for disabeled
+    // TODO: change name for insideOvertide to disable
+
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -283,14 +287,14 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if ((image == null && !(inside || overide)) ||
+            if ((image == null && !(inside || isInsideOverride)) ||
                     (image == null && !showHover && !toggled)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if ((image != null && !(inside || overide)) ||
+            if ((image != null && !(inside || isInsideOverride)) ||
                     (image != null && !showHover && !toggled)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -305,14 +309,14 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the toggelImage is not set
-            if ((image == null && !(inside || overide) && toggled) ||
+            if ((image == null && !(inside || isInsideOverride) && toggled) ||
                     (image == null && toggled && !showHover)) {
                 g2d.setColor(toggleColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if toggleImage is set
-            if ((image != null && !(inside || overide) && toggled) ||
+            if ((image != null && !(inside || isInsideOverride) && toggled) ||
                     (image != null && toggled && !showHover)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -327,13 +331,13 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the hoverImage is not set and inside is true
-            if (showHover && (inside || overide) && hoverImage == null) {
+            if (showHover && (inside || isInsideOverride) && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if (showHover && (inside || overide) && hoverImage != null) {
+            if (showHover && (inside || isInsideOverride) && hoverImage != null) {
 
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -357,27 +361,36 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         if (!show)
             return;
 
-        if (inside && mouse.getLeftDown() && !wasPressed)
+        if (!wasPressed && mouse.getLeftDown() && inside)
             wasPressed = true;
 
-        if (wasPressed && !mouse.getLeftDown() && inside) {
+        if (wasPressed && !mouse.getLeftDown()) {
             wasPressed = false;
 
-            toggled = !toggled;
+            updateCursor();
 
-            // Run action if one is set
-            if (inside && onClickAction != null)
-                onClickAction.run();
+            if (inside && !isInsideOverride) {
 
-            if (toggled && onToggleTrueAction != null)
-                onToggleTrueAction.run();
-            else if (!toggled && onToggleFalseAction != null)
-                onToggleFalseAction.run();
+                toggled = !toggled;
+
+                // Run action if one is set
+                if (onClickAction != null)
+                    onClickAction.run();
+
+                if (toggled && onToggleTrueAction != null)
+                    onToggleTrueAction.run();
+                else if (!toggled && onToggleFalseAction != null)
+                    onToggleFalseAction.run();
+            }
         }
 
+        // Only update if inside has changed
+        if (insideCache != inside)
+            updateCursor();
+
         // Hitbox detection for the "rotatedShape"
-        if (!insideOveride)
-            inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+        insideCache = inside;
+        inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
     // Call updateRotatedShape everytime the position, size or rotation changes
@@ -388,6 +401,25 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
         transform.rotate(Math.toRadians(angle), middle.x, middle.y);
         rotatedShape = transform.createTransformedShape(baseShape);
+    }
+
+    private void updateCursor() {
+        // NotAllowed cursor
+        if (inside && isInsideOverride) {
+            notAllowed.showCursor();
+        } else {
+            notAllowed.hideCursor();
+        }
+
+        // DefaultCursor
+        if (!inside && !isInsideOverride) {
+            panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+
+        // HandCursor
+        if (inside && !isInsideOverride) {
+            panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        }
     }
 
 }

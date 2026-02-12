@@ -1,14 +1,10 @@
 package GameEngine;
 
 import java.awt.Color;
-import java.awt.Point;
 
 import javax.swing.JFrame;
 
-import AdvancedRendering.uiRendering.Button.RectButton;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
-import AdvancedRendering.uiRendering.Slider.Slider;
-import AdvancedRendering.uiRendering.TextField.TextField;
 import Game.*;
 import Game.Configs.GameState.GameState;
 import GameEngine.EngineModules.*;
@@ -45,24 +41,6 @@ public class GameUpdate implements Runnable {
         // constructors for game
         ClassFactory.create(new MainGameClass(), context, 8);
         ClassFactory.create(new SecondGameClass(), context, 8);
-
-        Slider s = new Slider(context, panel, mouse, new Point(100, 100), new Point(900, 900));
-        s.show();
-
-        TextField text = new TextField(context, panel, mouse, keys, new Point(100, 100), new Point(900, 150));
-        text.setColor(Color.GRAY);
-        text.show();
-
-        RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(550, 550));
-        b.show();
-        b.setInsideOveride(true);
-        // ClassFactory.updatePriority(b, context, 0);
-
-        RectButton b2 = new RectButton(context, panel, mouse, new Point(525, 500), new Point(600, 550));
-        b2.show();
-        b2.setHoverColor(Color.ORANGE);
-        b2.setInsideOveride(true);
-        // ClassFactory.updatePriority(b2, context, 1);
 
     }
 

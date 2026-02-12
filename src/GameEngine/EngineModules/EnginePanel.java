@@ -11,14 +11,6 @@ import java.awt.*;
 
 public class EnginePanel extends JPanel {
 
-    // FIXME:
-    // private Point hotspot32x32 = new Point(16, 16);
-    // private Toolkit toolkit = Toolkit.getDefaultToolkit();
-    // private Image notAllowedCursor =
-    // toolkit.getImage("src/GameEngine/Assets/Cursors/not-allowed.png");
-    // public Cursor invalidCursor = toolkit.createCustomCursor(notAllowedCursor,
-    // hotspot32x32, "not-allowed");
-
     // logical space dimension
     public final int logicalWidth = 1000;
     public final int logicalHeight = 1000;
