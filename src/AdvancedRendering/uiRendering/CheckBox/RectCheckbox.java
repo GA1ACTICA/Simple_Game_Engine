@@ -21,7 +21,7 @@ import GameEngine.Interfaces.Drawables.UIDrawable;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetImage, MenuSetColor {
+        MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable {
 
     private int x, y, width, height;
     private double angle = 0;
@@ -40,7 +40,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
     private boolean inside;
     private boolean wasPressed;
-    private boolean insideOveride = false;
+    private boolean disabled = false;
     private boolean overide;
 
     private Runnable onClickAction;
@@ -138,6 +138,18 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     }
 
     @Override
+    public void setZIndex(int ZIndex) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setZIndex'");
+    }
+
+    @Override
+    public int getZIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getZIndex'");
+    }
+
+    @Override
     public void show() {
         show = true;
     }
@@ -219,8 +231,8 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.toggleImage = toggleImage;
     }
 
-    public void setInsideOveride(boolean isInside) {
-        insideOveride = isInside;
+    public void setdisabled(boolean isInside) {
+        disabled = isInside;
 
         if (isInside)
             inside = isInside;
@@ -259,6 +271,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * 
      * @param action
      */
+    @Override
     public void onClick(Runnable onClickAction) {
         this.onClickAction = onClickAction;
 
@@ -376,7 +389,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         }
 
         // Hitbox detection for the "rotatedShape"
-        if (!insideOveride)
+        if (!disabled)
             inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
@@ -390,4 +403,19 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
+    @Override
+    public boolean contains(int mouseX, int mouseY) {
+        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+    }
+
+    @Override
+    public void executeOnClick() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'executeOnClick'");
+    }
+
+    @Override
+    public boolean getDisabled() {
+        return disabled;
+    }
 }

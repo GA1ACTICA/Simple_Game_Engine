@@ -9,15 +9,17 @@ import GameEngine.Interfaces.Drawables.UIDrawable;
 
 public class ClassFactory {
 
-    public static <T> T create(T object, EngineContext context) {
+    public static Object create(Object object, EngineContext context) {
         return create(object, context, -1);
     }
 
-    public static <T> T create(T object, EngineContext context, int renderPriority) {
+    // TODO: seperate adding to list into seperate method for better docstring
+
+    public static Object create(Object object, EngineContext context, int renderPriority) {
 
         if (object instanceof Drawable d) {
 
-            List<RenderEntry> list;
+            List<ListEntry> list;
 
             if (object instanceof UIDrawable) {
                 list = context.getUiDrawables();
@@ -25,7 +27,7 @@ public class ClassFactory {
                 list = context.getWorldDrawables();
             }
 
-            RenderEntry entry = new RenderEntry(d, renderPriority);
+            ListEntry entry = new ListEntry(d, renderPriority);
 
             int index = 0;
             while (index < list.size() &&
@@ -45,14 +47,28 @@ public class ClassFactory {
             context.getCursorDrawables().add(u);
         }
 
+        if (object instanceof Clickable c) {
+            List<ListEntry> list = context.getClickables();
+
+            ListEntry entry = new ListEntry(c, renderPriority);
+
+            // Find the appropriate index for insertion (Descending order)
+            int index = 0;
+            while (index < list.size() && list.get(index).priority > renderPriority) {
+                index++;
+            }
+
+            list.add(index, entry);
+        }
+
         return object;
     }
 
-    public static <T> T updatePriority(T object, EngineContext context, int renderPriority) {
+    public static Object updatePriority(Object object, EngineContext context, int renderPriority) {
 
         if (object instanceof Drawable d) {
 
-            List<RenderEntry> list;
+            List<ListEntry> list;
 
             if (object instanceof UIDrawable) {
                 list = context.getUiDrawables();
@@ -63,7 +79,7 @@ public class ClassFactory {
             // Remove old entry
             list.removeIf(entry -> entry.drawable == d);
 
-            RenderEntry newEntry = new RenderEntry(d, renderPriority);
+            ListEntry newEntry = new ListEntry(d, renderPriority);
 
             int index = 0;
             while (index < list.size() &&
@@ -75,6 +91,33 @@ public class ClassFactory {
             list.add(index, newEntry);
         }
 
+        if (object instanceof Clickable c) {
+
+            List<ListEntry> list;
+
+            list = context.getClickables();
+
+            // Remove old entry
+            list.removeIf(entry -> entry.clickable == c);
+
+            ListEntry newEntry = new ListEntry(c, renderPriority);
+
+            // Find the appropriate index for insertion (Descending order)
+            int index = 0;
+            while (index < list.size() && list.get(index).priority > renderPriority) {
+                index++;
+            }
+
+            // Add sorted entry
+            list.add(index, newEntry);
+        }
+
         return object;
+    }
+
+    public static int getPriority(Object object) {
+
+        int priority = 0;
+        return priority;
     }
 }

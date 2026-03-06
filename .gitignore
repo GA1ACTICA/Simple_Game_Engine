@@ -1,5 +1,6 @@
 bin/
 src/recources/
+.vscode/
 
 # Compiled class file
 *.class

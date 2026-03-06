@@ -7,7 +7,7 @@ public class GameStateData {
     // here you can store variables that you use
     // for you game that should also be accesable in other classes
 
-    public boolean debug = true;
+    public boolean debug = false;
     public boolean debugVerbose = false; // used in Keys.java and Mouse.java
 
     public float exampleUpdateInterval = 1000 / 60; // ≈60fps expressed in milliseconds

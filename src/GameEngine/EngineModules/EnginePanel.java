@@ -65,7 +65,7 @@ public class EnginePanel extends JPanel {
             g2d.fillRect(0, 0, logicalWidth, logicalHeight);
 
             // Draw game objects in world space
-            for (RenderEntry entry : context.getWorldDrawables()) {
+            for (ListEntry entry : context.getWorldDrawables()) {
                 entry.drawable.draw(g2d);
             }
 
@@ -73,7 +73,7 @@ public class EnginePanel extends JPanel {
             g2d.setTransform(old);
 
             // Draw game objects in UI space
-            for (RenderEntry entry : context.getUiDrawables()) {
+            for (ListEntry entry : context.getUiDrawables()) {
                 entry.drawable.draw(g2d);
             }
 

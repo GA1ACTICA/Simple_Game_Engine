@@ -23,9 +23,13 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     private float mouseWheelDelta;
 
     private GameState state;
+    private EngineContext context;
+
+    public boolean moved;
 
     public Mouse(GameState state, EngineContext context, EnginePanel panel) {
         ClassFactory.create(this, context);
+        this.context = context;
         this.state = state;
     }
 
@@ -47,6 +51,11 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         deltaX = x - lastX;
         deltaY = y - lastY;
 
+        moved = true;
+
+        if (lastX == x)
+            moved = false;
+
         lastX = x;
         lastY = y;
 
@@ -57,13 +66,13 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
             System.out.println("DeltaX: " + deltaX);
             System.out.println("DeltaY: " + deltaY + '\n');
         }
+
     }
 
     // MouseListener
-    // unused
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        // unused
     }
 
     @Override
@@ -88,9 +97,14 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     private void setButton(int button, boolean down) {
         switch (button) {
-            case MouseEvent.BUTTON1 -> leftDown = down;
-            case MouseEvent.BUTTON2 -> middleDown = down;
-            case MouseEvent.BUTTON3 -> rightDown = down;
+            case MouseEvent.BUTTON1:
+                leftDown = down;
+                if (down)
+                    ClickManager.handleClick(context, getPoint());
+            case MouseEvent.BUTTON2:
+                middleDown = down;
+            case MouseEvent.BUTTON3:
+                rightDown = down;
         }
 
         if (state.data().debugVerbose) {
@@ -106,13 +120,14 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         float delta = (float) e.getPreciseWheelRotation();
 
         mouseWheelDelta += delta;
+
+        if (state.data().debugVerbose) {
+            System.out.println("MouseWheelDelta: " + mouseWheelDelta + '\n');
+        }
     }
 
     @Override
     public void update() {
-        if (state.data().debugVerbose) {
-            System.out.println("MouseWheelDelta: " + mouseWheelDelta + '\n');
-        }
 
         deltaX = 0;
         deltaY = 0;

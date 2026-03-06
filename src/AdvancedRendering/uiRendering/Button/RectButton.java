@@ -19,8 +19,11 @@ import GameEngine.Interfaces.MenuInterface.*;
 import Utils.CustomCursor;
 import Utils.GraphicsTools;
 
-public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetImage, MenuSetColor {
+public class RectButton implements
+        UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
+        MenuSetImage, MenuSetColor, Clickable {
+
+    private int zIndex = 0; // default zIndex
 
     private int x, y, width, height;
     private double angle = 0;
@@ -38,14 +41,14 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
     public boolean inside;
     public boolean isHandle;
     private boolean insideCache;
-    private boolean wasPressed;
-    public boolean isInsideOverride;
+    public boolean disabled;
 
     private Runnable clickAction;
     // private Runnable hoverAction; // TODO: look into this
 
     private Mouse mouse;
     private EnginePanel panel;
+    private EngineContext context;
 
     private CustomCursor notAllowed;
 
@@ -125,7 +128,8 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
     }
 
     private RectButton(EngineContext context) {
-        ClassFactory.create(this, context);
+        ClassFactory.create(this, context, zIndex);
+        this.context = context;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
@@ -133,6 +137,17 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
 
         notAllowed = new CustomCursor(panel, mouse, context);
         notAllowed.loadCursor("GameEngine/Assets/Cursors/not-allowed.png");
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
     }
 
     @Override
@@ -215,8 +230,8 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         updateRotatedShape();
     }
 
-    public void setInsideOveride(boolean isInsideOverride) {
-        this.isInsideOverride = isInsideOverride;
+    public void setInsideOveride(boolean disabled) {
+        this.disabled = disabled;
     }
 
     public int getX() {
@@ -248,9 +263,14 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
      * 
      * @param action
      */
+    @Override
     public void onClick(Runnable action) {
         this.clickAction = action;
 
+    }
+
+    public boolean getInside() {
+        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
     @Override
@@ -264,13 +284,13 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if (image == null && !(inside || isInsideOverride)) {
+            if (image == null && !(inside || disabled)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if (image != null && !(inside || isInsideOverride)) {
+            if (image != null && !(inside || disabled)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
                         width,
@@ -284,13 +304,13 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
             }
 
             // Draw if the hoverImage is not set and inside is true
-            if ((inside || isInsideOverride) && hoverImage == null) {
+            if ((inside || disabled) && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if ((inside || isInsideOverride) && hoverImage != null) {
+            if ((inside || disabled) && hoverImage != null) {
 
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -313,36 +333,24 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         if (!show)
             return;
 
-        if (!wasPressed && mouse.getLeftDown() && inside)
-            wasPressed = true;
-
-        if (wasPressed && !mouse.getLeftDown()) {
-            wasPressed = false;
-
-            updateCursor();
-
-            if (inside) {
-
-                // Run action if one is set
-                if (inside && clickAction != null && !isInsideOverride)
-                    clickAction.run();
-            }
-
-        }
-
         // Only update if inside has changed
         if (insideCache != inside) {
 
-            updateCursor();
+            if (!isHandle)
+                updateCursor();
 
-            if (isHandle)
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            if (isHandle) {
+                if (inside && !disabled)
+                    panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                else if (!disabled)
+                    panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
+            }
         }
 
         // Hitbox detection for the "rotatedShape"
         insideCache = inside;
-        inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+        inside = getInside();
     }
 
     // Call updateRotatedShape everytime the position, size or rotation changes
@@ -357,20 +365,41 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
 
     private void updateCursor() {
         // NotAllowed cursor
-        if (inside && isInsideOverride) {
+        if (inside && disabled) {
             notAllowed.showCursor();
         } else {
             notAllowed.hideCursor();
         }
 
         // DefaultCursor
-        if (!inside && !isInsideOverride) {
+        if (!inside && !disabled) {
             panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         }
 
         // HandCursor
-        if (inside && !isInsideOverride) {
+        if (inside && !disabled) {
             panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
+    }
+
+    @Override
+    public boolean contains(int mouseX, int mouseY) {
+        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+    }
+
+    @Override
+    public void executeOnClick() {
+        if (clickAction != null)
+            clickAction.run();
+    }
+
+    @Override
+    public boolean getDisabled() {
+        return disabled;
+    }
+
+    @Override
+    public boolean getVisible() {
+        return show;
     }
 }

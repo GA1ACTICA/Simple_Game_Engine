@@ -216,7 +216,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         if (!show)
             return;
 
-        if (handle.inside && mouse.getLeftDown() && !holding && !handle.isInsideOverride) {
+        if (handle.inside && mouse.getLeftDown() && !holding && !handle.disabled) {
             holding = true;
             handle.setInsideOveride(true);
         }

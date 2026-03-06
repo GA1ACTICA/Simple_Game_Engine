@@ -46,23 +46,31 @@ public class GameUpdate implements Runnable {
         ClassFactory.create(new MainGameClass(), context, 8);
         ClassFactory.create(new SecondGameClass(), context, 8);
 
-        Slider s = new Slider(context, panel, mouse, new Point(100, 100), new Point(900, 900));
-        s.show();
-
-        TextField text = new TextField(context, panel, mouse, keys, new Point(100, 100), new Point(900, 150));
-        text.setColor(Color.GRAY);
-        text.show();
-
-        RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(550, 550));
+        RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(700, 700));
         b.show();
-        b.setInsideOveride(true);
-        // ClassFactory.updatePriority(b, context, 0);
+        b.setInsideOveride(false);
+        b.onClick(() -> {
+            System.out.println("testing");
+        });
+        b.setZIndex(50);
 
-        RectButton b2 = new RectButton(context, panel, mouse, new Point(525, 500), new Point(600, 550));
+        RectButton b2 = new RectButton(context, panel, mouse, new Point(300, 500), new Point(550, 750));
         b2.show();
-        b2.setHoverColor(Color.ORANGE);
-        b2.setInsideOveride(true);
-        // ClassFactory.updatePriority(b2, context, 1);
+        b2.setColor(Color.MAGENTA);
+        b2.setInsideOveride(false);
+        b2.onClick(() -> {
+            System.out.println("testing2");
+        });
+        b2.setZIndex(51);
+
+        RectButton b3 = new RectButton(context, panel, mouse, new Point(0, 0), new Point(250, 250));
+        b3.show();
+        b3.setColor(Color.MAGENTA);
+        b3.setInsideOveride(false);
+        b3.onClick(() -> {
+            System.out.println("testing3");
+        });
+        b3.setZIndex(49);
 
     }
 
