@@ -100,7 +100,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
             case MouseEvent.BUTTON1:
                 leftDown = down;
                 if (down)
-                    ClickManager.handleClick(context, getPoint());
+                    MouseManager.handleClick(context, getPoint());
             case MouseEvent.BUTTON2:
                 middleDown = down;
             case MouseEvent.BUTTON3:

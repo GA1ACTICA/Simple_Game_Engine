@@ -1,7 +1,6 @@
 package AdvancedRendering.uiRendering.Button;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -16,7 +15,6 @@ import GameEngine.EngineModules.*;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 import GameEngine.Interfaces.MenuInterface.*;
-import Utils.CustomCursor;
 import Utils.GraphicsTools;
 
 public class RectButton implements
@@ -40,17 +38,13 @@ public class RectButton implements
 
     public boolean inside;
     public boolean isHandle;
-    private boolean insideCache;
-    public boolean disabled;
+    private boolean disabled;
 
     private Runnable clickAction;
     // private Runnable hoverAction; // TODO: look into this
 
     private Mouse mouse;
-    private EnginePanel panel;
     private EngineContext context;
-
-    private CustomCursor notAllowed;
 
     /**
      * 
@@ -72,10 +66,8 @@ public class RectButton implements
         this.y = y;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
 
     }
 
@@ -95,10 +87,8 @@ public class RectButton implements
         y = (int) topLeft.getY();
         width = (int) bottomRight.getX() - (int) topLeft.getX();
         height = (int) bottomRight.getY() - (int) topLeft.getY();
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
 
     }
 
@@ -120,23 +110,21 @@ public class RectButton implements
         y = (int) middle.getY() - height / 2;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
 
     }
 
-    private RectButton(EngineContext context) {
+    private RectButton(EngineContext context, Mouse mouse, EnginePanel panel) {
         ClassFactory.create(this, context, zIndex);
         this.context = context;
+
+        this.mouse = mouse;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
-        notAllowed = new CustomCursor(panel, mouse, context);
-        notAllowed.loadCursor("GameEngine/Assets/Cursors/not-allowed.png");
     }
 
     @Override
@@ -148,6 +136,11 @@ public class RectButton implements
     @Override
     public int getZIndex() {
         return zIndex;
+    }
+
+    @Override
+    public boolean getVisible() {
+        return show;
     }
 
     @Override
@@ -230,8 +223,13 @@ public class RectButton implements
         updateRotatedShape();
     }
 
-    public void setInsideOveride(boolean disabled) {
+    public void setDisabled(boolean disabled) {
         this.disabled = disabled;
+    }
+
+    @Override
+    public boolean getDisabled() {
+        return disabled;
     }
 
     public int getX() {
@@ -333,23 +331,7 @@ public class RectButton implements
         if (!show)
             return;
 
-        // Only update if inside has changed
-        if (insideCache != inside) {
-
-            if (!isHandle)
-                updateCursor();
-
-            if (isHandle) {
-                if (inside && !disabled)
-                    panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-                else if (!disabled)
-                    panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-            }
-        }
-
         // Hitbox detection for the "rotatedShape"
-        insideCache = inside;
         inside = getInside();
     }
 
@@ -363,25 +345,6 @@ public class RectButton implements
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
-    private void updateCursor() {
-        // NotAllowed cursor
-        if (inside && disabled) {
-            notAllowed.showCursor();
-        } else {
-            notAllowed.hideCursor();
-        }
-
-        // DefaultCursor
-        if (!inside && !disabled) {
-            panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        }
-
-        // HandCursor
-        if (inside && !disabled) {
-            panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        }
-    }
-
     @Override
     public boolean contains(int mouseX, int mouseY) {
         return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
@@ -391,15 +354,5 @@ public class RectButton implements
     public void executeOnClick() {
         if (clickAction != null)
             clickAction.run();
-    }
-
-    @Override
-    public boolean getDisabled() {
-        return disabled;
-    }
-
-    @Override
-    public boolean getVisible() {
-        return show;
     }
 }

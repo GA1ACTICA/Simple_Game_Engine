@@ -5,10 +5,9 @@ import java.awt.Point;
 
 import javax.swing.JFrame;
 
-import AdvancedRendering.uiRendering.Button.RectButton;
+import AdvancedRendering.uiRendering.Button.RoundRectButton;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.uiRendering.Slider.Slider;
-import AdvancedRendering.uiRendering.TextField.TextField;
 import Game.*;
 import Game.Configs.GameState.GameState;
 import GameEngine.EngineModules.*;
@@ -46,31 +45,23 @@ public class GameUpdate implements Runnable {
         ClassFactory.create(new MainGameClass(), context, 8);
         ClassFactory.create(new SecondGameClass(), context, 8);
 
-        RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(700, 700));
+        RoundRectButton b = new RoundRectButton(context, panel, mouse, new Point(500, 500), 100, 100, 25,
+                25);
         b.show();
-        b.setInsideOveride(false);
-        b.onClick(() -> {
-            System.out.println("testing");
-        });
-        b.setZIndex(50);
 
-        RectButton b2 = new RectButton(context, panel, mouse, new Point(300, 500), new Point(550, 750));
-        b2.show();
-        b2.setColor(Color.MAGENTA);
-        b2.setInsideOveride(false);
-        b2.onClick(() -> {
-            System.out.println("testing2");
-        });
-        b2.setZIndex(51);
+        Slider s = new Slider(context, panel, mouse, new Point(0, 0), new Point(1000, 1000));
+        s.setColor(new Color(150, 0, 150));
+        s.show();
 
-        RectButton b3 = new RectButton(context, panel, mouse, new Point(0, 0), new Point(250, 250));
-        b3.show();
-        b3.setColor(Color.MAGENTA);
-        b3.setInsideOveride(false);
-        b3.onClick(() -> {
-            System.out.println("testing3");
-        });
-        b3.setZIndex(49);
+        s.getHandle().setColor(Color.BLACK);
+
+        s.setZIndex(1);
+        s.setPercentage(25);
+        b.setZIndex(2);
+
+        System.out.println(b.getZIndex());
+        System.out.println(s.getZIndex());
+        System.out.println(s.getHandle().getZIndex());
 
     }
 

@@ -6,6 +6,7 @@ import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.CursorDrawable;
 import GameEngine.Interfaces.Drawables.Drawable;
 import GameEngine.Interfaces.Drawables.UIDrawable;
+import Utils.ErrorManagement;
 
 public class ClassFactory {
 
@@ -15,11 +16,11 @@ public class ClassFactory {
 
     // TODO: seperate adding to list into seperate method for better docstring
 
-    public static Object create(Object object, EngineContext context, int renderPriority) {
+    public static Object create(Object object, EngineContext context, int zIndex) {
 
-        if (object instanceof Drawable d) {
+        if (object instanceof Drawable drawable) {
 
-            List<ListEntry> list;
+            List<Drawable> list;
 
             if (object instanceof UIDrawable) {
                 list = context.getUiDrawables();
@@ -27,48 +28,45 @@ public class ClassFactory {
                 list = context.getWorldDrawables();
             }
 
-            ListEntry entry = new ListEntry(d, renderPriority);
-
             int index = 0;
             while (index < list.size() &&
-                    list.get(index).priority <= renderPriority) {
+                    list.get(index).getZIndex() <= zIndex) {
                 index++;
             }
 
             // Add sorted entry
-            list.add(index, entry);
+            list.add(index, drawable);
         }
 
-        if (object instanceof Updatable u) {
-            context.getUpdatables().add(u);
+        if (object instanceof Updatable updatable) {
+            context.getUpdatables().add(updatable);
         }
 
-        if (object instanceof CursorDrawable u) {
-            context.getCursorDrawables().add(u);
+        if (object instanceof CursorDrawable cursorDrawable) {
+            context.getCursorDrawables().add(cursorDrawable);
         }
 
-        if (object instanceof Clickable c) {
-            List<ListEntry> list = context.getClickables();
-
-            ListEntry entry = new ListEntry(c, renderPriority);
+        if (object instanceof Clickable clickable) {
+            List<Clickable> list = context.getClickables();
 
             // Find the appropriate index for insertion (Descending order)
             int index = 0;
-            while (index < list.size() && list.get(index).priority > renderPriority) {
+            while (index < list.size() &&
+                    list.get(index).getZIndex() > zIndex) {
                 index++;
             }
 
-            list.add(index, entry);
+            list.add(index, clickable);
         }
 
         return object;
     }
 
-    public static Object updatePriority(Object object, EngineContext context, int renderPriority) {
+    public static Object updatePriority(Object object, EngineContext context, int zIndex) {
 
-        if (object instanceof Drawable d) {
+        if (object instanceof Drawable drawable) {
 
-            List<ListEntry> list;
+            List<Drawable> list;
 
             if (object instanceof UIDrawable) {
                 list = context.getUiDrawables();
@@ -77,47 +75,48 @@ public class ClassFactory {
             }
 
             // Remove old entry
-            list.removeIf(entry -> entry.drawable == d);
-
-            ListEntry newEntry = new ListEntry(d, renderPriority);
+            list.removeIf(entry -> entry == drawable);
 
             int index = 0;
             while (index < list.size() &&
-                    list.get(index).priority <= renderPriority) {
+                    list.get(index).getZIndex() <= zIndex) {
                 index++;
             }
 
             // Add sorted entry
-            list.add(index, newEntry);
+            list.add(index, drawable);
         }
 
-        if (object instanceof Clickable c) {
+        if (object instanceof Clickable clickable) {
 
-            List<ListEntry> list;
+            List<Clickable> list;
 
             list = context.getClickables();
 
             // Remove old entry
-            list.removeIf(entry -> entry.clickable == c);
-
-            ListEntry newEntry = new ListEntry(c, renderPriority);
+            list.removeIf(entry -> entry == clickable);
 
             // Find the appropriate index for insertion (Descending order)
             int index = 0;
-            while (index < list.size() && list.get(index).priority > renderPriority) {
+            while (index < list.size() && list.get(index).getZIndex() > zIndex) {
                 index++;
             }
 
             // Add sorted entry
-            list.add(index, newEntry);
+            list.add(index, clickable);
         }
 
         return object;
     }
 
-    public static int getPriority(Object object) {
+    public static int getPriority(Object object) throws Exception {
+        if (object instanceof ZIndexable zIndexable)
+            return zIndexable.getZIndex();
 
-        int priority = 0;
-        return priority;
+        Exception e = new IllegalArgumentException(
+                object.getClass().getSimpleName() + " must implement ZIndexable");
+
+        ErrorManagement.reportError(e, "Inavlid object passed to getPriority");
+        throw e;
     }
 }

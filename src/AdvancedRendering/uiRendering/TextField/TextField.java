@@ -50,6 +50,8 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
 
     private Font fieldFont = new Font("SansSerif", Font.PLAIN, 25);
 
+    private EngineContext context;
+
     /**
      * 
      * @param mouse

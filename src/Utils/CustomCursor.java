@@ -13,6 +13,8 @@ import GameEngine.Interfaces.Drawables.CursorDrawable;
 
 public class CustomCursor implements CursorDrawable {
 
+    private int zIndex = 0;
+
     private int x, y, width, height;
 
     private BufferedImage cursorImage;
@@ -21,10 +23,12 @@ public class CustomCursor implements CursorDrawable {
 
     private EnginePanel panel;
     private Mouse mouse;
+    private EngineContext context;
 
-    public CustomCursor(EnginePanel panel, Mouse mouse, EngineContext context) {
+    public CustomCursor(EngineContext context, EnginePanel panel, Mouse mouse) {
         this.panel = panel;
         this.mouse = mouse;
+        this.context = context;
         ClassFactory.create(this, context);
     }
 
@@ -66,5 +70,16 @@ public class CustomCursor implements CursorDrawable {
         x = mouse.getPoint().x - width / 2;
         y = mouse.getPoint().y - height / 2;
         g.drawImage(cursorImage, x, y, width, height, null);
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
     }
 }

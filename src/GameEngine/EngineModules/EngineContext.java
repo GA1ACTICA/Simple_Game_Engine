@@ -8,20 +8,20 @@ import GameEngine.Interfaces.Updatable;
 import GameEngine.Interfaces.Drawables.Drawable;
 
 public class EngineContext {
-    private final List<ListEntry> worldDrawables = new ArrayList<>();
-    private final List<ListEntry> uiDrawables = new ArrayList<>();
+    private final List<Drawable> worldDrawables = new ArrayList<>();
+    private final List<Drawable> uiDrawables = new ArrayList<>();
 
     private final List<Drawable> cursorDrawables = new ArrayList<>();
 
     private final List<Updatable> updatables = new ArrayList<>();
 
-    private final List<ListEntry> clickables = new ArrayList<>();
+    private final List<Clickable> clickables = new ArrayList<>();
 
-    public List<ListEntry> getWorldDrawables() {
+    public List<Drawable> getWorldDrawables() {
         return worldDrawables;
     }
 
-    public List<ListEntry> getUiDrawables() {
+    public List<Drawable> getUiDrawables() {
         return uiDrawables;
     }
 
@@ -33,7 +33,7 @@ public class EngineContext {
         return updatables;
     }
 
-    public List<ListEntry> getClickables() {
+    public List<Clickable> getClickables() {
         return clickables;
     }
 

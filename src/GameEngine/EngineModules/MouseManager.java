@@ -5,7 +5,7 @@ import java.awt.Point;
 import Game.Configs.GameState.GameState;
 import GameEngine.Interfaces.Clickable;
 
-public class ClickManager {
+public class MouseManager {
 
     private static GameState state;
     private static Mouse mouse;
@@ -17,8 +17,7 @@ public class ClickManager {
 
     public static void handleClick(EngineContext context, Point mousePoint) {
 
-        for (ListEntry entry : context.getClickables()) {
-            Clickable clickable = entry.clickable;
+        for (Clickable clickable : context.getClickables()) {
 
             // Prints all buttons and zIndex
             if (state.data().debugVerbose)
@@ -40,8 +39,7 @@ public class ClickManager {
         if (!mouse.moved)
             return;
 
-        for (ListEntry entry : context.getClickables()) {
-            Clickable clickable = entry.clickable;
+        for (Clickable clickable : context.getClickables()) {
 
             if (clickable.getVisible()) {
 

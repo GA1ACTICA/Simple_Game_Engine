@@ -45,7 +45,7 @@ public class Game {
         frame.setVisible(true);
 
         // sets state in classes that needs its
-        ClickManager.setObjects(state, mouse);
+        MouseManager.setObjects(state, mouse);
 
         new Thread(gu).start();
     }

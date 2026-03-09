@@ -23,6 +23,8 @@ import Utils.GraphicsTools;
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
         MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable {
 
+    private int zIndex = 0;
+
     private int x, y, width, height;
     private double angle = 0;
     private boolean show = false;
@@ -39,7 +41,6 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     private Image toggleImage;
 
     private boolean inside;
-    private boolean wasPressed;
     private boolean disabled = false;
     private boolean overide;
 
@@ -47,8 +48,8 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     private Runnable onToggleTrueAction;
     private Runnable onToggleFalseAction;
 
-    private final Mouse mouse;
-    private EnginePanel panel;
+    private Mouse mouse;
+    private EngineContext context;
 
     private boolean toggled;
     private boolean showHover = false;
@@ -68,18 +69,13 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * @param height
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
-        ClassFactory.create(this, context);
 
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
+        this(context, mouse, panel);
 
     }
 
@@ -94,18 +90,13 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * @param bottomRight
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
-        ClassFactory.create(this, context);
 
         x = (int) topLeft.getX();
         y = (int) topLeft.getY();
         width = (int) bottomRight.getX() - (int) topLeft.getX();
         height = (int) bottomRight.getY() - (int) topLeft.getY();
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
+        this(context, mouse, panel);
 
     }
 
@@ -122,14 +113,20 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * @param height
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
-        ClassFactory.create(this, context);
 
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
         this.width = width;
         this.height = height;
+
+        this(context, mouse, panel);
+
+    }
+
+    private RectCheckbox(EngineContext context, Mouse mouse, EnginePanel panel) {
+        ClassFactory.create(this, context);
+
         this.mouse = mouse;
-        this.panel = panel;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
@@ -138,15 +135,19 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     }
 
     @Override
-    public void setZIndex(int ZIndex) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setZIndex'");
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
     }
 
     @Override
     public int getZIndex() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getZIndex'");
+        return zIndex;
+    }
+
+    @Override
+    public boolean getVisible() {
+        return show;
     }
 
     @Override
@@ -370,24 +371,6 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         if (!show)
             return;
 
-        if (inside && mouse.getLeftDown() && !wasPressed)
-            wasPressed = true;
-
-        if (wasPressed && !mouse.getLeftDown() && inside) {
-            wasPressed = false;
-
-            toggled = !toggled;
-
-            // Run action if one is set
-            if (inside && onClickAction != null)
-                onClickAction.run();
-
-            if (toggled && onToggleTrueAction != null)
-                onToggleTrueAction.run();
-            else if (!toggled && onToggleFalseAction != null)
-                onToggleFalseAction.run();
-        }
-
         // Hitbox detection for the "rotatedShape"
         if (!disabled)
             inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
@@ -403,6 +386,19 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
+    private void pressed() {
+        toggled = !toggled;
+
+        // Run action if one is set
+        if (inside && onClickAction != null)
+            onClickAction.run();
+
+        if (toggled && onToggleTrueAction != null)
+            onToggleTrueAction.run();
+        else if (!toggled && onToggleFalseAction != null)
+            onToggleFalseAction.run();
+    }
+
     @Override
     public boolean contains(int mouseX, int mouseY) {
         return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
@@ -410,12 +406,12 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
     @Override
     public void executeOnClick() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'executeOnClick'");
+        pressed();
     }
 
     @Override
     public boolean getDisabled() {
         return disabled;
     }
+
 }
