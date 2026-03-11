@@ -54,6 +54,9 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
 
     /**
      * 
+     * Important: TextField class is currently under development and is not to be
+     * used!
+     * 
      * @param mouse
      * 
      * @param context
@@ -85,6 +88,9 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
 
     /**
      * 
+     * Important: TextField class is currently under development and is not to be
+     * used!
+     * 
      * @param mouse
      * 
      * @param context
@@ -112,6 +118,9 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     }
 
     /**
+     * 
+     * Important: TextField class is currently under development and is not to be
+     * used!
      * 
      * @param mouse
      * 
@@ -283,6 +292,18 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
 
     private void updateFontMetrics(Font fieldFont) {
 
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setZIndex'");
+    }
+
+    @Override
+    public int getZIndex() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getZIndex'");
     }
 
 }
