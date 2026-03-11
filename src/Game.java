@@ -1,3 +1,4 @@
+
 /**
  * Project: Simple_Game_Engine
  *
@@ -5,8 +6,8 @@
  *
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
-
- Coppyright © 2026 Galactica
+ *
+ *Coppyright © 2026 Galactica
  */
 
 import java.awt.Dimension;

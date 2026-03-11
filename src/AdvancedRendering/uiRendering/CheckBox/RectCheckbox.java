@@ -5,14 +5,13 @@
  *
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
-
- Coppyright © 2026 Galactica
+ *
+ *Coppyright © 2026 Galactica
  */
 
 package AdvancedRendering.uiRendering.CheckBox;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
