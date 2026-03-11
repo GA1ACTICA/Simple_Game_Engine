@@ -26,6 +26,8 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
 
     private boolean show = false;
 
+    private int zIndex = 0;
+
     private int frames = 0;
     private int fps = 0;
     private long timer = System.currentTimeMillis();
@@ -35,8 +37,21 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
     private Font font = new Font("Arial", Font.PLAIN, 25);
     private Color color = Color.BLACK;
 
+    private EngineContext context;
+
     public FPSCounter(EngineContext context) {
         ClassFactory.create(this, context);
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
     }
 
     @Override
@@ -99,5 +114,4 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
             timer += 1000;
         }
     }
-
 }

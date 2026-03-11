@@ -31,7 +31,9 @@ import Utils.MathTools;
 
 public class Slider implements UIDrawable, Updatable, MenuInterface {
 
-    boolean show = false;
+    private boolean show = false;
+
+    private int zIndex = 0;
 
     // Slider looks
     private Point pointOne, pointTwo;
@@ -53,11 +55,14 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     private RectButton handle;
     private final Mouse mouse;
 
+    private EngineContext context;
+
     public Slider(EngineContext context, EnginePanel panel, Mouse mouse, Point pointOne, Point pointTwo) {
         ClassFactory.create(this, context);
         this.mouse = mouse;
         this.pointOne = pointOne;
         this.pointTwo = pointTwo;
+        this.context = context;
 
         Point middle = new Point(((pointOne.x + pointTwo.x) / 2), ((pointOne.y + pointTwo.y) / 2));
 
@@ -71,6 +76,18 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         handle.setRotation(handleAngle);
 
         handle.isHandle = true;
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        handle.setZIndex(zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
     }
 
     @Override
@@ -136,6 +153,8 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
         // Sets the handle at the correct x and y even if the new handles constructor
         // was wrong
+
+        // If it works it works I guess (;
         setPercentage(getPercentage());
 
         // Update handle angle if a custom angle is not set
@@ -190,7 +209,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
     }
 
-    public void setSliderColor(Color sliderColor) {
+    public void setColor(Color sliderColor) {
         this.sliderColor = sliderColor;
     }
 
@@ -227,14 +246,14 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         if (!show)
             return;
 
-        if (handle.inside && mouse.getLeftDown() && !holding && !handle.isInsideOverride) {
+        if (handle.inside && mouse.getLeftDown() && !holding && !handle.getDisabled()) {
             holding = true;
-            handle.setInsideOveride(true);
+            handle.setDisabled(true);
         }
 
         if (!mouse.getLeftDown() && holding) {
             holding = false;
-            handle.setInsideOveride(false);
+            handle.setDisabled(false);
         }
 
         // Only run when holding / draging

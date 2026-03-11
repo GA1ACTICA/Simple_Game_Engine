@@ -68,18 +68,19 @@ public class EnginePanel extends JPanel {
             g2d.fillRect(0, 0, logicalWidth, logicalHeight);
 
             // Draw game objects in world space
-            for (RenderEntry entry : context.getWorldDrawables()) {
-                entry.drawable.draw(g2d);
+            for (Drawable drawable : context.getWorldDrawables()) {
+                drawable.draw(g2d);
             }
 
             // Restore transform
             g2d.setTransform(old);
 
             // Draw game objects in UI space
-            for (RenderEntry entry : context.getUiDrawables()) {
-                entry.drawable.draw(g2d);
+            for (Drawable drawable : context.getUiDrawables()) {
+                drawable.draw(g2d);
             }
 
+            // Allways draws cursors ontop
             for (Drawable d : context.getCursorDrawables()) {
                 d.draw(g2d);
             }

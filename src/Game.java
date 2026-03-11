@@ -55,6 +55,9 @@ public class Game {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
+        // sets state in classes that needs its
+        MouseManager.setObjects(state, mouse);
+
         new Thread(gu).start();
     }
 }

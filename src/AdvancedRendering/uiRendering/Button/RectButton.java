@@ -12,7 +12,6 @@
 package AdvancedRendering.uiRendering.Button;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -27,11 +26,13 @@ import GameEngine.EngineModules.*;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 import GameEngine.Interfaces.MenuInterface.*;
-import Utils.CustomCursor;
 import Utils.GraphicsTools;
 
-public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetImage, MenuSetColor {
+public class RectButton implements
+        UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
+        MenuSetImage, MenuSetColor, Clickable {
+
+    private int zIndex = 0; // default zIndex
 
     private int x, y, width, height;
     private double angle = 0;
@@ -48,17 +49,13 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
 
     public boolean inside;
     public boolean isHandle;
-    private boolean insideCache;
-    private boolean wasPressed;
-    public boolean isInsideOverride;
+    private boolean disabled;
 
     private Runnable clickAction;
     // private Runnable hoverAction; // TODO: look into this
 
     private Mouse mouse;
-    private EnginePanel panel;
-
-    public CustomCursor notAllowed;
+    private EngineContext context;
 
     /**
      * 
@@ -80,10 +77,8 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         this.y = y;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
 
     }
 
@@ -103,10 +98,8 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         y = (int) topLeft.getY();
         width = (int) bottomRight.getX() - (int) topLeft.getX();
         height = (int) bottomRight.getY() - (int) topLeft.getY();
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
 
     }
 
@@ -128,22 +121,37 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         y = (int) middle.getY() - height / 2;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
 
     }
 
-    private RectButton(EngineContext context) {
-        ClassFactory.create(this, context);
+    private RectButton(EngineContext context, Mouse mouse, EnginePanel panel) {
+        ClassFactory.create(this, context, zIndex);
+        this.context = context;
+
+        this.mouse = mouse;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
-        notAllowed = new CustomCursor(panel, mouse, context);
-        notAllowed.loadCursor("GameEngine/Assets/Cursors/not-allowed.png");
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
+    }
+
+    @Override
+    public boolean getVisible() {
+        return show;
     }
 
     @Override
@@ -226,8 +234,13 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         updateRotatedShape();
     }
 
-    public void setInsideOveride(boolean isInsideOverride) {
-        this.isInsideOverride = isInsideOverride;
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    @Override
+    public boolean getDisabled() {
+        return disabled;
     }
 
     public int getX() {
@@ -259,6 +272,7 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
      * 
      * @param action
      */
+    @Override
     public void onClick(Runnable action) {
         this.clickAction = action;
 
@@ -266,6 +280,10 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
 
     // TODO: fix seperate color for disabeled
     // TODO: change name for insideOvertide to disable
+
+    public boolean getInside() {
+        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+    }
 
     @Override
     public void draw(Graphics g) {
@@ -278,13 +296,13 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if (image == null && !(inside || isInsideOverride)) {
+            if (image == null && !(inside || disabled)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if (image != null && !(inside || isInsideOverride)) {
+            if (image != null && !(inside || disabled)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
                         width,
@@ -298,13 +316,13 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
             }
 
             // Draw if the hoverImage is not set and inside is true
-            if ((inside || isInsideOverride) && hoverImage == null) {
+            if ((inside || disabled) && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if ((inside || isInsideOverride) && hoverImage != null) {
+            if ((inside || disabled) && hoverImage != null) {
 
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -327,39 +345,8 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         if (!show)
             return;
 
-        if (!wasPressed && mouse.getLeftDown() && inside)
-            wasPressed = true;
-
-        if (wasPressed && !mouse.getLeftDown()) {
-            wasPressed = false;
-
-            updateCursor();
-
-            if (inside && !isInsideOverride) {
-
-                // Run action if one is set
-                if (inside && clickAction != null)
-                    clickAction.run();
-            }
-
-        }
-
-        // Only update if inside has changed
-        if (insideCache != inside) {
-
-            if (!isHandle)
-                updateCursor();
-            System.out.println("test");
-            if ((isHandle && inside) || (isHandle && mouse.getLeftDown()))
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
-            else if (isHandle)
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-
-        }
-
         // Hitbox detection for the "rotatedShape"
-        insideCache = inside;
-        inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+        inside = getInside();
     }
 
     // Call updateRotatedShape everytime the position, size or rotation changes
@@ -372,22 +359,14 @@ public class RectButton implements UIDrawable, Updatable, MenuInterface, MenuSet
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
-    private void updateCursor() {
-        // NotAllowed cursor
-        if (inside && isInsideOverride) {
-            notAllowed.showCursor();
-        } else {
-            notAllowed.hideCursor();
-        }
+    @Override
+    public boolean contains(int mouseX, int mouseY) {
+        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+    }
 
-        // DefaultCursor
-        if (!inside && !isInsideOverride) {
-            panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        }
-
-        // HandCursor
-        if (inside && !isInsideOverride) {
-            panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        }
+    @Override
+    public void executeOnClick() {
+        if (clickAction != null)
+            clickAction.run();
     }
 }

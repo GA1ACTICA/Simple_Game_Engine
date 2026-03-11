@@ -1,6 +1,10 @@
 bin/
 src/recources/
+<<<<<<< HEAD
 *.py
+=======
+.vscode/
+>>>>>>> dev
 
 # Compiled class file
 *.class

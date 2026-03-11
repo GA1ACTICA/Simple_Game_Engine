@@ -24,6 +24,8 @@ public class MainGameClass implements Drawable, Updatable {
     public MainGameClass() {
     }
 
+    private int zIndex = 0;
+
     @Override
     public void draw(Graphics g) {
 
@@ -40,5 +42,15 @@ public class MainGameClass implements Drawable, Updatable {
     @Override
     public void update() {
         // here you update game logic
+    }
+
+    @Override
+    public void setZIndex(int ZIndex) {
+
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
     }
 }

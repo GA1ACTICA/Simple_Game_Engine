@@ -34,7 +34,9 @@ import Utils.CustomCursor;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetImage, MenuSetColor {
+        MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable {
+
+    private int zIndex = 0;
 
     private int x, y, width, height;
     private double angle = 0;
@@ -51,18 +53,16 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     private Image hoverImage;
     private Image toggleImage;
 
-    public boolean inside;
-    public boolean isHandle;
-    private boolean insideCache;
-    private boolean wasPressed;
-    public boolean isInsideOverride;
+    private boolean inside;
+    private boolean disabled = false;
+    private boolean overide;
 
     private Runnable onClickAction;
     private Runnable onToggleTrueAction;
     private Runnable onToggleFalseAction;
 
     private Mouse mouse;
-    private EnginePanel panel;
+    private EngineContext context;
 
     private boolean toggled;
     private boolean showHover = false;
@@ -89,10 +89,9 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.y = y;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
+
     }
 
     /**
@@ -111,10 +110,9 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         y = (int) topLeft.getY();
         width = (int) bottomRight.getX() - (int) topLeft.getX();
         height = (int) bottomRight.getY() - (int) topLeft.getY();
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
+
     }
 
     /**
@@ -135,21 +133,36 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         y = (int) middle.getY() - height / 2;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
-        this.panel = panel;
 
-        this(context);
+        this(context, mouse, panel);
+
     }
 
-    private RectCheckbox(EngineContext context) {
+    private RectCheckbox(EngineContext context, Mouse mouse, EnginePanel panel) {
         ClassFactory.create(this, context);
+
+        this.mouse = mouse;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
-        notAllowed = new CustomCursor(panel, mouse, context);
-        notAllowed.loadCursor("GameEngine/Assets/Cursors/not-allowed.png");
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
+    }
+
+    @Override
+    public boolean getVisible() {
+        return show;
     }
 
     @Override
@@ -234,8 +247,11 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.toggleImage = toggleImage;
     }
 
-    public void setInsideOveride(boolean isInsideOverride) {
-        this.isInsideOverride = isInsideOverride;
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+
+        if (disabled)
+            inside = !disabled;
     }
 
     public void setShowHover(boolean showHover) {
@@ -271,6 +287,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
      * 
      * @param action
      */
+    @Override
     public void onClick(Runnable onClickAction) {
         this.onClickAction = onClickAction;
 
@@ -298,14 +315,14 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if ((image == null && !(inside || isInsideOverride)) ||
+            if ((image == null && !(inside || disabled)) ||
                     (image == null && !showHover && !toggled)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if ((image != null && !(inside || isInsideOverride)) ||
+            if ((image != null && !(inside || disabled)) ||
                     (image != null && !showHover && !toggled)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -320,14 +337,14 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the toggelImage is not set
-            if ((image == null && !(inside || isInsideOverride) && toggled) ||
+            if ((image == null && !(inside || disabled) && toggled) ||
                     (image == null && toggled && !showHover)) {
                 g2d.setColor(toggleColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if toggleImage is set
-            if ((image != null && !(inside || isInsideOverride) && toggled) ||
+            if ((image != null && !(inside || disabled) && toggled) ||
                     (image != null && toggled && !showHover)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -342,13 +359,13 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the hoverImage is not set and inside is true
-            if (showHover && (inside || isInsideOverride) && hoverImage == null) {
+            if (showHover && (inside || disabled) && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if (showHover && (inside || isInsideOverride) && hoverImage != null) {
+            if (showHover && (inside || disabled) && hoverImage != null) {
 
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -372,36 +389,9 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         if (!show)
             return;
 
-        if (!wasPressed && mouse.getLeftDown() && inside)
-            wasPressed = true;
-
-        if (wasPressed && !mouse.getLeftDown()) {
-            wasPressed = false;
-
-            updateCursor();
-
-            if (inside && !isInsideOverride) {
-
-                toggled = !toggled;
-
-                // Run action if one is set
-                if (onClickAction != null)
-                    onClickAction.run();
-
-                if (toggled && onToggleTrueAction != null)
-                    onToggleTrueAction.run();
-                else if (!toggled && onToggleFalseAction != null)
-                    onToggleFalseAction.run();
-            }
-        }
-
-        // Only update if inside has changed
-        if (insideCache != inside)
-            updateCursor();
-
         // Hitbox detection for the "rotatedShape"
-        insideCache = inside;
-        inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+        if (!disabled)
+            inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
     // Call updateRotatedShape everytime the position, size or rotation changes
@@ -414,23 +404,32 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
-    private void updateCursor() {
-        // NotAllowed cursor
-        if (inside && isInsideOverride) {
-            notAllowed.showCursor();
-        } else {
-            notAllowed.hideCursor();
-        }
+    private void pressed() {
+        toggled = !toggled;
 
-        // DefaultCursor
-        if (!inside && !isInsideOverride) {
-            panel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        }
+        // Run action if one is set
+        if (inside && onClickAction != null)
+            onClickAction.run();
 
-        // HandCursor
-        if (inside && !isInsideOverride) {
-            panel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        }
+        if (toggled && onToggleTrueAction != null)
+            onToggleTrueAction.run();
+        else if (!toggled && onToggleFalseAction != null)
+            onToggleFalseAction.run();
+    }
+
+    @Override
+    public boolean contains(int mouseX, int mouseY) {
+        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
+    }
+
+    @Override
+    public void executeOnClick() {
+        pressed();
+    }
+
+    @Override
+    public boolean getDisabled() {
+        return disabled;
     }
 
 }
