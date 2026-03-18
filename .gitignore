@@ -1,5 +1,6 @@
 bin/
 src/recources/
+*.py
 .vscode/
 
 # Compiled class file
