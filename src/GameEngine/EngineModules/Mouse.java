@@ -6,7 +6,7 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package GameEngine.EngineModules;
@@ -47,15 +47,15 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     // MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent arg0) {
-        updateMouseMovment(arg0);
+        updateMouseMovement(arg0);
     }
 
     @Override
     public void mouseMoved(MouseEvent arg0) {
-        updateMouseMovment(arg0);
+        updateMouseMovement(arg0);
     }
 
-    private void updateMouseMovment(MouseEvent arg0) {
+    private void updateMouseMovement(MouseEvent arg0) {
         x = arg0.getX();
         y = arg0.getY();
 
@@ -69,15 +69,6 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
         lastX = x;
         lastY = y;
-
-        if (state.data().debugVerbose) {
-            System.out.println("MouseMovedToX: " + x);
-            System.out.println("MouseMovedToY: " + y + '\n');
-
-            System.out.println("DeltaX: " + deltaX);
-            System.out.println("DeltaY: " + deltaY + '\n');
-        }
-
     }
 
     // MouseListener
@@ -112,17 +103,55 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
                 leftDown = down;
                 if (down)
                     MouseManager.handleClick(context, getPoint());
+
+                buttonPrintout(button, down);
+                break;
+
             case MouseEvent.BUTTON2:
                 middleDown = down;
+                buttonPrintout(button, down);
+                break;
+
             case MouseEvent.BUTTON3:
                 rightDown = down;
+                buttonPrintout(button, down);
+                break;
+        }
+    }
+
+    private void buttonPrintout(int button, boolean down) {
+        if (!state.data().debugVerbose)
+            return;
+
+        String buttonName = "Unknown"; // In case an unknown integer is passed
+        String buttonState;
+
+        switch (button) {
+            case MouseEvent.BUTTON1:
+                buttonName = "Left mouse button";
+                break;
+
+            case MouseEvent.BUTTON2:
+                buttonName = "Middle mouse button";
+
+                break;
+
+            case MouseEvent.BUTTON3:
+                buttonName = "Right mouse button";
+
+                break;
         }
 
-        if (state.data().debugVerbose) {
-            System.out.println("IsLeftPreesed: " + leftDown);
-            System.out.println("IsRightPreesed: " + rightDown);
-            System.out.println("IsMiddlePreesed: " + middleDown + '\n');
-        }
+        if (down)
+            buttonState = "pressed";
+        else
+            buttonState = "released";
+
+        System.out.println("%s %s".formatted(buttonName, buttonState));
+
+        System.out.println("Mouse moved to X: " + x);
+        System.out.println("Mouse moved to Y: " + y + '\n');
+
     }
 
     // MouseWheelListener
@@ -132,9 +161,6 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
         mouseWheelDelta += delta;
 
-        if (state.data().debugVerbose) {
-            System.out.println("MouseWheelDelta: " + mouseWheelDelta + '\n');
-        }
     }
 
     @Override

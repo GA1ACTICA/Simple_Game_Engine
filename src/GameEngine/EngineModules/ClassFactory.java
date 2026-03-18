@@ -6,7 +6,7 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package GameEngine.EngineModules;
@@ -127,7 +127,7 @@ public class ClassFactory {
         Exception e = new IllegalArgumentException(
                 object.getClass().getSimpleName() + " must implement ZIndexable");
 
-        ErrorManagement.reportError(e, "Inavlid object passed to getPriority");
+        ErrorManagement.reportError(e, "Invalid object passed to getPriority");
         throw e;
     }
 }

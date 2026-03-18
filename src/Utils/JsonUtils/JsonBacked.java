@@ -6,7 +6,7 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package Utils.JsonUtils;
@@ -32,11 +32,11 @@ public abstract class JsonBacked<T> {
         this.data = initialData;
     }
 
-    protected void succsessfullExportLog(T object, String path) {
+    protected void successfulExportLog(T object, String path) {
 
     }
 
-    protected void succsessfullImportLog(T data, String path) {
+    protected void successfulImportLog(T data, String path) {
 
     }
 
@@ -58,7 +58,7 @@ public abstract class JsonBacked<T> {
 
             // Export to Json
             gson.toJson(object, writer);
-            succsessfullExportLog(object, path);
+            successfulExportLog(object, path);
 
         } catch (Exception e) {
             ErrorManagement.reportError(e, "Error exporting JSON file ('%s')".formatted(path));
@@ -79,7 +79,7 @@ public abstract class JsonBacked<T> {
 
             // Import Json and set data
             data = gson.fromJson(reader, clazz);
-            succsessfullImportLog(data, path);
+            successfulImportLog(data, path);
 
         } catch (Exception e) {
             ErrorManagement.reportError(e, "Error importing JSON file ('%s')".formatted(path));
