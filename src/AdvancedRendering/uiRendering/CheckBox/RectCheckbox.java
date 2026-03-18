@@ -6,7 +6,7 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package AdvancedRendering.uiRendering.CheckBox;
@@ -310,7 +310,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // Rotate everything drawin inside
+        // Rotate everything drawn inside
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
@@ -335,7 +335,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
             }
 
-            // Draw if the toggelImage is not set
+            // Draw if the toggleImage is not set
             if ((image == null && !(inside || disabled) && toggled) ||
                     (image == null && toggled && !showHover)) {
                 g2d.setColor(toggleColor);
@@ -388,12 +388,12 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         if (!show)
             return;
 
-        // Hitbox detection for the "rotatedShape"
+        // Hit box detection for the "rotatedShape"
         if (!disabled)
             inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
-    // Call updateRotatedShape everytime the position, size or rotation changes
+    // Call updateRotatedShape every time the position, size or rotation changes
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();

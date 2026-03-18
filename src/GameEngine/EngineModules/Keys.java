@@ -6,26 +6,22 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package GameEngine.EngineModules;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.HashSet;
+import java.util.Set;
 
 import Game.Configs.GameState.GameState;
 
 public class Keys implements KeyListener {
 
-    public int keyCodePressed;
-    public char keyNamePressed;
-
-    public int keyCodeReleased;
-    public char keyNameReleased;
-
-    public int keyCodeTyped;
-    public char keyNameTyped;
+    private Set<Integer> keysPressed = new HashSet<>();
+    private Set<Character> keysTyped = new HashSet<>();
 
     private final GameState state;
 
@@ -35,39 +31,56 @@ public class Keys implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        keyCodePressed = e.getKeyCode();
-        keyNamePressed = e.getKeyChar();
+        int keyCode = e.getKeyCode();
+        /*
+         * This is necessary since keyPressed is repeatedly called when a button is
+         * being held
+         */
+        if (!keysPressed.contains(keyCode)) {
 
-        if (state.data().debugVerbose) {
-            System.out.println("keyCodePressed: " + keyCodePressed + '\n');
-            System.out.println("keyNamePressed: " + keyNamePressed + '\n');
+            if (state.data().debugVerbose)
+                System.out.println("Key: %s %s was pressed".formatted(e.getKeyChar(), keyCode));
+
+            keysPressed.add(keyCode);
         }
-
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        keyCodeReleased = e.getKeyCode();
-        keyNameReleased = e.getKeyChar();
 
-        if (state.data().debugVerbose) {
-            System.out.println("keyCodeReleased: " + keyCodeReleased + '\n');
-            System.out.println("keyNameReleased: " + keyNameReleased + '\n');
-            System.out.println("");
-        }
+        if (state.data().debugVerbose && keysPressed.contains(e.getKeyCode()))
+            System.out.println("Key: %s %s was released".formatted(e.getKeyChar(), e.getKeyCode()));
 
+        keysPressed.remove(e.getKeyCode());
+        keysTyped.remove(e.getKeyChar());
     }
 
     @Override
     public void keyTyped(KeyEvent e) {
-        keyCodeTyped = e.getKeyCode();
-        keyNameTyped = e.getKeyChar();
+        keysTyped.add(e.getKeyChar());
+    }
 
-        if (state.data().debugVerbose) {
-            System.out.println("keyCodeTyped: " + keyCodeTyped + '\n');
-            System.out.println("keyNameTyped: " + keyNameTyped + '\n');
-            System.out.println("");
-        }
+    /**
+     * Returns a set of key codes representing all currently pressed keys.
+     * Each key code corresponds to a standard {@link java.awt.event.KeyEvent} key
+     * code.
+     * 
+     * @return {@code Set<Integer>} a Set of key codes representing the currently
+     *         pressed keys
+     */
+    public Set<Integer> getKeysPressed() {
+        return keysPressed;
+    }
 
+    /**
+     * Returns a set of characters representing all currently pressed keys.
+     * Characters are case sensitive and will be capitalized if applicable.
+     * Non-Unicode characters are ignored.
+     * 
+     * @return {@code Set<Character>} a Set of Characters for the currently pressed
+     *         keys
+     */
+    public Set<Character> getKeysTyped() {
+        return keysTyped;
     }
 }

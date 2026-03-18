@@ -6,7 +6,7 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package AdvancedRendering.uiRendering.Button;
@@ -292,7 +292,7 @@ public class RectButton implements
 
         Graphics2D g2d = (Graphics2D) g;
 
-        // Rotate everything drawin inside
+        // Rotate everything drawn inside
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
@@ -345,11 +345,11 @@ public class RectButton implements
         if (!show)
             return;
 
-        // Hitbox detection for the "rotatedShape"
+        // Hit box detection for the "rotatedShape"
         inside = getInside();
     }
 
-    // Call updateRotatedShape everytime the position, size or rotation changes
+    // Call updateRotatedShape every time the position, size or rotation changes
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();

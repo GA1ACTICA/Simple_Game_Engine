@@ -6,7 +6,7 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package AdvancedRendering.uiRendering.Slider;
@@ -41,7 +41,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     private int sliderWidth = 5;
 
     // Slider values
-    private double sliderPercentage = 50.0;
+    private double sliderPercentage = 0.50;
     private int sliderMin = 0;
     private int sliderMax = 100;
 
@@ -109,15 +109,11 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         return length;
     }
 
-    public double getPercentage() {
-        return sliderPercentage;
-    }
-
     public double getSliderValue() {
-        return sliderPercentage / 100 * sliderMax;
+        return sliderPercentage * sliderMax;
     }
 
-    // fix better java doc
+    // TODO: fix better javadoc
     /**
      * Returns information about the values of the current "handle" position on the
      * slider.
@@ -125,7 +121,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
      * @return SliderInformation
      */
     public SliderInformation getSliderInformation() {
-        return new SliderInformation(sliderPercentage / 100 * sliderMax, sliderPercentage);
+        return new SliderInformation(sliderPercentage * sliderMax, sliderPercentage);
     }
 
     public int getSliderMin() {
@@ -134,6 +130,10 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
     public int getSliderMax() {
         return sliderMax;
+    }
+
+    public double getSliderPercentage() {
+        return sliderPercentage;
     }
 
     public Color getSliderColor() {
@@ -155,7 +155,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         // was wrong
 
         // If it works it works I guess (;
-        setPercentage(getPercentage());
+        setPercentage(sliderPercentage);
 
         // Update handle angle if a custom angle is not set
         if (handleAngle == Math.toDegrees(Math.atan2(
@@ -205,7 +205,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         this.pointOne = pointOne;
         this.pointTwo = pointTwo;
 
-        setPercentage(getPercentage());
+        setPercentage(sliderPercentage);
 
     }
 
@@ -218,8 +218,8 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         double deltaX = pointTwo.x - pointOne.x;
         double deltaY = pointTwo.y - pointOne.y;
 
-        int px = (int) Math.round(pointOne.x + percentage / 100 * deltaX);
-        int py = (int) Math.round(pointOne.y + percentage / 100 * deltaY);
+        int px = (int) Math.round(pointOne.x + percentage * deltaX);
+        int py = (int) Math.round(pointOne.y + percentage * deltaY);
 
         handle.setMiddle(new Point(px, py));
 
@@ -260,7 +260,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         if (holding) {
 
             // Update "sliderProcentage"
-            sliderPercentage = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).progress() * 100;
+            sliderPercentage = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).progress();
 
             // Update "handle" position
             handle.setMiddle(MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).point());

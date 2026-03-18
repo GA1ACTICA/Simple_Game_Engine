@@ -3,12 +3,12 @@
  *
  * Author: Galactica
  * 
- * Description: This is an example game class and is only use as an example. I strongly recomend to delete this and create your own
+ * Description: This is an example game class and is only use as an example. I strongly recommend to delete this and create your own
  *
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- * Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package Game;

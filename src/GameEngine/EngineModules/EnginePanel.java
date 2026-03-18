@@ -6,7 +6,7 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package GameEngine.EngineModules;
@@ -80,7 +80,7 @@ public class EnginePanel extends JPanel {
                 drawable.draw(g2d);
             }
 
-            // Allways draws cursors ontop
+            // Always draws cursors on top
             for (Drawable d : context.getCursorDrawables()) {
                 d.draw(g2d);
             }

@@ -6,16 +6,18 @@
  * Licensed under the GPL 3.0 License.
  * See LICENSE file in the project root for full license information.
  *
- *Coppyright © 2026 Galactica
+ * Copyright © 2026 Galactica
  */
 
 package GameEngine;
 
 import java.awt.Color;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
+import AdvancedRendering.uiRendering.Slider.Slider;
 import Game.*;
 import Game.Configs.GameState.GameState;
 import GameEngine.EngineModules.*;
@@ -30,6 +32,8 @@ public class GameUpdate implements Runnable {
     private GameState state;
     private final EnginePanel panel;
     private final EngineContext context;
+
+    Slider s;
 
     public GameUpdate(
             Keys keys,
@@ -47,6 +51,10 @@ public class GameUpdate implements Runnable {
         FPSCounter fps = new FPSCounter(context);
         fps.setColor(Color.RED);
         fps.show();
+
+        s = new Slider(context, panel, mouse, new Point(0, 0), new Point(1000, 1000));
+        s.show();
+        s.setSliderMax(104563);
 
         // constructors for menu
         // constructors for game
@@ -70,6 +78,8 @@ public class GameUpdate implements Runnable {
                 for (Updatable u : context.getUpdatables()) {
                     u.update();
                 }
+
+                System.out.println(s.getSliderInformation());
 
                 lastUpdateTime = currentTime;
             }
