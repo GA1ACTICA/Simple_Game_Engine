@@ -1,3 +1,14 @@
+/**
+ * Project: Simple_Game_Engine
+ *
+ * Author: Galactica
+ *
+ * Licensed under the GPL 3.0 License.
+ * See LICENSE file in the project root for full license information.
+ *
+ *Coppyright © 2026 Galactica
+ */
+
 package GameEngine.EngineModules;
 
 import java.awt.geom.AffineTransform;
@@ -10,14 +21,6 @@ import GameEngine.Interfaces.Drawables.Drawable;
 import java.awt.*;
 
 public class EnginePanel extends JPanel {
-
-    // FIXME:
-    // private Point hotspot32x32 = new Point(16, 16);
-    // private Toolkit toolkit = Toolkit.getDefaultToolkit();
-    // private Image notAllowedCursor =
-    // toolkit.getImage("src/GameEngine/Assets/Cursors/not-allowed.png");
-    // public Cursor invalidCursor = toolkit.createCustomCursor(notAllowedCursor,
-    // hotspot32x32, "not-allowed");
 
     // logical space dimension
     public final int logicalWidth = 1000;

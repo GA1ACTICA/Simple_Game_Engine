@@ -1,13 +1,21 @@
+/**
+ * Project: Simple_Game_Engine
+ *
+ * Author: Galactica
+ *
+ * Licensed under the GPL 3.0 License.
+ * See LICENSE file in the project root for full license information.
+ *
+ *Coppyright © 2026 Galactica
+ */
+
 package GameEngine;
 
 import java.awt.Color;
-import java.awt.Point;
 
 import javax.swing.JFrame;
 
-import AdvancedRendering.uiRendering.Button.RoundRectButton;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
-import AdvancedRendering.uiRendering.Slider.Slider;
 import Game.*;
 import Game.Configs.GameState.GameState;
 import GameEngine.EngineModules.*;
@@ -44,24 +52,6 @@ public class GameUpdate implements Runnable {
         // constructors for game
         ClassFactory.create(new MainGameClass(), context, 8);
         ClassFactory.create(new SecondGameClass(), context, 8);
-
-        RoundRectButton b = new RoundRectButton(context, panel, mouse, new Point(500, 500), 100, 100, 25,
-                25);
-        b.show();
-
-        Slider s = new Slider(context, panel, mouse, new Point(0, 0), new Point(1000, 1000));
-        s.setColor(new Color(150, 0, 150));
-        s.show();
-
-        s.getHandle().setColor(Color.BLACK);
-
-        s.setZIndex(1);
-        s.setPercentage(25);
-        b.setZIndex(2);
-
-        System.out.println(b.getZIndex());
-        System.out.println(s.getZIndex());
-        System.out.println(s.getHandle().getZIndex());
 
     }
 

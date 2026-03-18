@@ -1,3 +1,14 @@
+/**
+ * Project: Simple_Game_Engine
+ *
+ * Author: Galactica
+ *
+ * Licensed under the GPL 3.0 License.
+ * See LICENSE file in the project root for full license information.
+ *
+ *Coppyright © 2026 Galactica
+ */
+
 package AdvancedRendering.uiRendering.CheckBox;
 
 import java.awt.Color;
@@ -18,6 +29,7 @@ import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
+import Utils.CustomCursor;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
@@ -53,6 +65,8 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
     private boolean toggled;
     private boolean showHover = false;
+
+    public CustomCursor notAllowed;
 
     /**
      * 
@@ -232,11 +246,11 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.toggleImage = toggleImage;
     }
 
-    public void setdisabled(boolean isInside) {
-        disabled = isInside;
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
 
-        if (isInside)
-            inside = isInside;
+        if (disabled)
+            inside = !disabled;
     }
 
     public void setShowHover(boolean showHover) {
@@ -286,6 +300,9 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.onToggleFalseAction = onToggleFalseAction;
     }
 
+    // TODO: fix seperate color for disabeled
+    // TODO: change name for insideOvertide to disable
+
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -297,14 +314,14 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
             // Draw if the image is not set
-            if ((image == null && !(inside || overide)) ||
+            if ((image == null && !(inside || disabled)) ||
                     (image == null && !showHover && !toggled)) {
                 g2d.setColor(color);
                 g2d.fill(baseShape);
             }
 
             // Draw if image is set
-            if ((image != null && !(inside || overide)) ||
+            if ((image != null && !(inside || disabled)) ||
                     (image != null && !showHover && !toggled)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -319,14 +336,14 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the toggelImage is not set
-            if ((image == null && !(inside || overide) && toggled) ||
+            if ((image == null && !(inside || disabled) && toggled) ||
                     (image == null && toggled && !showHover)) {
                 g2d.setColor(toggleColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if toggleImage is set
-            if ((image != null && !(inside || overide) && toggled) ||
+            if ((image != null && !(inside || disabled) && toggled) ||
                     (image != null && toggled && !showHover)) {
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
@@ -341,13 +358,13 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
             }
 
             // Draw if the hoverImage is not set and inside is true
-            if (showHover && (inside || overide) && hoverImage == null) {
+            if (showHover && (inside || disabled) && hoverImage == null) {
                 g2d.setColor(hoverColor);
                 g2d.fill(baseShape);
             }
 
             // Draw if hoverImage is set
-            if (showHover && (inside || overide) && hoverImage != null) {
+            if (showHover && (inside || disabled) && hoverImage != null) {
 
                 BufferedImage buffer = GraphicsTools.createMask(
                         baseShape,
