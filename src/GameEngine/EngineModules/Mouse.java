@@ -62,13 +62,11 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         deltaX = x - lastX;
         deltaY = y - lastY;
 
-        moved = true;
-
-        if (lastX == x)
-            moved = false;
-
         lastX = x;
         lastY = y;
+
+        MouseManager.handlePriority(context, getPoint());
+        MouseManager.handleHover(context, getPoint());
     }
 
     // MouseListener

@@ -29,11 +29,10 @@ import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
-import Utils.CustomCursor;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable {
+        MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
 
     private int zIndex = 0;
 
@@ -45,28 +44,32 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     protected Shape rotatedShape;
 
     private Color color = Color.GREEN;
-    private Color hoverColor = Color.RED;
-    private Color toggleColor = Color.ORANGE;
+    private Color hoverColor = Color.ORANGE;
+    private Color toggleColorTrue = Color.RED;
+    private Color disabledColor = Color.LIGHT_GRAY;
+    private Color clickColor = new Color(145, 145, 145, 90); // TODO: implement me!
 
     private Image image;
     private Image hoverImage;
     private Image toggleImage;
+    private Image disabledImage;
+    private Image clickImage; // TODO: implement me!
 
     private boolean inside;
-    private boolean disabled = false;
-    private boolean overide;
+    private boolean disabled; // FIXME: look into it's use
 
     private Runnable onClickAction;
     private Runnable onToggleTrueAction;
     private Runnable onToggleFalseAction;
 
-    private Mouse mouse;
-    private EngineContext context;
-
     private boolean toggled;
     private boolean showHover = false;
 
-    public CustomCursor notAllowed;
+    // private Runnable hoverAction; // TODO: look into this
+    private boolean isHovered;
+
+    private Mouse mouse;
+    private EngineContext context;
 
     /**
      * 
@@ -138,9 +141,10 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     }
 
     private RectCheckbox(EngineContext context, Mouse mouse, EnginePanel panel) {
-        ClassFactory.create(this, context);
+        ClassFactory.create(this, context, zIndex);
 
         this.mouse = mouse;
+        this.context = context;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
@@ -222,29 +226,41 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         updateRotatedShape();
     }
 
+    // ————————— Set colors ——————————
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setToggleColorTrue(Color toggleColorTrue) {
+        this.toggleColorTrue = toggleColorTrue;
     }
 
     public void setHoverColor(Color hoveColor) {
         this.hoverColor = hoveColor;
     }
 
-    public void setToggleColor(Color toggleColor) {
-        this.toggleColor = toggleColor;
+    public void setDisabledColor(Color disabledColor) {
+        this.disabledColor = disabledColor;
     }
 
+    // —————————— Set images ——————————
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    public void setToggleImageTrue(Image toggleImage) {
+        this.toggleImage = toggleImage;
     }
 
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }
 
-    public void setToggleImage(Image toggleImage) {
-        this.toggleImage = toggleImage;
+    public void setDisabledImage(Image disabledImage) {
+        this.disabledImage = disabledImage;
     }
+
+    // ————————————————————————————————
 
     public void setDisabled(boolean disabled) {
         this.disabled = disabled;
@@ -313,70 +329,77 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         // Rotate everything drawn inside
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
-            // Draw if the image is not set
-            if ((image == null && !(inside || disabled)) ||
-                    (image == null && !showHover && !toggled)) {
-                g2d.setColor(color);
-                g2d.fill(baseShape);
+            if (disabled) {
+                if (disabledImage == null) {
+                    g2d.setColor(disabledColor);
+                    g2d.fill(baseShape);
+                } else {
+                    g2d.drawImage(disabledImage, 0, 0, width, height, null);
+                }
+                return;
             }
 
-            // Draw if image is set
-            if ((image != null && !(inside || disabled)) ||
-                    (image != null && !showHover && !toggled)) {
-                BufferedImage buffer = GraphicsTools.createMask(
-                        baseShape,
-                        width,
-                        height,
-                        gMask -> {
+            if (!toggled) {
+                // Draw if the image is not set
+                if (image == null) {
+                    g2d.setColor(color);
+                    g2d.fill(baseShape);
 
-                            gMask.drawImage(image, 0, 0, width, height, null);
-                        });
-                g2d.drawImage(buffer, x, y, null);
+                } else {
 
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+
+                                gMask.drawImage(image, 0, 0, width, height, null);
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+                }
+
+            } else if (toggled) {
+
+                // Draw if the toggleImage is not set
+                if (image == null) {
+                    g2d.setColor(toggleColorTrue);
+                    g2d.fill(baseShape);
+
+                } else {
+
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+
+                                gMask.drawImage(toggleImage, 0, 0, width, height, null);
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+
+                }
             }
 
-            // Draw if the toggleImage is not set
-            if ((image == null && !(inside || disabled) && toggled) ||
-                    (image == null && toggled && !showHover)) {
-                g2d.setColor(toggleColor);
-                g2d.fill(baseShape);
-            }
+            if (showHover) {
 
-            // Draw if toggleImage is set
-            if ((image != null && !(inside || disabled) && toggled) ||
-                    (image != null && toggled && !showHover)) {
-                BufferedImage buffer = GraphicsTools.createMask(
-                        baseShape,
-                        width,
-                        height,
-                        gMask -> {
+                // Draw if the hoverImage is not set and inside is true
+                if (hoverImage == null) {
+                    g2d.setColor(hoverColor);
+                    g2d.fill(baseShape);
 
-                            gMask.drawImage(toggleImage, 0, 0, width, height, null);
-                        });
-                g2d.drawImage(buffer, x, y, null);
+                } else {
 
-            }
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
 
-            // Draw if the hoverImage is not set and inside is true
-            if (showHover && (inside || disabled) && hoverImage == null) {
-                g2d.setColor(hoverColor);
-                g2d.fill(baseShape);
-            }
+                                gMask.drawImage(hoverImage, 0, 0, width, height, null);
+                            });
+                    g2d.drawImage(buffer, x, y, null);
 
-            // Draw if hoverImage is set
-            if (showHover && (inside || disabled) && hoverImage != null) {
-
-                BufferedImage buffer = GraphicsTools.createMask(
-                        baseShape,
-                        width,
-                        height,
-                        gMask -> {
-
-                            gMask.drawImage(hoverImage, 0, 0, width, height, null);
-
-                        });
-                g2d.drawImage(buffer, x, y, null);
-
+                }
             }
 
         });
@@ -429,6 +452,16 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     @Override
     public boolean getDisabled() {
         return disabled;
+    }
+
+    @Override
+    public boolean isHovered() {
+        return isHovered;
+    }
+
+    @Override
+    public void setHovered(boolean isHovered) {
+        this.isHovered = isHovered;
     }
 
 }

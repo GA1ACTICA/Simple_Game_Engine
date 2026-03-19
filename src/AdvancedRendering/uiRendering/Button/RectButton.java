@@ -30,7 +30,7 @@ import Utils.GraphicsTools;
 
 public class RectButton implements
         UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
-        MenuSetImage, MenuSetColor, Clickable {
+        MenuSetImage, MenuSetColor, Clickable, Hoverable {
 
     private int zIndex = 0; // default zIndex
 
@@ -42,17 +42,23 @@ public class RectButton implements
     protected Shape rotatedShape;
 
     private Color color = Color.GREEN;
-    private Color hoverColor = Color.RED;
+    private Color hoverColor = Color.ORANGE;
+    private Color clickColor = new Color(145, 145, 145, 90); // TODO: implement me!
+    private Color disabledColor = Color.LIGHT_GRAY;
 
     private Image image;
     private Image hoverImage;
+    private Image clickImage; // TODO: implement me!
+    private Image disabledImage;
 
     public boolean inside;
     public boolean isHandle;
-    private boolean disabled;
+    private boolean disabled; // FIXME: look into it's use
 
     private Runnable clickAction;
+
     // private Runnable hoverAction; // TODO: look into this
+    private boolean isHovered;
 
     private Mouse mouse;
     private EngineContext context;
@@ -128,8 +134,8 @@ public class RectButton implements
 
     private RectButton(EngineContext context, Mouse mouse, EnginePanel panel) {
         ClassFactory.create(this, context, zIndex);
-        this.context = context;
 
+        this.context = context;
         this.mouse = mouse;
 
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
@@ -200,6 +206,7 @@ public class RectButton implements
         updateRotatedShape();
     }
 
+    // ————————— Set colors ——————————
     @Override
     public void setColor(Color color) {
         this.color = color;
@@ -210,6 +217,15 @@ public class RectButton implements
         this.hoverColor = hoverColor;
     }
 
+    public void setDisabledColor(Color disabledColor) {
+        this.disabledColor = disabledColor;
+    }
+
+    public void setClickColor(Color clickColor) {
+        this.clickColor = clickColor;
+    }
+
+    // —————————— Set images ——————————
     @Override
     public void setImage(Image image) {
         this.image = image;
@@ -219,6 +235,16 @@ public class RectButton implements
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }
+
+    public void setDisabledImage(Image disabledImage) {
+        this.disabledImage = disabledImage;
+    }
+
+    public void setClickImage(Image clickImage) {
+        this.clickImage = clickImage;
+    }
+
+    // ————————————————————————————————
 
     public void setMiddle(Point middle) {
         x = (int) middle.getX() - width / 2;
@@ -295,48 +321,56 @@ public class RectButton implements
         // Rotate everything drawn inside
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
 
-            // Draw if the image is not set
-            if (image == null && !(inside || disabled)) {
-                g2d.setColor(color);
-                g2d.fill(baseShape);
+            if (disabled) {
+                if (disabledImage == null) {
+                    g2d.setColor(disabledColor);
+                    g2d.fill(baseShape);
+                } else {
+                    g2d.drawImage(disabledImage, 0, 0, width, height, null);
+                }
+                return;
             }
 
-            // Draw if image is set
-            if (image != null && !(inside || disabled)) {
-                BufferedImage buffer = GraphicsTools.createMask(
-                        baseShape,
-                        width,
-                        height,
-                        gMask -> {
+            if (!isHovered) {
 
-                            gMask.drawImage(image, 0, 0, width, height, null);
-                        });
-                g2d.drawImage(buffer, x, y, null);
+                // Draw if the button is not hovered
+                if (image == null) {
+                    g2d.setColor(color);
+                    g2d.fill(baseShape);
 
+                } else {
+
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+                                gMask.drawImage(image, 0, 0, width, height, null);
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+                }
+
+            } else {
+
+                // Draws this if button is hovered
+                if (hoverImage == null) {
+                    g2d.setColor(hoverColor);
+                    g2d.fill(baseShape);
+
+                } else {
+
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+
+                                gMask.drawImage(hoverImage, 0, 0, width, height, null);
+
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+                }
             }
-
-            // Draw if the hoverImage is not set and inside is true
-            if ((inside || disabled) && hoverImage == null) {
-                g2d.setColor(hoverColor);
-                g2d.fill(baseShape);
-            }
-
-            // Draw if hoverImage is set
-            if ((inside || disabled) && hoverImage != null) {
-
-                BufferedImage buffer = GraphicsTools.createMask(
-                        baseShape,
-                        width,
-                        height,
-                        gMask -> {
-
-                            gMask.drawImage(hoverImage, 0, 0, width, height, null);
-
-                        });
-                g2d.drawImage(buffer, x, y, null);
-
-            }
-
         });
     }
 
@@ -368,5 +402,15 @@ public class RectButton implements
     public void executeOnClick() {
         if (clickAction != null)
             clickAction.run();
+    }
+
+    @Override
+    public boolean isHovered() {
+        return isHovered;
+    }
+
+    @Override
+    public void setHovered(boolean isHovered) {
+        this.isHovered = isHovered;
     }
 }

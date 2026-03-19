@@ -14,47 +14,72 @@ import java.awt.Point;
 
 import Game.Configs.GameState.GameState;
 import GameEngine.Interfaces.Clickable;
+import GameEngine.Interfaces.Hoverable;
 
 public class MouseManager {
 
     private static GameState state;
-    private static Mouse mouse;
 
-    public static void setObjects(GameState getState, Mouse getMouse) {
+    public static void setObjects(GameState getState) {
         state = getState;
-        mouse = getMouse;
     }
+
+    private static Clickable topMost = null;
 
     public static void handleClick(EngineContext context, Point mousePoint) {
 
         for (Clickable clickable : context.getClickables()) {
+            if (!clickable.getVisible() || clickable.getDisabled())
+                continue;
 
             // Prints all buttons and zIndex
             if (state.data().debugVerbose)
                 System.out.println("%s %s".formatted(clickable, clickable.getZIndex()));
 
-            // Print only pressed button and zIndex
-            if (state.data().debug && clickable.contains(mousePoint.x, mousePoint.y))
-                System.out.println("%s %s".formatted(clickable, clickable.getZIndex()));
-
-            if (clickable.contains(mousePoint.x, mousePoint.y) && !clickable.getDisabled()) {
+            if ((clickable == topMost)) {
                 clickable.executeOnClick();
+
+                // Print only pressed button and zIndex
+                if (state.data().debug)
+                    System.out.println("%s %s".formatted(clickable, clickable.getZIndex()));
+
                 return;
+            }
+
+        }
+
+    }
+
+    public static void handlePriority(EngineContext context, Point mousePoint) {
+
+        // Find the topmost clickable under the mouse
+        for (Clickable clickable : context.getClickables()) {
+            if (!clickable.getVisible() || clickable.getDisabled())
+                continue;
+
+            if (clickable.contains(mousePoint.x, mousePoint.y)) {
+                topMost = clickable;
+                return;
+            } else {
+                topMost = null;
             }
         }
 
     }
 
-    public static void handleInside(EngineContext context, Point mousePoint) {
-        if (!mouse.moved)
-            return;
+    public static void handleHover(EngineContext context, Point mousePoint) {
 
+        // Update hover states
         for (Clickable clickable : context.getClickables()) {
+            if (!clickable.getVisible() || clickable.getDisabled())
+                continue;
 
-            if (clickable.getVisible()) {
+            if (!(clickable instanceof Hoverable hoverable))
+                continue;
 
-            }
+            // Check if current clickable is the top clickable on the mouse
+            hoverable.setHovered((clickable == topMost));
+
         }
-
     }
 }
