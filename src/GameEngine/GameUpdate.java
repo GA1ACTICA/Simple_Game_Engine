@@ -16,6 +16,8 @@ import java.awt.Point;
 
 import javax.swing.JFrame;
 
+import AdvancedRendering.uiRendering.Button.RectButton;
+import AdvancedRendering.uiRendering.CheckBox.RectCheckbox;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.uiRendering.Slider.Slider;
 import Game.*;
@@ -56,6 +58,21 @@ public class GameUpdate implements Runnable {
         s.show();
         s.setSliderMax(104563);
 
+        RectButton b1 = new RectButton(context, panel, mouse, new Point(475, 525), new Point(600, 600));
+        b1.show();
+
+        RectCheckbox b = new RectCheckbox(context, panel, mouse, new Point(450, 500), new Point(550, 550));
+        b.setColor(Color.BLACK);
+        b.show();
+
+        b.onClick(() -> {
+            System.out.println("black");
+        });
+
+        b1.onClick(() -> {
+            System.out.println("green");
+        });
+
         // constructors for menu
         // constructors for game
         ClassFactory.create(new MainGameClass(), context, 8);
@@ -78,8 +95,6 @@ public class GameUpdate implements Runnable {
                 for (Updatable u : context.getUpdatables()) {
                     u.update();
                 }
-
-                System.out.println(s.getSliderInformation());
 
                 lastUpdateTime = currentTime;
             }
