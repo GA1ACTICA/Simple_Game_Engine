@@ -30,7 +30,7 @@ public interface MenuInterface {
 
         void setPosition(Point position);
 
-        void changePosition(int x, int y);
+        void translate(int dx, int dy);
     }
 
     public interface MenuSetColor {

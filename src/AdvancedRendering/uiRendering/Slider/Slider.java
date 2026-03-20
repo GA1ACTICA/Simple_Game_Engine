@@ -148,6 +148,14 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         return handleAngle;
     }
 
+    public Point getPointOne() {
+        return pointOne;
+    }
+
+    public Point getPointTwo() {
+        return pointTwo;
+    }
+
     public void setHandle(RectButton handle) {
         this.handle = handle;
 
@@ -221,7 +229,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         int px = (int) Math.round(pointOne.x + percentage * deltaX);
         int py = (int) Math.round(pointOne.y + percentage * deltaY);
 
-        handle.setMiddle(new Point(px, py));
+        handle.setCenter(new Point(px, py));
 
         this.sliderPercentage = percentage;
     }
@@ -246,14 +254,15 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         if (!show)
             return;
 
-        if (handle.inside && mouse.getLeftDown() && !holding && !handle.getDisabled()) {
+        if (handle.contains(mouse.getPoint().x, mouse.getPoint().y) && mouse.getLeftDown() && !holding
+                && !handle.isEnabled()) {
             holding = true;
-            handle.setDisabled(true);
+            handle.setEnabled(false);
         }
 
         if (!mouse.getLeftDown() && holding) {
             holding = false;
-            handle.setDisabled(false);
+            handle.setEnabled(true);
         }
 
         // Only run when holding / draging
@@ -263,7 +272,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
             sliderPercentage = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).progress();
 
             // Update "handle" position
-            handle.setMiddle(MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).point());
+            handle.setCenter(MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).point());
 
         }
     }

@@ -31,7 +31,7 @@ import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 import Utils.GraphicsTools;
 
-public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize,
+public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize,
         MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
 
     private int zIndex = 0;
@@ -47,22 +47,23 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     private Color hoverColor = Color.ORANGE;
     private Color toggleColorTrue = Color.RED;
     private Color disabledColor = Color.LIGHT_GRAY;
-    private Color clickColor = new Color(145, 145, 145, 90); // TODO: implement me!
+    private Color clickColor = new Color(255, 255, 255, 150);
 
     private Image image;
     private Image hoverImage;
     private Image toggleImage;
     private Image disabledImage;
-    private Image clickImage; // TODO: implement me!
-
-    private boolean inside;
-    private boolean disabled; // FIXME: look into it's use
+    private Image clickImage;
 
     private Runnable onClickAction;
     private Runnable onToggleTrueAction;
     private Runnable onToggleFalseAction;
 
-    private boolean toggled;
+    private boolean enabled = true;
+    private boolean clickEffect = true;
+    private boolean clicked = false;
+
+    private boolean toggled = false;
     private boolean showHover = false;
 
     // private Runnable hoverAction; // TODO: look into this
@@ -164,7 +165,7 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     }
 
     @Override
-    public boolean getVisible() {
+    public boolean isVisible() {
         return show;
     }
 
@@ -204,15 +205,15 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     }
 
     @Override
-    public void changePosition(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void translate(int dx, int dy) {
+        x += dx;
+        y += dy;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
     }
 
-    public void setMiddle(Point middle) {
+    public void setCenter(Point middle) {
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
         baseShape.setFrame(x, y, width, height);
@@ -262,11 +263,8 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
     // ————————————————————————————————
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
-
-        if (disabled)
-            inside = !disabled;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public void setShowHover(boolean showHover) {
@@ -289,8 +287,16 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         return height;
     }
 
-    public Point getMiddlePoint() {
+    public Point getCenter() {
         return new Point(x + width / 2, y + height / 2);
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     /**
@@ -316,9 +322,6 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         this.onToggleFalseAction = onToggleFalseAction;
     }
 
-    // TODO: fix seperate color for disabeled
-    // TODO: change name for insideOvertide to disable
-
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -327,9 +330,9 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawn inside
-        GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
+        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), () -> {
 
-            if (disabled) {
+            if (!enabled) {
                 if (disabledImage == null) {
                     g2d.setColor(disabledColor);
                     g2d.fill(baseShape);
@@ -402,41 +405,39 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
                 }
             }
 
+            if (clickEffect && clicked) {
+                // Draws this if button is clicked
+                if (clickImage == null) {
+                    g2d.setColor(clickColor);
+                    g2d.fill(baseShape);
+
+                } else {
+
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+
+                                gMask.drawImage(clickImage, 0, 0, width, height, null);
+
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+                }
+            }
+
         });
 
-    }
-
-    @Override
-    public void update() {
-        if (!show)
-            return;
-
-        // Hit box detection for the "rotatedShape"
-        if (!disabled)
-            inside = rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
     // Call updateRotatedShape every time the position, size or rotation changes
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();
-        Point middle = getMiddlePoint();
+        Point middle = getCenter();
 
         transform.rotate(Math.toRadians(angle), middle.x, middle.y);
         rotatedShape = transform.createTransformedShape(baseShape);
-    }
-
-    private void pressed() {
-        toggled = !toggled;
-
-        // Run action if one is set
-        if (inside && onClickAction != null)
-            onClickAction.run();
-
-        if (toggled && onToggleTrueAction != null)
-            onToggleTrueAction.run();
-        else if (!toggled && onToggleFalseAction != null)
-            onToggleFalseAction.run();
     }
 
     @Override
@@ -446,12 +447,21 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
 
     @Override
     public void executeOnClick() {
-        pressed();
+        toggled = !toggled;
+
+        // Run action if one is set
+        if (onClickAction != null)
+            onClickAction.run();
+
+        if (toggled && onToggleTrueAction != null)
+            onToggleTrueAction.run();
+        else if (!toggled && onToggleFalseAction != null)
+            onToggleFalseAction.run();
     }
 
     @Override
-    public boolean getDisabled() {
-        return disabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     @Override
@@ -462,6 +472,16 @@ public class RectCheckbox implements UIDrawable, Updatable, MenuInterface, MenuS
     @Override
     public void setHovered(boolean isHovered) {
         this.isHovered = isHovered;
+    }
+
+    @Override
+    public void released() {
+        clicked = false;
+    }
+
+    @Override
+    public void pressed() {
+        clicked = true;
     }
 
 }

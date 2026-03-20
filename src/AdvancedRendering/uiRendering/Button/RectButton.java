@@ -29,7 +29,7 @@ import GameEngine.Interfaces.MenuInterface.*;
 import Utils.GraphicsTools;
 
 public class RectButton implements
-        UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
+        UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
         MenuSetImage, MenuSetColor, Clickable, Hoverable {
 
     private int zIndex = 0; // default zIndex
@@ -43,22 +43,23 @@ public class RectButton implements
 
     private Color color = Color.GREEN;
     private Color hoverColor = Color.ORANGE;
-    private Color clickColor = new Color(145, 145, 145, 90); // TODO: implement me!
+    private Color clickColor = new Color(255, 255, 255, 150);
     private Color disabledColor = Color.LIGHT_GRAY;
 
     private Image image;
     private Image hoverImage;
-    private Image clickImage; // TODO: implement me!
+    private Image clickImage;
     private Image disabledImage;
 
-    public boolean inside;
-    public boolean isHandle;
-    private boolean disabled; // FIXME: look into it's use
+    public boolean isHandle = false;
+    private boolean enabled = true;
+    private boolean clicked = false;
+    private boolean clickEffect = true;
 
     private Runnable clickAction;
 
     // private Runnable hoverAction; // TODO: look into this
-    private boolean isHovered;
+    private boolean isHovered = false;
 
     private Mouse mouse;
     private EngineContext context;
@@ -156,7 +157,7 @@ public class RectButton implements
     }
 
     @Override
-    public boolean getVisible() {
+    public boolean isVisible() {
         return show;
     }
 
@@ -189,7 +190,7 @@ public class RectButton implements
     }
 
     @Override
-    public void changePosition(int x, int y) {
+    public void translate(int x, int y) {
         this.x += x;
         this.y += y;
         baseShape.setFrame(x, y, width, height);
@@ -204,6 +205,10 @@ public class RectButton implements
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
+    }
+
+    public void setClickEffect(boolean clickEffect) {
+        this.clickEffect = clickEffect;
     }
 
     // ————————— Set colors ——————————
@@ -246,7 +251,7 @@ public class RectButton implements
 
     // ————————————————————————————————
 
-    public void setMiddle(Point middle) {
+    public void setCenter(Point middle) {
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
         baseShape.setFrame(x, y, width, height);
@@ -260,13 +265,13 @@ public class RectButton implements
         updateRotatedShape();
     }
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     @Override
-    public boolean getDisabled() {
-        return disabled;
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public int getX() {
@@ -285,8 +290,16 @@ public class RectButton implements
         return height;
     }
 
-    public Point getMiddlePoint() {
+    public Point getCenter() {
         return new Point(x + width / 2, y + height / 2);
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public double getAngle() {
+        return angle;
     }
 
     /**
@@ -304,9 +317,6 @@ public class RectButton implements
 
     }
 
-    // TODO: fix seperate color for disabeled
-    // TODO: change name for insideOvertide to disable
-
     public boolean getInside() {
         return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
@@ -319,9 +329,9 @@ public class RectButton implements
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawn inside
-        GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
+        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), () -> {
 
-            if (disabled) {
+            if (!enabled) {
                 if (disabledImage == null) {
                     g2d.setColor(disabledColor);
                     g2d.fill(baseShape);
@@ -371,23 +381,35 @@ public class RectButton implements
                     g2d.drawImage(buffer, x, y, null);
                 }
             }
+
+            if (clickEffect && clicked) {
+                // Draws this if button is clicked
+                if (clickImage == null) {
+                    g2d.setColor(clickColor);
+                    g2d.fill(baseShape);
+
+                } else {
+
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+
+                                gMask.drawImage(clickImage, 0, 0, width, height, null);
+
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+                }
+            }
         });
-    }
-
-    @Override
-    public void update() {
-        if (!show)
-            return;
-
-        // Hit box detection for the "rotatedShape"
-        inside = getInside();
     }
 
     // Call updateRotatedShape every time the position, size or rotation changes
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();
-        Point middle = getMiddlePoint();
+        Point middle = getCenter();
 
         transform.rotate(Math.toRadians(angle), middle.x, middle.y);
         rotatedShape = transform.createTransformedShape(baseShape);
@@ -412,5 +434,15 @@ public class RectButton implements
     @Override
     public void setHovered(boolean isHovered) {
         this.isHovered = isHovered;
+    }
+
+    @Override
+    public void pressed() {
+        clicked = true;
+    }
+
+    @Override
+    public void released() {
+        clicked = false;
     }
 }
