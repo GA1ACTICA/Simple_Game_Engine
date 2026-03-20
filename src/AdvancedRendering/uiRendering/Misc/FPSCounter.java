@@ -54,6 +54,18 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
         return zIndex;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
     @Override
     public void show() {
         show = true;
@@ -77,9 +89,9 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
     }
 
     @Override
-    public void changePosition(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void translate(int dx, int dy) {
+        x += dx;
+        y += dy;
     }
 
     @Override

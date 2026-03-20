@@ -81,10 +81,10 @@ public class GameMenu extends UIContainer
     }
 
     @Override
-    public void changePosition(int x, int y) {
+    public void translate(int dx, int dy) {
         this.x += x;
         this.y += y;
-        super.changePosition(x, y);
+        super.translate(dx, dy);
 
     }
 

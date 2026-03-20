@@ -66,10 +66,10 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
     }
 
     @Override
-    public void changePosition(int x, int y) {
+    public void translate(int dx, int dy) {
         for (MenuInterface item : items) {
             if (item instanceof MenuSetPosition r) {
-                r.changePosition(x, y);
+                r.translate(dx, dy);
             }
         }
     }

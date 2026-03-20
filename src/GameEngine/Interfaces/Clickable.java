@@ -17,9 +17,13 @@ public interface Clickable extends ZIndexable {
 
     void executeOnClick();
 
+    void pressed();
+
+    void released();
+
     boolean contains(int mouseX, int mouseY);
 
-    boolean getDisabled();
+    boolean isEnabled();
 
-    boolean getVisible();
+    boolean isVisible();
 }

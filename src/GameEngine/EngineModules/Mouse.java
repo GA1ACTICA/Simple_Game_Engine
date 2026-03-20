@@ -99,9 +99,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         switch (button) {
             case MouseEvent.BUTTON1:
                 leftDown = down;
-                if (down)
-                    MouseManager.handleClick(context, getPoint());
-
+                MouseManager.handleClick(context, getPoint(), down);
                 buttonPrintout(button, down);
                 break;
 

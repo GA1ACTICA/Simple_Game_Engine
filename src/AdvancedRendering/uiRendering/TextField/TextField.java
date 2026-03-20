@@ -189,9 +189,9 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     }
 
     @Override
-    public void changePosition(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void translate(int dx, int dy) {
+        x += dx;
+        y += dy;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
@@ -258,6 +258,14 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
 
     public Point getMiddlePoint() {
         return new Point(x + width / 2, y + height / 2);
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public Color getColor() {
+        return color;
     }
 
     @Override
