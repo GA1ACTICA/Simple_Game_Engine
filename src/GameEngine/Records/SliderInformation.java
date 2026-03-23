@@ -11,8 +11,10 @@
 
 package GameEngine.Records;
 
+import java.util.Objects;
+
 /**
- * The {@code SliderInformation} class is used to encapsulate the values of the
+ * The {@code SliderInformation} record is used to encapsulate the values of the
  * {@link #AdvancedRendering.uiRendering.Slider Slider} class. It contains the
  * current value of the slider which is calculated with the formula
  * {@code sliderProgress * sliderMax}
@@ -22,6 +24,13 @@ package GameEngine.Records;
  * and "end"
  * points, represented as a decimal value between 0.0 and 1.0
  * <p>
+ * 
+ * @throws NullPointerException if {@code sliderValue} or {@code sliderProgress}
+ *                              is {@code null}
  */
 public record SliderInformation(double sliderValue, double sliderProgress) {
+    public SliderInformation {
+        Objects.requireNonNull(sliderValue, "sliderValue must not be null");
+        Objects.requireNonNull(sliderProgress, "sliderProgress must not be null");
+    }
 }
