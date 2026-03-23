@@ -52,9 +52,9 @@ public class MouseManager {
 
             }
 
-        } else {
+        } else if (currentTopMost != null) {
 
-            if (currentTopMost.contains(mousePoint.x, mousePoint.y))
+            if ((topMost == currentTopMost))
                 currentTopMost.executeOnClick();
 
             currentTopMost.released();
