@@ -28,6 +28,8 @@ public class Game {
     static final Keys keys = new Keys(state);
     static final Mouse mouse = new Mouse(state, context, panel);
 
+    static final CustomCursor cursor = new CustomCursor(context, panel, mouse);
+
     static final GameUpdate gu = new GameUpdate(keys,
             mouse,
             state,
