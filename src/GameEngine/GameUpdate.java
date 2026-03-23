@@ -71,6 +71,7 @@ public class GameUpdate implements Runnable {
 
         b1.onClick(() -> {
             System.out.println("green");
+
         });
 
         // constructors for menu

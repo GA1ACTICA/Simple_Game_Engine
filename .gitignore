@@ -2,6 +2,7 @@ bin/
 src/recources/
 *.py
 .vscode/
+devTools/
 
 # Compiled class file
 *.class
