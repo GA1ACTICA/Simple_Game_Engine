@@ -11,5 +11,8 @@
 
 package GameEngine.Interfaces.Drawables;
 
-public interface CursorDrawable extends Drawable {
+import java.awt.Graphics;
+
+public interface CursorDrawable {
+    void draw(Graphics g);
 }

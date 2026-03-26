@@ -16,6 +16,7 @@ import java.awt.geom.AffineTransform;
 import javax.swing.*;
 
 import Game.Configs.GameState.GameState;
+import GameEngine.Interfaces.Drawables.CursorDrawable;
 import GameEngine.Interfaces.Drawables.Drawable;
 
 import java.awt.*;
@@ -75,13 +76,15 @@ public class EnginePanel extends JPanel {
             // Restore transform
             g2d.setTransform(old);
 
+            // TODO: Watch how other games handle UI (This dosen't look good)
+
             // Draw game objects in UI space
             for (Drawable drawable : context.getUiDrawables()) {
                 drawable.draw(g2d);
             }
 
             // Always draws cursors on top
-            for (Drawable d : context.getCursorDrawables()) {
+            for (CursorDrawable d : context.getCursorDrawables()) {
                 d.draw(g2d);
             }
 

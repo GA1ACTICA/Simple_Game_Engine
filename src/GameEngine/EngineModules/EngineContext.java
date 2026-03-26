@@ -16,13 +16,14 @@ import java.util.List;
 
 import GameEngine.Interfaces.Clickable;
 import GameEngine.Interfaces.Updatable;
+import GameEngine.Interfaces.Drawables.CursorDrawable;
 import GameEngine.Interfaces.Drawables.Drawable;
 
 public class EngineContext {
     private final List<Drawable> worldDrawables = new ArrayList<>();
     private final List<Drawable> uiDrawables = new ArrayList<>();
 
-    private final List<Drawable> cursorDrawables = new ArrayList<>();
+    private final List<CursorDrawable> cursorDrawables = new ArrayList<>();
 
     private final List<Updatable> updatables = new ArrayList<>();
 
@@ -36,7 +37,7 @@ public class EngineContext {
         return uiDrawables;
     }
 
-    public List<Drawable> getCursorDrawables() {
+    public List<CursorDrawable> getCursorDrawables() {
         return cursorDrawables;
     }
 

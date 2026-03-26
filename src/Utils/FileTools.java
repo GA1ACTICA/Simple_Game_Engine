@@ -14,6 +14,7 @@ package Utils;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.nio.file.Path;
 
 import javax.swing.ImageIcon;
 
@@ -25,22 +26,26 @@ public class FileTools {
      * @param path Path to the image file, relative to the project
      *             resources.
      * @return The Image loaded from the given file path.
+     * 
+     * @see Image
      */
-    public static Image getImage(String path) {
-        Image image = new ImageIcon(FileTools.class.getClassLoader().getResource(path)).getImage();
+    public static Image getImage(Path path) {
+        Image image = new ImageIcon(FileTools.class.getClassLoader().getResource(path.toString())).getImage();
         return image;
     }
 
     /**
      * Get an image from the specified file path.
      * 
-     * @param filePathFromProject Path to the image file, relative to the project
-     *                            resources.
+     * @param path Path to the image file, relative to the project
+     *             resources.
      * @return The BufferedImage loaded from the given file path.
+     * 
+     * @see BufferedImage
      */
-    public static BufferedImage getBufferedImage(String filePathFromProject, int type) {
+    public static BufferedImage getBufferedImage(Path path, int type) {
 
-        BufferedImage image = convertToBufferedImage(getImage(filePathFromProject), type);
+        BufferedImage image = convertToBufferedImage(getImage(path), type);
 
         return image;
     }
@@ -50,6 +55,8 @@ public class FileTools {
      * @param image Input Image to be cast to BufferedImage
      * 
      * @return The casted BufferedImage
+     * 
+     * @see BufferedImage
      */
     public static BufferedImage convertToBufferedImage(Image image, int type) {
 
