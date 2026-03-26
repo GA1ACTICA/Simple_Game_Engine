@@ -23,6 +23,7 @@ import AdvancedRendering.uiRendering.Slider.Slider;
 import Game.*;
 import Game.Configs.GameState.GameState;
 import GameEngine.EngineModules.*;
+import GameEngine.EngineModules.CustomCursor.CursorType;
 import GameEngine.Interfaces.Updatable;
 
 public class GameUpdate implements Runnable {
@@ -72,6 +73,7 @@ public class GameUpdate implements Runnable {
         b1.onClick(() -> {
             System.out.println("green");
 
+            CustomCursor.setCursor(CursorType.ALIAS);
         });
 
         // constructors for menu
