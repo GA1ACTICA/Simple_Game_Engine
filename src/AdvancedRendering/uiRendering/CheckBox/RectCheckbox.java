@@ -23,6 +23,8 @@ import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.ClassFactory;
+import GameEngine.EngineModules.CursorManager;
+import GameEngine.EngineModules.CursorManager.CursorType;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Mouse;
@@ -299,6 +301,11 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         return color;
     }
 
+    @Override
+    public boolean isHovered() {
+        return isHovered;
+    }
+
     /**
      * This lets you run code when the button is pressed with the method:
      * 
@@ -465,13 +472,13 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     @Override
-    public boolean isHovered() {
-        return isHovered;
-    }
-
-    @Override
     public void setHovered(boolean isHovered) {
         this.isHovered = isHovered;
+
+        if (isHovered)
+            CursorManager.setCursor(CursorType.POINTER);
+        else
+            CursorManager.setCursor(CursorType.DEFAULT);
     }
 
     @Override

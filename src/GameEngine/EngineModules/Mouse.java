@@ -171,19 +171,19 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         return new Point(x, y);
     }
 
-    public boolean getLeftDown() {
+    public boolean leftDown() {
         return leftDown;
     }
 
-    public boolean getMiddleDown() {
+    public boolean middleDown() {
         return middleDown;
     }
 
-    public boolean getRightDown() {
+    public boolean rightDown() {
         return rightDown;
     }
 
-    public boolean getOnScreen() {
+    public boolean onScreen() {
         return onScreen;
     }
 

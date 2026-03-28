@@ -23,6 +23,7 @@ import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.*;
+import GameEngine.EngineModules.CursorManager.CursorType;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 import GameEngine.Interfaces.MenuInterface.*;
@@ -51,7 +52,6 @@ public class RectButton implements
     private Image clickImage;
     private Image disabledImage;
 
-    public boolean isHandle = false;
     private boolean enabled = true;
     private boolean clicked = false;
     private boolean clickEffect = true;
@@ -302,6 +302,11 @@ public class RectButton implements
         return angle;
     }
 
+    @Override
+    public boolean isHovered() {
+        return isHovered;
+    }
+
     /**
      * This lets you run code when the button is pressed with the method:
      * 
@@ -427,13 +432,14 @@ public class RectButton implements
     }
 
     @Override
-    public boolean isHovered() {
-        return isHovered;
-    }
-
-    @Override
     public void setHovered(boolean isHovered) {
         this.isHovered = isHovered;
+
+        if (isHovered)
+            CursorManager.setCursor(CursorType.POINTER);
+        else
+            CursorManager.setCursor(CursorType.DEFAULT);
+
     }
 
     @Override
@@ -444,5 +450,13 @@ public class RectButton implements
     @Override
     public void released() {
         clicked = false;
+    }
+
+    public boolean isPressed() {
+        return clicked;
+    }
+
+    public boolean isReleased() {
+        return !clicked;
     }
 }
