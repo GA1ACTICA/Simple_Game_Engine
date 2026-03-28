@@ -92,6 +92,8 @@ public class MouseManager {
 
             // Check if current clickable is the top clickable on the mouse
             hoverable.setHovered((clickable == topMost));
+            if ((clickable == topMost))
+                return;
 
         }
     }

@@ -75,7 +75,6 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
         handle.setRotation(handleAngle);
 
-        handle.isHandle = true;
     }
 
     @Override
@@ -156,6 +155,10 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         return pointTwo;
     }
 
+    public void setColor(Color sliderColor) {
+        this.sliderColor = sliderColor;
+    }
+
     public void setHandle(RectButton handle) {
         this.handle = handle;
 
@@ -217,10 +220,6 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
     }
 
-    public void setColor(Color sliderColor) {
-        this.sliderColor = sliderColor;
-    }
-
     public void setPercentage(double percentage) {
 
         double deltaX = pointTwo.x - pointOne.x;
@@ -254,21 +253,10 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         if (!show)
             return;
 
-        if (handle.contains(mouse.getPoint().x, mouse.getPoint().y) && mouse.getLeftDown() && !holding
-                && !handle.isEnabled()) {
-            holding = true;
-            handle.setEnabled(false);
-        }
+        // Only run when holding / dragging
+        if (handle.isPressed()) {
 
-        if (!mouse.getLeftDown() && holding) {
-            holding = false;
-            handle.setEnabled(true);
-        }
-
-        // Only run when holding / draging
-        if (holding) {
-
-            // Update "sliderProcentage"
+            // Update "sliderPercentage"
             sliderPercentage = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).progress();
 
             // Update "handle" position
