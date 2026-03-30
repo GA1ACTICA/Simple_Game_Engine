@@ -17,7 +17,6 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -26,267 +25,266 @@ import GameEngine.Records.CursorInformation;
 import Utils.FileTools;
 
 public class CursorManager implements CursorDrawable {
-        public enum CursorType {
-                ALIAS,
-                ALL_RESIZE,
-                ALL_SCROLL,
-                CELL,
-                COL_RESIZE,
-                CONTEXT_MENU,
-                COPY,
-                CROSSHAIR,
-                DEFAULT,
-                E_RESIZE,
-                EW_RESIZE,
-                GRAB,
-                GRABBING,
-                HELP,
-                MOVE,
-                NE_RESIZE,
-                NESW_RESIZE,
-                NO_DROP,
-                NOT_ALLOWED,
-                N_RESIZE,
-                NS_RESIZE,
-                NW_RESIZE,
-                NWSE_RESIZE,
-                POINTER,
-                ROW_RESIZE,
-                SE_RESIZE,
-                S_RESIZE,
-                SW_RESIZE,
-                TEXT,
-                VERTICAL_TEXT,
-                W_RESIZE,
-                X_CURSOR,
-                ZOOM_IN,
-                ZOOM_OUT,
+    public enum CursorType {
+        ALIAS,
+        ALL_RESIZE,
+        ALL_SCROLL,
+        CELL,
+        COL_RESIZE,
+        CONTEXT_MENU,
+        COPY,
+        CROSSHAIR,
+        DEFAULT,
+        E_RESIZE,
+        EW_RESIZE,
+        GRAB,
+        GRABBING,
+        HELP,
+        MOVE,
+        NE_RESIZE,
+        NESW_RESIZE,
+        NO_DROP,
+        NOT_ALLOWED,
+        N_RESIZE,
+        NS_RESIZE,
+        NW_RESIZE,
+        NWSE_RESIZE,
+        POINTER,
+        ROW_RESIZE,
+        SE_RESIZE,
+        S_RESIZE,
+        SW_RESIZE,
+        TEXT,
+        VERTICAL_TEXT,
+        W_RESIZE,
+        X_CURSOR,
+        ZOOM_IN,
+        ZOOM_OUT,
 
-                // Animated
-                PROGRESS,
-                WAIT
-        }
+        // Animated
+        PROGRESS,
+        WAIT
+    }
 
-        private static String defaultCursorPath = "GameEngine/Assets/Cursors/Adwaita 96x96/";
+    private static String defaultCursorPath = "GameEngine/Assets/Cursors/Adwaita 96x96/";
 
-        private static Map<CursorType, CursorInformation> cursors = new EnumMap<>(CursorType.class) {
-                {
-                        put(CursorType.ALIAS,
-                                        new CursorInformation(new Point(72, 20),
-                                                        Path.of(defaultCursorPath + "alias.png")));
-                        put(CursorType.ALL_RESIZE,
-                                        new CursorInformation(new Point(48, 44),
-                                                        Path.of(defaultCursorPath + "all-resize.png")));
-                        put(CursorType.ALL_SCROLL,
-                                        new CursorInformation(new Point(44, 44),
-                                                        Path.of(defaultCursorPath + "all-scroll.png")));
-                        put(CursorType.CELL,
-                                        new CursorInformation(new Point(44, 44),
-                                                        Path.of(defaultCursorPath + "cell.png")));
-                        put(CursorType.COL_RESIZE,
-                                        new CursorInformation(new Point(48, 48),
-                                                        Path.of(defaultCursorPath + "col-resize.png")));
-                        put(CursorType.CONTEXT_MENU,
-                                        new CursorInformation(new Point(12, 4),
-                                                        Path.of(defaultCursorPath + "context-menu.png")));
-                        put(CursorType.COPY,
-                                        new CursorInformation(new Point(12, 4),
-                                                        Path.of(defaultCursorPath + "copy.png")));
-                        put(CursorType.CROSSHAIR,
-                                        new CursorInformation(new Point(44, 44),
-                                                        Path.of(defaultCursorPath + "crosshair.png")));
-                        put(CursorType.DEFAULT,
-                                        new CursorInformation(new Point(12, 4),
-                                                        Path.of(defaultCursorPath + "default.png")));
-                        put(CursorType.E_RESIZE,
-                                        new CursorInformation(new Point(76, 52),
-                                                        Path.of(defaultCursorPath + "e-resize.png"))); // e-resize
-                        put(CursorType.EW_RESIZE,
-                                        new CursorInformation(new Point(48, 48),
-                                                        Path.of(defaultCursorPath + "ew-resize.png"))); // ew-resize
-                        put(CursorType.GRAB,
-                                        new CursorInformation(new Point(44, 8),
-                                                        Path.of(defaultCursorPath + "grab.png"))); // grab
-                        put(CursorType.GRABBING,
-                                        new CursorInformation(new Point(36, 20),
-                                                        Path.of(defaultCursorPath + "grabbing.png"))); // grabbing
-                        put(CursorType.HELP,
-                                        new CursorInformation(new Point(48, 84),
-                                                        Path.of(defaultCursorPath + "help.png"))); // help
-                        put(CursorType.MOVE,
-                                        new CursorInformation(new Point(12, 4),
-                                                        Path.of(defaultCursorPath + "move.png"))); // move
-                        put(CursorType.NE_RESIZE,
-                                        new CursorInformation(new Point(60, 40),
-                                                        Path.of(defaultCursorPath + "ne-resize.png"))); // ne-resize
-                        put(CursorType.NESW_RESIZE,
-                                        new CursorInformation(new Point(44, 44),
-                                                        Path.of(defaultCursorPath + "nesw-resize.png")));// nesw-resize
-                        put(CursorType.NO_DROP,
-                                        new CursorInformation(new Point(12, 4),
-                                                        Path.of(defaultCursorPath + "no-drop.png"))); // no-drop
-                        put(CursorType.NOT_ALLOWED,
-                                        new CursorInformation(new Point(48, 48),
-                                                        Path.of(defaultCursorPath + "not-allowed.png")));// not-allowed
-                        put(CursorType.N_RESIZE,
-                                        new CursorInformation(new Point(52, 24),
-                                                        Path.of(defaultCursorPath + "n-resize.png"))); // n-resize
-                        put(CursorType.NS_RESIZE,
-                                        new CursorInformation(new Point(48, 52),
-                                                        Path.of(defaultCursorPath + "ns-resize.png"))); // ns-resize
-                        put(CursorType.NW_RESIZE,
-                                        new CursorInformation(new Point(40, 40),
-                                                        Path.of(defaultCursorPath + "nw-resize.png"))); // nw-resize
-                        put(CursorType.NWSE_RESIZE,
-                                        new CursorInformation(new Point(44, 44),
-                                                        Path.of(defaultCursorPath + "nwse-resize.png")));// nwse-resize
-                        put(CursorType.POINTER,
-                                        new CursorInformation(new Point(28, 20),
-                                                        Path.of(defaultCursorPath + "pointer.png"))); // pointer
-                        put(CursorType.ROW_RESIZE,
-                                        new CursorInformation(new Point(48, 52),
-                                                        Path.of(defaultCursorPath + "row-resize.png"))); // row-resize
-                        put(CursorType.SE_RESIZE,
-                                        new CursorInformation(new Point(60, 60),
-                                                        Path.of(defaultCursorPath + "se-resize.png"))); // se-resize
-                        put(CursorType.S_RESIZE,
-                                        new CursorInformation(new Point(52, 72),
-                                                        Path.of(defaultCursorPath + "s-resize.png"))); // s-resize
-                        put(CursorType.SW_RESIZE,
-                                        new CursorInformation(new Point(40, 60),
-                                                        Path.of(defaultCursorPath + "sw-resize.png"))); // sw-resize
-                        put(CursorType.TEXT,
-                                        new CursorInformation(new Point(44, 48),
-                                                        Path.of(defaultCursorPath + "text.png"))); // text
-                        put(CursorType.VERTICAL_TEXT,
-                                        new CursorInformation(new Point(48, 44),
-                                                        Path.of(defaultCursorPath + "vertical-text.png"))); // vertical-text
-                        put(CursorType.W_RESIZE,
-                                        new CursorInformation(new Point(24, 52),
-                                                        Path.of(defaultCursorPath + "w-resize.png"))); // w-resize
-                        put(CursorType.X_CURSOR,
-                                        new CursorInformation(new Point(44, 48),
-                                                        Path.of(defaultCursorPath + "X_curs.png"))); // X_curs
-                        put(CursorType.ZOOM_IN,
-                                        new CursorInformation(new Point(44, 40),
-                                                        Path.of(defaultCursorPath + "zoom-in.png"))); // zoom-in
-                        put(CursorType.ZOOM_OUT,
-                                        new CursorInformation(new Point(44, 40),
-                                                        Path.of(defaultCursorPath + "zoom-out.png"))); // zoom-out
+    private static Map<CursorType, CursorInformation> cursors = new EnumMap<>(CursorType.class) {
+        {
+            put(CursorType.ALIAS,
+                    new CursorInformation(new Point(72, 20),
+                            Path.of(defaultCursorPath + "alias.png")));
+            put(CursorType.ALL_RESIZE,
+                    new CursorInformation(new Point(48, 44),
+                            Path.of(defaultCursorPath + "all-resize.png")));
+            put(CursorType.ALL_SCROLL,
+                    new CursorInformation(new Point(44, 44),
+                            Path.of(defaultCursorPath + "all-scroll.png")));
+            put(CursorType.CELL,
+                    new CursorInformation(new Point(44, 44),
+                            Path.of(defaultCursorPath + "cell.png")));
+            put(CursorType.COL_RESIZE,
+                    new CursorInformation(new Point(48, 48),
+                            Path.of(defaultCursorPath + "col-resize.png")));
+            put(CursorType.CONTEXT_MENU,
+                    new CursorInformation(new Point(12, 4),
+                            Path.of(defaultCursorPath + "context-menu.png")));
+            put(CursorType.COPY,
+                    new CursorInformation(new Point(12, 4),
+                            Path.of(defaultCursorPath + "copy.png")));
+            put(CursorType.CROSSHAIR,
+                    new CursorInformation(new Point(44, 44),
+                            Path.of(defaultCursorPath + "crosshair.png")));
+            put(CursorType.DEFAULT,
+                    new CursorInformation(new Point(12, 4),
+                            Path.of(defaultCursorPath + "default.png")));
+            put(CursorType.E_RESIZE,
+                    new CursorInformation(new Point(76, 52),
+                            Path.of(defaultCursorPath + "e-resize.png"))); // e-resize
+            put(CursorType.EW_RESIZE,
+                    new CursorInformation(new Point(48, 48),
+                            Path.of(defaultCursorPath + "ew-resize.png"))); // ew-resize
+            put(CursorType.GRAB,
+                    new CursorInformation(new Point(44, 8),
+                            Path.of(defaultCursorPath + "grab.png"))); // grab
+            put(CursorType.GRABBING,
+                    new CursorInformation(new Point(36, 20),
+                            Path.of(defaultCursorPath + "grabbing.png"))); // grabbing
+            put(CursorType.HELP,
+                    new CursorInformation(new Point(48, 84),
+                            Path.of(defaultCursorPath + "help.png"))); // help
+            put(CursorType.MOVE,
+                    new CursorInformation(new Point(12, 4),
+                            Path.of(defaultCursorPath + "move.png"))); // move
+            put(CursorType.NE_RESIZE,
+                    new CursorInformation(new Point(60, 40),
+                            Path.of(defaultCursorPath + "ne-resize.png"))); // ne-resize
+            put(CursorType.NESW_RESIZE,
+                    new CursorInformation(new Point(44, 44),
+                            Path.of(defaultCursorPath + "nesw-resize.png")));// nesw-resize
+            put(CursorType.NO_DROP,
+                    new CursorInformation(new Point(12, 4),
+                            Path.of(defaultCursorPath + "no-drop.png"))); // no-drop
+            put(CursorType.NOT_ALLOWED,
+                    new CursorInformation(new Point(48, 48),
+                            Path.of(defaultCursorPath + "not-allowed.png")));// not-allowed
+            put(CursorType.N_RESIZE,
+                    new CursorInformation(new Point(52, 24),
+                            Path.of(defaultCursorPath + "n-resize.png"))); // n-resize
+            put(CursorType.NS_RESIZE,
+                    new CursorInformation(new Point(48, 52),
+                            Path.of(defaultCursorPath + "ns-resize.png"))); // ns-resize
+            put(CursorType.NW_RESIZE,
+                    new CursorInformation(new Point(40, 40),
+                            Path.of(defaultCursorPath + "nw-resize.png"))); // nw-resize
+            put(CursorType.NWSE_RESIZE,
+                    new CursorInformation(new Point(44, 44),
+                            Path.of(defaultCursorPath + "nwse-resize.png")));// nwse-resize
+            put(CursorType.POINTER,
+                    new CursorInformation(new Point(28, 20),
+                            Path.of(defaultCursorPath + "pointer.png"))); // pointer
+            put(CursorType.ROW_RESIZE,
+                    new CursorInformation(new Point(48, 52),
+                            Path.of(defaultCursorPath + "row-resize.png"))); // row-resize
+            put(CursorType.SE_RESIZE,
+                    new CursorInformation(new Point(60, 60),
+                            Path.of(defaultCursorPath + "se-resize.png"))); // se-resize
+            put(CursorType.S_RESIZE,
+                    new CursorInformation(new Point(52, 72),
+                            Path.of(defaultCursorPath + "s-resize.png"))); // s-resize
+            put(CursorType.SW_RESIZE,
+                    new CursorInformation(new Point(40, 60),
+                            Path.of(defaultCursorPath + "sw-resize.png"))); // sw-resize
+            put(CursorType.TEXT,
+                    new CursorInformation(new Point(44, 48),
+                            Path.of(defaultCursorPath + "text.png"))); // text
+            put(CursorType.VERTICAL_TEXT,
+                    new CursorInformation(new Point(48, 44),
+                            Path.of(defaultCursorPath + "vertical-text.png"))); // vertical-text
+            put(CursorType.W_RESIZE,
+                    new CursorInformation(new Point(24, 52),
+                            Path.of(defaultCursorPath + "w-resize.png"))); // w-resize
+            put(CursorType.X_CURSOR,
+                    new CursorInformation(new Point(44, 48),
+                            Path.of(defaultCursorPath + "X_curs.png"))); // X_curs
+            put(CursorType.ZOOM_IN,
+                    new CursorInformation(new Point(44, 40),
+                            Path.of(defaultCursorPath + "zoom-in.png"))); // zoom-in
+            put(CursorType.ZOOM_OUT,
+                    new CursorInformation(new Point(44, 40),
+                            Path.of(defaultCursorPath + "zoom-out.png"))); // zoom-out
 
-                        // animated
-                        // put(CursorType.PROGRESS, new CursorInformation(new Point(12, 4), null, true,
-                        // 50)); // progress
-                        // put(CursorType.WAIT, new CursorInformation(new Point(44, 44), null, true,
-                        // 50));// wait
-
-                }
-        };
-
-        private static CursorInformation currentCursor = cursors.get(CursorType.DEFAULT);
-
-        private int x, y;
-        private int width = 24;
-        private int height = 24;
-
-        private static boolean overriding = false;
-
-        // Does not need cursorPath since the image is stored instead.
-        private static Point hotspot = currentCursor.hotspot();
-        private static boolean animated = currentCursor.animated();
-        private static Integer millis = currentCursor.millis();
-        private static Image cursorImage = FileTools.getImage(currentCursor.cursorPath());
-
-        private static boolean show = true;
-
-        private Mouse mouse;
-
-        public CursorManager(EngineContext context, EnginePanel panel, Mouse mouse) {
-                this.mouse = mouse;
-                ClassFactory.create(this, context);
-
-                // Hide system cursor
-                panel.setCursor(
-                                Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(1, 1,
-                                                BufferedImage.TYPE_INT_ARGB),
-                                                new Point(0, 0), "Transparent cursor"));
+            // animated
+            // put(CursorType.PROGRESS, new CursorInformation(new Point(12, 4), null, true,
+            // 50)); // progress
+            // put(CursorType.WAIT, new CursorInformation(new Point(44, 44), null, true,
+            // 50));// wait
 
         }
+    };
 
-        public static boolean isVisible() {
-                return show;
-        }
+    private static CursorInformation currentCursor = cursors.get(CursorType.DEFAULT);
 
-        public static void show() {
-                show = true;
-        }
+    private int width = 24;
+    private int height = 24;
 
-        public static void hide() {
-                show = false;
-        }
+    private static boolean overriding = false;
 
-        /**
-         * Set a cursor predefined in {@link CursorType} or added with
-         * {@link #TEMPORARY_METHOD_NAME()}.
-         * 
-         * @param cursorType
-         * @return {@code true} if
-         */
-        public static boolean setCursor(CursorManager.CursorType cursorType) {
-                if (overriding)
-                        return false;
+    // Does not need cursorPath since the image is stored instead.
+    private static Point hotspot = currentCursor.hotspot();
+    private static boolean animated = currentCursor.animated();
+    private static Integer millis = currentCursor.millis();
+    private static Image cursorImage = FileTools.getImage(currentCursor.cursorPath());
 
-                currentCursor = cursors.get(cursorType);
-                updateCursor();
-                return true;
-        }
+    private static boolean show = true;
 
-        /**
-         * Sets the current cursor and locks it, preventing it from being changed
-         * via {@link #setCursor(CursorManager.CursorType) setCursor()}.
-         * <p>
-         * While the cursor is locked, calls to {@code setCursor(...)} will have
-         * no effect and return {@code false}.
-         *
-         * @param cursorType the cursor type to set and lock
-         */
-        public static void lockCursor(CursorManager.CursorType cursorType) {
-                currentCursor = cursors.get(cursorType);
-                updateCursor();
+    private Mouse mouse;
 
-                overriding = true;
-        }
+    public CursorManager(EngineContext context, EnginePanel panel, Mouse mouse) {
+        this.mouse = mouse;
+        ClassFactory.create(this, context);
 
-        /**
-         * Unlocks the cursor, allowing it to be changed via
-         * {@link #setCursor(CursorManager.CursorType) setCursor()}.
-         * <p>
-         * After calling this method, {@code setCursor(...)} will resume normal
-         * behavior and return {@code true}.
-         */
-        public static void unlockCursor() {
-                overriding = false;
-        }
+        // Hide system cursor
+        panel.setCursor(
+                Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(1, 1,
+                        BufferedImage.TYPE_INT_ARGB),
+                        new Point(0, 0), "Transparent cursor"));
 
-        @Override
-        public void draw(Graphics g) {
-                if (!show || !mouse.onScreen())
-                        return;
+    }
 
-                double scaleX = (double) width / cursorImage.getWidth(null);
-                double scaleY = (double) height / cursorImage.getHeight(null);
+    public static boolean isVisible() {
+        return show;
+    }
 
-                int drawX = (int) (mouse.getPoint().x - hotspot.x * scaleX);
-                int drawY = (int) (mouse.getPoint().y - hotspot.y * scaleY);
+    public static void show() {
+        show = true;
+    }
 
-                g.drawImage(cursorImage, drawX, drawY, width, height, null);
-        }
+    public static void hide() {
+        show = false;
+    }
 
-        private static void updateCursor() {
-                hotspot = currentCursor.hotspot();
-                animated = currentCursor.animated();
-                millis = currentCursor.millis();
-                cursorImage = FileTools.getImage(currentCursor.cursorPath());
-        }
+    /**
+     * Set a cursor predefined in {@link CursorType} or added with
+     * {@link #TEMPORARY_METHOD_NAME()}.
+     * 
+     * @param cursorType
+     * @return {@code true} if
+     */
+    public static boolean setCursor(CursorManager.CursorType cursorType) {
+        if (overriding)
+            return false;
+
+        currentCursor = cursors.get(cursorType);
+        updateCursor();
+        return true;
+    }
+
+    /**
+     * Sets the current cursor and locks it, preventing it from being changed
+     * via {@link #setCursor(CursorManager.CursorType) setCursor()}.
+     * <p>
+     * While the cursor is locked, calls to {@code setCursor(...)} will have
+     * no effect and return {@code false}.
+     *
+     * @param cursorType the cursor type to set and lock
+     */
+    public static void lockCursor(CursorManager.CursorType cursorType) {
+        currentCursor = cursors.get(cursorType);
+        updateCursor();
+
+        overriding = true;
+    }
+
+    /**
+     * Unlocks the cursor, allowing it to be changed via
+     * {@link #setCursor(CursorManager.CursorType) setCursor()}.
+     * <p>
+     * After calling this method, {@code setCursor(...)} will resume normal
+     * behavior and return {@code true}.
+     */
+    public static void unlockCursor() {
+        overriding = false;
+    }
+
+    @Override
+    public void draw(Graphics g) {
+        if (!show || !mouse.onScreen())
+            return;
+
+        double scaleX = (double) width / cursorImage.getWidth(null);
+        double scaleY = (double) height / cursorImage.getHeight(null);
+
+        int drawX = (int) (mouse.getPoint().x - hotspot.x * scaleX);
+        int drawY = (int) (mouse.getPoint().y - hotspot.y * scaleY);
+
+        g.drawImage(cursorImage, drawX, drawY, width, height, null);
+    }
+
+    private static void updateCursor() {
+        hotspot = currentCursor.hotspot();
+        animated = currentCursor.animated();
+        millis = currentCursor.millis();
+        cursorImage = FileTools.getImage(currentCursor.cursorPath());
+    }
 
 }
