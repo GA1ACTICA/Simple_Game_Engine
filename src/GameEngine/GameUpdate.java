@@ -12,10 +12,7 @@
 package GameEngine;
 
 import java.awt.Color;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Point;
-import java.awt.Rectangle;
 
 import javax.swing.JFrame;
 
@@ -58,7 +55,7 @@ public class GameUpdate implements Runnable {
         fps.setColor(Color.RED);
         fps.show();
 
-        s = new Slider(context, panel, mouse, new Point(0, 0), new Point(1000, 500));
+        s = new Slider(context, panel, mouse, new Point(0, 0), new Point(1000, 1000));
         s.show();
         s.setSliderMax(104563);
 
@@ -76,6 +73,7 @@ public class GameUpdate implements Runnable {
         b1.onClick(() -> {
             System.out.println("green");
 
+            CursorManager.setCursor(CursorType.ALIAS);
         });
 
         // constructors for menu

@@ -322,10 +322,6 @@ public class RectButton implements
 
     }
 
-    public boolean getInside() {
-        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
-    }
-
     @Override
     public void draw(Graphics g) {
         if (!show)

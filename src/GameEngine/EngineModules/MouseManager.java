@@ -27,6 +27,23 @@ public class MouseManager {
     private static Clickable topMost = null;
     private static Clickable currentTopMost = null; // only gets set when left mouse button is pressed down
 
+    public static void handlePriority(EngineContext context, Point mousePoint) {
+
+        // Find the topmost clickable under the mouse
+        for (Clickable clickable : context.getClickables()) {
+            if (!clickable.isVisible() || !clickable.isEnabled())
+                continue;
+
+            if (clickable.contains(mousePoint.x, mousePoint.y)) {
+                topMost = clickable;
+                return;
+            } else {
+                topMost = null;
+            }
+        }
+
+    }
+
     public static void handleClick(EngineContext context, Point mousePoint, boolean mouseState) {
 
         if (mouseState) {
@@ -44,7 +61,7 @@ public class MouseManager {
                     clickable.pressed();
 
                     // Print only pressed button and zIndex
-                    if (state.data().debug)
+                    if (state.data().debug && !state.data().debugVerbose)
                         System.out.println("%s %s".formatted(clickable, clickable.getZIndex()));
 
                     return;
@@ -63,38 +80,15 @@ public class MouseManager {
 
     }
 
-    public static void handlePriority(EngineContext context, Point mousePoint) {
-
-        // Find the topmost clickable under the mouse
-        for (Clickable clickable : context.getClickables()) {
-            if (!clickable.isVisible() || !clickable.isEnabled())
-                continue;
-
-            if (clickable.contains(mousePoint.x, mousePoint.y)) {
-                topMost = clickable;
-                return;
-            } else {
-                topMost = null;
-            }
-        }
-
-    }
-
     public static void handleHover(EngineContext context, Point mousePoint) {
 
         // Update hover states
         for (Clickable clickable : context.getClickables()) {
-            if (!clickable.isVisible() || !clickable.isEnabled())
-                continue;
-
-            if (!(clickable instanceof Hoverable hoverable))
+            if (!clickable.isVisible() || !clickable.isEnabled() || !(clickable instanceof Hoverable hoverable))
                 continue;
 
             // Check if current clickable is the top clickable on the mouse
             hoverable.setHovered((clickable == topMost));
-            if ((clickable == topMost))
-                return;
-
         }
     }
 }
