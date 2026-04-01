@@ -12,6 +12,12 @@ package GameEngine.Interfaces;
 
 public interface ZIndexable {
 
+    /**
+     * Sets the z-index of this object and updates its rendering priority
+     * within the engine context.
+     *
+     * @param zIndex The new z-index value.
+     */
     void setZIndex(int zIndex);
 
     int getZIndex();

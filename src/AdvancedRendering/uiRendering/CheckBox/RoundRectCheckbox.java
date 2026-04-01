@@ -20,6 +20,64 @@ import GameEngine.EngineModules.Mouse;
 
 public class RoundRectCheckbox extends RectCheckbox {
 
+    /**
+     * Creates and registers a rounded rectangular checkbox with the specified
+     * dimensions and rounded corners.
+     * 
+     * @param context   The engine context containing objects involved in rendering,
+     *                  updating, and input handling.
+     * 
+     * @param panel     The panel on which the checkbox is drawn to.
+     * 
+     * @param mouse     The mouse input handler used for interaction with the
+     *                  checkbox.
+     * 
+     * @param x         The x-coordinate of the rectangle's top-left point.
+     * 
+     * @param y         The y-coordinate of the rectangle's top-left point.
+     * 
+     * @param width     The width of the rectangle.
+     * 
+     * @param height    The height of the rectangle.
+     *
+     * @param arcWidth  The horizontal diameter of the corner arcs. Typically should
+     *                  not exceed the rectangle's width.
+     * 
+     * @param arcHeight The vertical diameter of the corner arcs. Typically should
+     *                  not exceed the rectangle's height.
+     */
+    public RoundRectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height,
+            int arcWidth,
+            int arcHeight) {
+        super(context, panel, mouse, x, y, width, height);
+
+        this.baseShape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+        this.rotatedShape = baseShape;
+
+        updateRotatedShape();
+    }
+
+    /**
+     * Creates and registers a rectangular checkbox with the specified points.
+     * 
+     * @param context     The engine context containing objects involved
+     *                    in rendering, updating, and input handling.
+     * 
+     * @param panel       The panel on which the checkbox is drawn to.
+     * 
+     * @param mouse       The mouse input handler used for interaction with the
+     *                    checkbox.
+     * 
+     * @param topLeft     The top-left point of the rectangle.
+     * 
+     * @param bottomRight The bottom-left point of the rectangle.
+     * 
+     * @param arcWidth    The horizontal diameter of the corner arcs. Typically
+     *                    should not exceed the rectangle's width.
+     * 
+     * @param arcHeight   The vertical diameter of the corner arcs. Typically should
+     *                    not exceed the rectangle's height.
+     */
     public RoundRectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight,
             int arcWidth,
             int arcHeight) {
@@ -36,12 +94,37 @@ public class RoundRectCheckbox extends RectCheckbox {
         updateRotatedShape();
     }
 
-    public RoundRectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height,
+    /**
+     * Creates and registers a rectangular checkbox with the specified dimensions
+     * and
+     * center point.
+     *
+     * @param context   The engine context containing objects involved in rendering,
+     *                  updating, and input handling.
+     * 
+     * @param panel     The panel on which the checkbox is drawn to.
+     * 
+     * @param mouse     The mouse input handler used for interaction with the
+     *                  checkbox.
+     * 
+     * @param center    The center point of the rectangle.
+     * 
+     * @param width     The width of the rectangle.
+     * 
+     * @param height    The height of the rectangle.
+     * 
+     * @param arcWidth  The horizontal diameter of the corner arcs. Typically
+     *                  should not exceed the rectangle's width.
+     * 
+     * @param arcHeight The vertical diameter of the corner arcs. Typically should
+     *                  not exceed the rectangle's height.
+     */
+    public RoundRectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int width, int height,
             int arcWidth,
             int arcHeight) {
 
-        int x = (int) middle.getX() - width / 2;
-        int y = (int) middle.getY() - height / 2;
+        int x = (int) center.getX() - width / 2;
+        int y = (int) center.getY() - height / 2;
 
         super(context, panel, mouse, x, y, width, height);
 
@@ -51,12 +134,31 @@ public class RoundRectCheckbox extends RectCheckbox {
         updateRotatedShape();
     }
 
-    public RoundRectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height,
-            int arcWidth,
-            int arcHeight) {
-        super(context, panel, mouse, x, y, width, height);
+    /**
+     * Creates and registers a circular checkbox with the specified dimensions and
+     * center point.
+     * 
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
+     * 
+     * @param panel   The panel on which the checkbox is drawn to.
+     * 
+     * @param mouse   The mouse input handler used for interaction with the
+     *                checkbox.
+     * 
+     * @param center  The center point from where the circle is created.
+     * 
+     * @param radius  The circles radius.
+     */
+    public RoundRectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int radius) {
+        int x = center.x - radius;
+        int y = center.y - radius;
 
-        this.baseShape = new RoundRectangle2D.Float(x, y, width, height, arcWidth, arcHeight);
+        int length = radius * 2;
+
+        super(context, panel, mouse, x, y, length, length);
+
+        this.baseShape = new RoundRectangle2D.Float(x, y, length, length, length, length);
         this.rotatedShape = baseShape;
 
         updateRotatedShape();
