@@ -21,18 +21,20 @@ import GameEngine.EngineModules.Mouse;
 public class OvalButton extends RectButton {
 
     /**
+     * Creates and registers an oval button with the specified dimensions.
      * 
-     * @param mouse
+     * @param mouse   The mouse input handler used for interaction with the button.
      * 
-     * @param context
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param x
+     * @param x       The x-coordinate of the oval's topLeft point.
      * 
-     * @param y
+     * @param y       The y-coordinate of the oval's topLeft point.
      * 
-     * @param width
+     * @param width   The width of the oval.
      * 
-     * @param height
+     * @param height  The height of the oval.
      */
     public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
 
@@ -46,14 +48,18 @@ public class OvalButton extends RectButton {
     }
 
     /**
+     * Creates and registers an oval button with the specified points.
      * 
-     * @param mouse
+     * @param mouse       The mouse input handler used for interaction with the
+     *                    button.
      * 
-     * @param context
+     * @param context     The engine context containing objects involved in
+     *                    rendering,
+     *                    updating, and input handling.
      * 
-     * @param topLeft
+     * @param topLeft     The top left point of the oval.
      * 
-     * @param bottomRight
+     * @param bottomRight The bottom left point of the oval.
      */
     public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
@@ -72,16 +78,19 @@ public class OvalButton extends RectButton {
     }
 
     /**
+     * Creates and registers an oval button with the specified dimensions and center
+     * point.
+     *
+     * @param mouse   The mouse input handler used for interaction with the button.
      * 
-     * @param mouse
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param context
+     * @param middle  The center point of the oval.
      * 
-     * @param middle
+     * @param width   The width of the oval.
      * 
-     * @param width
-     * 
-     * @param height
+     * @param height  The height of the oval.
      */
     public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
 
@@ -98,15 +107,17 @@ public class OvalButton extends RectButton {
     }
 
     /**
-     * Creates a circle
+     * Creates and registers a circular button with the specified dimensions and
+     * center point.
+     *
+     * @param mouse   The mouse input handler used for interaction with the button.
      * 
-     * @param mouse
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param context
+     * @param middle  The circle's center point.
      * 
-     * @param middle
-     * 
-     * @param radius
+     * @param radius  The circle's radius.
      */
     public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int radius) {
 

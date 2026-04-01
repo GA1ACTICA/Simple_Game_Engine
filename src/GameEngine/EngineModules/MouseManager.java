@@ -20,6 +20,9 @@ public class MouseManager {
 
     private static GameState state;
 
+    /**
+     * @param getState
+     */
     public static void setObjects(GameState getState) {
         state = getState;
     }
@@ -27,6 +30,10 @@ public class MouseManager {
     private static Clickable topMost = null;
     private static Clickable currentTopMost = null; // only gets set when left mouse button is pressed down
 
+    /**
+     * @param context
+     * @param mousePoint
+     */
     public static void handlePriority(EngineContext context, Point mousePoint) {
 
         // Find the topmost clickable under the mouse
@@ -44,6 +51,11 @@ public class MouseManager {
 
     }
 
+    /**
+     * @param context
+     * @param mousePoint
+     * @param mouseState
+     */
     public static void handleClick(EngineContext context, Point mousePoint, boolean mouseState) {
 
         if (mouseState) {
@@ -58,7 +70,7 @@ public class MouseManager {
                     System.out.println("%s %s".formatted(clickable, clickable.getZIndex()));
 
                 if ((clickable == currentTopMost) && clickable.contains(mousePoint.x, mousePoint.y)) {
-                    clickable.pressed();
+                    clickable.onPressed();
 
                     // Print only pressed button and zIndex
                     if (state.data().debug && !state.data().debugVerbose)
@@ -74,12 +86,16 @@ public class MouseManager {
             if ((topMost == currentTopMost))
                 currentTopMost.executeOnClick();
 
-            currentTopMost.released();
+            currentTopMost.onReleased();
 
         }
 
     }
 
+    /**
+     * @param context
+     * @param mousePoint
+     */
     public static void handleHover(EngineContext context, Point mousePoint) {
 
         // Update hover states

@@ -29,6 +29,9 @@ public class Keys implements KeyListener {
         this.state = state;
     }
 
+    /**
+     * @param e
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
@@ -45,6 +48,9 @@ public class Keys implements KeyListener {
         }
     }
 
+    /**
+     * @param e
+     */
     @Override
     public void keyReleased(KeyEvent e) {
 
@@ -55,6 +61,9 @@ public class Keys implements KeyListener {
         keysTyped.remove(e.getKeyChar());
     }
 
+    /**
+     * @param e
+     */
     @Override
     public void keyTyped(KeyEvent e) {
         keysTyped.add(e.getKeyChar());

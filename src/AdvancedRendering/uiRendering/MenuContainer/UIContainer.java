@@ -23,6 +23,9 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
 
     private List<MenuInterface> items = new ArrayList<>();
 
+    /**
+     * @param item
+     */
     public void add(MenuInterface item) {
         items.add(item);
     }
@@ -39,6 +42,10 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
         }
     }
 
+    /**
+     * @param width
+     * @param height
+     */
     public void setSize(int width, int height) {
         for (MenuInterface item : items) {
             if (item instanceof MenuSetSize r) {
@@ -47,6 +54,10 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
         }
     }
 
+    /**
+     * @param x
+     * @param y
+     */
     @Override
     public void setPosition(int x, int y) {
         for (MenuInterface item : items) {
@@ -56,6 +67,9 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
         }
     }
 
+    /**
+     * @param position
+     */
     @Override
     public void setPosition(Point position) {
         for (MenuInterface item : items) {
@@ -65,6 +79,10 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
         }
     }
 
+    /**
+     * @param dx
+     * @param dy
+     */
     @Override
     public void translate(int dx, int dy) {
         for (MenuInterface item : items) {

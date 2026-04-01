@@ -55,26 +55,15 @@ public class GameUpdate implements Runnable {
         fps.setColor(Color.RED);
         fps.show();
 
-        s = new Slider(context, panel, mouse, new Point(0, 0), new Point(1000, 1000));
-        s.show();
-        s.setSliderMax(104563);
-
-        RectButton b1 = new RectButton(context, panel, mouse, new Point(475, 525), new Point(600, 600));
-        b1.show();
-
-        RectCheckbox b = new RectCheckbox(context, panel, mouse, new Point(450, 500), new Point(550, 550));
-        b.setColor(Color.BLACK);
+        RectButton b = new RectButton(context, panel, mouse, new Point(200, 300), new Point(400, 500));
+        System.out.println(b.getX());
+        b.setRotation(20);
+        System.out.println(b.getX());
         b.show();
 
-        b.onClick(() -> {
-            System.out.println("black");
-        });
-
-        b1.onClick(() -> {
-            System.out.println("green");
-
-            CursorManager.setCursor(CursorType.ALIAS);
-        });
+        RectButton b1 = new RectButton(context, panel, mouse, new Point(200, 300), new Point(400, 500));
+        b1.setZIndex(-1);
+        b1.show();
 
         // constructors for menu
         // constructors for game

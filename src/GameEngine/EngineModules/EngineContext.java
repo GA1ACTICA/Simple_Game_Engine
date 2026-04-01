@@ -29,22 +29,37 @@ public class EngineContext {
 
     private final List<Clickable> clickables = new ArrayList<>();
 
+    /**
+     * @return List<Drawable>
+     */
     public List<Drawable> getWorldDrawables() {
         return worldDrawables;
     }
 
+    /**
+     * @return List<Drawable>
+     */
     public List<Drawable> getUiDrawables() {
         return uiDrawables;
     }
 
+    /**
+     * @return List<CursorDrawable>
+     */
     public List<CursorDrawable> getCursorDrawables() {
         return cursorDrawables;
     }
 
+    /**
+     * @return List<Updatable>
+     */
     public List<Updatable> getUpdatables() {
         return updatables;
     }
 
+    /**
+     * @return List<Clickable>
+     */
     public List<Clickable> getClickables() {
         return clickables;
     }
