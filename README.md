@@ -28,9 +28,9 @@ Button
 
 Checkbox
 
-- [ ] OvalCheckbox.java
-- [ ] RectCheckbox.java
-- [ ] RoundRectCheckbox.java
+- [x] OvalCheckbox.java
+- [x] RectCheckbox.java
+- [x] RoundRectCheckbox.java
 
 MenuContainer
 

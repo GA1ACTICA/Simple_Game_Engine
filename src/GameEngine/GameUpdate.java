@@ -17,13 +17,14 @@ import java.awt.Point;
 import javax.swing.JFrame;
 
 import AdvancedRendering.uiRendering.Button.RectButton;
+import AdvancedRendering.uiRendering.Button.RoundRectButton;
 import AdvancedRendering.uiRendering.CheckBox.RectCheckbox;
+import AdvancedRendering.uiRendering.CheckBox.RoundRectCheckbox;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.uiRendering.Slider.Slider;
 import Game.*;
 import Game.Configs.GameState.GameState;
 import GameEngine.EngineModules.*;
-import GameEngine.EngineModules.CursorManager.CursorType;
 import GameEngine.Interfaces.Updatable;
 
 public class GameUpdate implements Runnable {
@@ -55,15 +56,17 @@ public class GameUpdate implements Runnable {
         fps.setColor(Color.RED);
         fps.show();
 
-        RectButton b = new RectButton(context, panel, mouse, new Point(200, 300), new Point(400, 500));
-        System.out.println(b.getX());
-        b.setRotation(20);
-        System.out.println(b.getX());
+        RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(200, 200));
         b.show();
 
-        RectButton b1 = new RectButton(context, panel, mouse, new Point(200, 300), new Point(400, 500));
-        b1.setZIndex(-1);
-        b1.show();
+        RoundRectCheckbox c = new RoundRectCheckbox(context, panel, mouse, new Point(500, 500), 25);
+        c.setHoverEffectEnabled(false);
+        c.setClickEffectEnabled(false);
+        c.show();
+
+        b.onClick(() -> {
+            c.setCheckboxState(false);
+        });
 
         // constructors for menu
         // constructors for game

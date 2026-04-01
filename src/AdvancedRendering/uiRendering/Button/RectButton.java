@@ -60,21 +60,25 @@ public class RectButton implements
 
     // private Runnable hoverAction; // TODO: look into this
     private boolean isHovered = false;
+    private boolean showHover = false;
 
     private Mouse mouse;
     private EngineContext context;
 
     /**
-     * Creates and registers an rectangular button with the specified dimensions.
-     * 
-     * @param mouse   The mouse input handler used for interaction with the button.
+     * Creates and registers a rectangular button with the specified dimensions.
      * 
      * @param context The engine context containing objects involved in rendering,
      *                updating, and input handling.
      * 
-     * @param x       The x-coordinate of the rectangle's topLeft point.
+     * @param panel   The panel on which the button is drawn to.
      * 
-     * @param y       The y-coordinate of the rectangle's topLeft point.
+     * @param mouse   The mouse input handler used for interaction with the
+     *                button.
+     * 
+     * @param x       The x-coordinate of the rectangle's top-left point.
+     * 
+     * @param y       The y-coordinate of the rectangle's top-left point.
      * 
      * @param width   The width of the rectangle.
      * 
@@ -92,18 +96,19 @@ public class RectButton implements
     }
 
     /**
-     * Creates and registers an rectangular button with the specified points.
+     * Creates and registers a rectangular button with the specified points.
+     * 
+     * @param context     The engine context containing objects involved in
+     *                    rendering, updating, and input handling.
+     * 
+     * @param panel       The panel on which the button is drawn to.
      * 
      * @param mouse       The mouse input handler used for interaction with the
      *                    button.
      * 
-     * @param context     The engine context containing objects involved in
-     *                    rendering,
-     *                    updating, and input handling.
+     * @param topLeft     The top-left point of the rectangle.
      * 
-     * @param topLeft     The top left point of the rectangle.
-     * 
-     * @param bottomRight The bottom left point of the rectangle.
+     * @param bottomRight The bottom-left point of the rectangle.
      */
     public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
@@ -117,24 +122,27 @@ public class RectButton implements
     }
 
     /**
-     * Creates and registers an rectangular button with the specified dimensions and
+     * Creates and registers a rectangular button with the specified dimensions and
      * center point.
      *
-     * @param mouse   The mouse input handler used for interaction with the button.
-     * 
      * @param context The engine context containing objects involved in rendering,
      *                updating, and input handling.
      * 
-     * @param middle  The center point of the rectangle.
+     * @param panel   The panel on which the button is drawn to.
+     * 
+     * @param mouse   The mouse input handler used for interaction with the
+     *                button.
+     * 
+     * @param center  The center point of the rectangle.
      * 
      * @param width   The width of the rectangle.
      * 
      * @param height  The height of the rectangle.
      */
-    public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
+    public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int width, int height) {
 
-        x = (int) middle.getX() - width / 2;
-        y = (int) middle.getY() - height / 2;
+        x = (int) center.getX() - width / 2;
+        y = (int) center.getY() - height / 2;
         this.width = width;
         this.height = height;
 
@@ -154,12 +162,6 @@ public class RectButton implements
 
     }
 
-    /**
-     * Sets the z-index of this object and updates its rendering priority
-     * within the engine context.
-     *
-     * @param zIndex The new z-index value.
-     */
     @Override
     public void setZIndex(int zIndex) {
         ClassFactory.updatePriority(this, context, zIndex);
@@ -220,16 +222,6 @@ public class RectButton implements
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
-    }
-
-    /**
-     * Enables or disables the visual click effect (color or image change)
-     * when the button is pressed.
-     *
-     * @param clickEffect true to enable the click effect, false to disable it
-     */
-    public void setClickEffectEnabled(boolean enabled) {
-        clickEffect = enabled;
     }
 
     // ————————— Set colors ——————————
@@ -304,6 +296,26 @@ public class RectButton implements
         updateRotatedShape();
     }
 
+    /**
+     * Enables or disables the visual click effect (color or image change)
+     * when the button is pressed.
+     *
+     * @param clickEffect true to enable the click effect, false to disable it
+     */
+    public void setClickEffectEnabled(boolean enabled) {
+        clickEffect = enabled;
+    }
+
+    /**
+     * Enables or disables the visual hover effect (color or image change)
+     * when the button is hovered.
+     *
+     * @param hoverEffect true to enable the hover effect, false to disable it
+     */
+    public void setHoverEffectEnabled(boolean hoverEffect) {
+        showHover = hoverEffect;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -372,29 +384,10 @@ public class RectButton implements
                 return;
             }
 
-            if (!isHovered) {
+            if (isHovered && showHover) {
 
                 // Draw if the button is not hovered
                 if (image == null) {
-                    g2d.setColor(color);
-                    g2d.fill(baseShape);
-
-                } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-                                gMask.drawImage(image, 0, 0, width, height, null);
-                            });
-                    g2d.drawImage(buffer, x, y, null);
-                }
-
-            } else {
-
-                // Draws this if button is hovered
-                if (hoverImage == null) {
                     g2d.setColor(hoverColor);
                     g2d.fill(baseShape);
 
@@ -405,8 +398,27 @@ public class RectButton implements
                             width,
                             height,
                             gMask -> {
-
                                 gMask.drawImage(hoverImage, 0, 0, width, height, null);
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+                }
+
+            } else {
+
+                // Draws this if button is hovered
+                if (hoverImage == null) {
+                    g2d.setColor(color);
+                    g2d.fill(baseShape);
+
+                } else {
+
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+
+                                gMask.drawImage(image, 0, 0, width, height, null);
 
                             });
                     g2d.drawImage(buffer, x, y, null);
@@ -446,9 +458,9 @@ public class RectButton implements
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();
-        Point middle = getCenter();
+        Point center = getCenter();
 
-        transform.rotate(Math.toRadians(angle), middle.x, middle.y);
+        transform.rotate(Math.toRadians(angle), center.x, center.y);
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
