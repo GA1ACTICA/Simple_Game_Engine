@@ -21,16 +21,27 @@ public class GameState extends JsonBacked<GameStateData> {
         super(new GameStateData());
     }
 
+    /**
+     * @param state
+     */
     public void setGameStateData(GameState state) {
         this.state = state;
     }
 
+    /**
+     * @param object
+     * @param path
+     */
     @Override
     protected void successfulExportLog(GameStateData object, String path) {
         if (state.data().debug)
             System.out.println('\n' + "Successfully exported ('%s') to %s".formatted(object, path));
     }
 
+    /**
+     * @param object
+     * @param path
+     */
     @Override
     protected void successfulImportLog(GameStateData object, String path) {
         if (state.data().debug)

@@ -21,10 +21,21 @@ import Utils.ErrorManagement;
 
 public class ClassFactory {
 
+    /**
+     * @param object
+     * @param context
+     * @return Object
+     */
     public static Object create(Object object, EngineContext context) {
         return create(object, context, -1);
     }
 
+    /**
+     * @param object
+     * @param context
+     * @param zIndex
+     * @return Object
+     */
     // TODO: seperate adding to list into seperate method for better docstring
 
     public static Object create(Object object, EngineContext context, int zIndex) {
@@ -73,6 +84,12 @@ public class ClassFactory {
         return object;
     }
 
+    /**
+     * @param object
+     * @param context
+     * @param zIndex
+     * @return Object
+     */
     public static Object updatePriority(Object object, EngineContext context, int zIndex) {
 
         if (object instanceof Drawable drawable) {
@@ -120,6 +137,11 @@ public class ClassFactory {
         return object;
     }
 
+    /**
+     * @param object
+     * @return int
+     * @throws Exception
+     */
     public static int getPriority(Object object) throws Exception {
         if (object instanceof ZIndexable zIndexable)
             return zIndexable.getZIndex();

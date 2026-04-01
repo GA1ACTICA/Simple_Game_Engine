@@ -43,25 +43,40 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
         ClassFactory.create(this, context);
     }
 
+    /**
+     * @param zIndex
+     */
     @Override
     public void setZIndex(int zIndex) {
         ClassFactory.updatePriority(this, context, zIndex);
         this.zIndex = zIndex;
     }
 
+    /**
+     * @return int
+     */
     @Override
     public int getZIndex() {
         return zIndex;
     }
 
+    /**
+     * @return int
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * @return int
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * @return Color
+     */
     public Color getColor() {
         return color;
     }
@@ -76,33 +91,53 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
         show = false;
     }
 
+    /**
+     * @param x
+     * @param y
+     */
     @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * @param position
+     */
     @Override
     public void setPosition(Point position) {
         this.x = position.x;
         this.y = position.y;
     }
 
+    /**
+     * @param dx
+     * @param dy
+     */
     @Override
     public void translate(int dx, int dy) {
         x += dx;
         y += dy;
     }
 
+    /**
+     * @param color
+     */
     @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * @param font
+     */
     public void setFont(Font font) {
         this.font = font;
     }
 
+    /**
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
         if (!show)

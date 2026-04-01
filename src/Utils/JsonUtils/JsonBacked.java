@@ -32,14 +32,25 @@ public abstract class JsonBacked<T> {
         this.data = initialData;
     }
 
+    /**
+     * @param object
+     * @param path
+     */
     protected void successfulExportLog(T object, String path) {
 
     }
 
+    /**
+     * @param data
+     * @param path
+     */
     protected void successfulImportLog(T data, String path) {
 
     }
 
+    /**
+     * @return T
+     */
     public T data() {
         return data;
     }

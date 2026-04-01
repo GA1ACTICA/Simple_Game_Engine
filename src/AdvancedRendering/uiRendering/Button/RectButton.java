@@ -65,18 +65,20 @@ public class RectButton implements
     private EngineContext context;
 
     /**
+     * Creates and registers an rectangular button with the specified dimensions.
      * 
-     * @param mouse
+     * @param mouse   The mouse input handler used for interaction with the button.
      * 
-     * @param context
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param x
+     * @param x       The x-coordinate of the rectangle's topLeft point.
      * 
-     * @param y
+     * @param y       The y-coordinate of the rectangle's topLeft point.
      * 
-     * @param width
+     * @param width   The width of the rectangle.
      * 
-     * @param height
+     * @param height  The height of the rectangle.
      */
     public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
 
@@ -90,14 +92,18 @@ public class RectButton implements
     }
 
     /**
+     * Creates and registers an rectangular button with the specified points.
      * 
-     * @param mouse
+     * @param mouse       The mouse input handler used for interaction with the
+     *                    button.
      * 
-     * @param context
+     * @param context     The engine context containing objects involved in
+     *                    rendering,
+     *                    updating, and input handling.
      * 
-     * @param topLeft
+     * @param topLeft     The top left point of the rectangle.
      * 
-     * @param bottomRight
+     * @param bottomRight The bottom left point of the rectangle.
      */
     public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
@@ -111,16 +117,19 @@ public class RectButton implements
     }
 
     /**
+     * Creates and registers an rectangular button with the specified dimensions and
+     * center point.
+     *
+     * @param mouse   The mouse input handler used for interaction with the button.
      * 
-     * @param mouse
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param context
+     * @param middle  The center point of the rectangle.
      * 
-     * @param middle
+     * @param width   The width of the rectangle.
      * 
-     * @param width
-     * 
-     * @param height
+     * @param height  The height of the rectangle.
      */
     public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
 
@@ -145,6 +154,12 @@ public class RectButton implements
 
     }
 
+    /**
+     * Sets the z-index of this object and updates its rendering priority
+     * within the engine context.
+     *
+     * @param zIndex The new z-index value.
+     */
     @Override
     public void setZIndex(int zIndex) {
         ClassFactory.updatePriority(this, context, zIndex);
@@ -207,8 +222,14 @@ public class RectButton implements
         updateRotatedShape();
     }
 
-    public void setClickEffect(boolean clickEffect) {
-        this.clickEffect = clickEffect;
+    /**
+     * Enables or disables the visual click effect (color or image change)
+     * when the button is pressed.
+     *
+     * @param clickEffect true to enable the click effect, false to disable it
+     */
+    public void setClickEffectEnabled(boolean enabled) {
+        clickEffect = enabled;
     }
 
     // ————————— Set colors ——————————
@@ -251,14 +272,32 @@ public class RectButton implements
 
     // ————————————————————————————————
 
-    public void setCenter(Point middle) {
-        x = (int) middle.getX() - width / 2;
-        y = (int) middle.getY() - height / 2;
+    /**
+     * Sets the center position of the button. This recalculates the
+     * top-left coordinates based on the current width and height,
+     * updates the base shape, and refreshes the rotated shape.
+     *
+     * @param center the new center position
+     */
+    public void setCenter(Point center) {
+        x = (int) Math.round(center.getX() - width / 2);
+        y = (int) Math.round(center.getY() - height / 2);
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
     }
 
+    /**
+     * Sets the rotation of the button.
+     * Positive angles rotate clockwise, negative angles rotate counterclockwise.
+     *
+     * <p>
+     * <b>Note:</b> Positioning methods return values based on the unrotated
+     * shape, not the visually rotated one.
+     * </p>
+     *
+     * @param angle the rotation angle in degrees
+     */
     public void setRotation(double angle) {
         this.angle = angle;
 
@@ -307,15 +346,6 @@ public class RectButton implements
         return isHovered;
     }
 
-    /**
-     * This lets you run code when the button is pressed with the method:
-     * 
-     * <p>
-     * onClick(() -> {});
-     * <p>
-     * 
-     * @param action
-     */
     @Override
     public void onClick(Runnable action) {
         this.clickAction = action;
@@ -406,7 +436,13 @@ public class RectButton implements
         });
     }
 
-    // Call updateRotatedShape every time the position, size or rotation changes
+    /**
+     * Updates the rotated version of the base shape based on the current angle.
+     * The rotation is performed around the shape's center point.
+     *
+     * This method should be called whenever the position, size, or rotation
+     * changes.
+     */
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();
@@ -439,12 +475,12 @@ public class RectButton implements
     }
 
     @Override
-    public void pressed() {
+    public void onPressed() {
         clicked = true;
     }
 
     @Override
-    public void released() {
+    public void onReleased() {
         clicked = false;
     }
 

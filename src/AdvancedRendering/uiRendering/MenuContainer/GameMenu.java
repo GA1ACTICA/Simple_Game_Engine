@@ -59,6 +59,10 @@ public class GameMenu extends UIContainer
         super.hide();
     }
 
+    /**
+     * @param width
+     * @param height
+     */
     @Override
     public void setSize(int width, int height) {
         this.width = width;
@@ -66,6 +70,10 @@ public class GameMenu extends UIContainer
         super.setSize(width, height);
     }
 
+    /**
+     * @param x
+     * @param y
+     */
     @Override
     public void setPosition(int x, int y) {
         this.x = x;
@@ -73,6 +81,9 @@ public class GameMenu extends UIContainer
         super.setPosition(x, y);
     }
 
+    /**
+     * @param position
+     */
     @Override
     public void setPosition(Point position) {
         x = position.x;
@@ -80,6 +91,10 @@ public class GameMenu extends UIContainer
         super.setPosition(position);
     }
 
+    /**
+     * @param dx
+     * @param dy
+     */
     @Override
     public void translate(int dx, int dy) {
         this.x += x;
@@ -88,6 +103,9 @@ public class GameMenu extends UIContainer
 
     }
 
+    /**
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -105,6 +123,9 @@ public class GameMenu extends UIContainer
 
     }
 
+    /**
+     * @param zIndex
+     */
     @Override
     public void setZIndex(int zIndex) {
         ClassFactory.updatePriority(this, context, zIndex);
@@ -112,6 +133,9 @@ public class GameMenu extends UIContainer
         return;
     }
 
+    /**
+     * @return int
+     */
     @Override
     public int getZIndex() {
         return zIndex;

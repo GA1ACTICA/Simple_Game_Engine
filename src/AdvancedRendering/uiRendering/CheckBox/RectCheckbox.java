@@ -155,17 +155,26 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
 
     }
 
+    /**
+     * @param zIndex
+     */
     @Override
     public void setZIndex(int zIndex) {
         ClassFactory.updatePriority(this, context, zIndex);
         this.zIndex = zIndex;
     }
 
+    /**
+     * @return int
+     */
     @Override
     public int getZIndex() {
         return zIndex;
     }
 
+    /**
+     * @return boolean
+     */
     @Override
     public boolean isVisible() {
         return show;
@@ -181,6 +190,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         show = false;
     }
 
+    /**
+     * @param width
+     * @param height
+     */
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
@@ -189,6 +202,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         updateRotatedShape();
     }
 
+    /**
+     * @param x
+     * @param y
+     */
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -197,6 +214,9 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         updateRotatedShape();
     }
 
+    /**
+     * @param position
+     */
     @Override
     public void setPosition(Point position) {
         this.x = position.x;
@@ -206,6 +226,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         updateRotatedShape();
     }
 
+    /**
+     * @param dx
+     * @param dy
+     */
     @Override
     public void translate(int dx, int dy) {
         x += dx;
@@ -215,6 +239,9 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         updateRotatedShape();
     }
 
+    /**
+     * @param middle
+     */
     public void setCenter(Point middle) {
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
@@ -223,84 +250,141 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         updateRotatedShape();
     }
 
+    /**
+     * @param angle
+     */
     public void setRotation(double angle) {
         this.angle = angle;
 
         updateRotatedShape();
     }
 
+    /**
+     * @param color
+     */
     // ————————— Set colors ——————————
     public void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * @param toggleColorTrue
+     */
     public void setToggleColorTrue(Color toggleColorTrue) {
         this.toggleColorTrue = toggleColorTrue;
     }
 
+    /**
+     * @param hoveColor
+     */
     public void setHoverColor(Color hoveColor) {
         this.hoverColor = hoveColor;
     }
 
+    /**
+     * @param disabledColor
+     */
     public void setDisabledColor(Color disabledColor) {
         this.disabledColor = disabledColor;
     }
 
+    /**
+     * @param image
+     */
     // —————————— Set images ——————————
     public void setImage(Image image) {
         this.image = image;
     }
 
+    /**
+     * @param toggleImage
+     */
     public void setToggleImageTrue(Image toggleImage) {
         this.toggleImage = toggleImage;
     }
 
+    /**
+     * @param hoverImage
+     */
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }
 
+    /**
+     * @param disabledImage
+     */
     public void setDisabledImage(Image disabledImage) {
         this.disabledImage = disabledImage;
     }
 
+    /**
+     * @param enabled
+     */
     // ————————————————————————————————
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    /**
+     * @param showHover
+     */
     public void setShowHover(boolean showHover) {
         this.showHover = showHover;
     }
 
+    /**
+     * @return int
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * @return int
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * @return int
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @return int
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * @return Point
+     */
     public Point getCenter() {
         return new Point(x + width / 2, y + height / 2);
     }
 
+    /**
+     * @return double
+     */
     public double getAngle() {
         return angle;
     }
 
+    /**
+     * @return Color
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * @return boolean
+     */
     @Override
     public boolean isHovered() {
         return isHovered;
@@ -321,14 +405,23 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
 
     }
 
+    /**
+     * @param onToggleTrueAction
+     */
     public void onToggleTrue(Runnable onToggleTrueAction) {
         this.onToggleTrueAction = onToggleTrueAction;
     }
 
+    /**
+     * @param onToggleFalseAction
+     */
     public void onToggleFalse(Runnable onToggleFalseAction) {
         this.onToggleFalseAction = onToggleFalseAction;
     }
 
+    /**
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -447,6 +540,11 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
+    /**
+     * @param mouseX
+     * @param mouseY
+     * @return boolean
+     */
     @Override
     public boolean contains(int mouseX, int mouseY) {
         return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
@@ -466,11 +564,17 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
             onToggleFalseAction.run();
     }
 
+    /**
+     * @return boolean
+     */
     @Override
     public boolean isEnabled() {
         return enabled;
     }
 
+    /**
+     * @param isHovered
+     */
     @Override
     public void setHovered(boolean isHovered) {
         this.isHovered = isHovered;
@@ -482,12 +586,12 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     @Override
-    public void released() {
+    public void onReleased() {
         clicked = false;
     }
 
     @Override
-    public void pressed() {
+    public void onPressed() {
         clicked = true;
     }
 
