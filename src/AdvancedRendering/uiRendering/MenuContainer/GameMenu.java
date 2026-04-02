@@ -20,7 +20,7 @@ import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 
 public class GameMenu extends UIContainer
-        implements UIDrawable, Updatable {
+        implements UIDrawable {
 
     private boolean show;
 
@@ -31,7 +31,7 @@ public class GameMenu extends UIContainer
     private int width = 200;
     private int height = 200;
 
-    private InterfacePainter customDrawAction = (gDraw) -> {
+    private Painter customDrawAction = (gDraw) -> {
         gDraw.setColor(new Color(10, 10, 10, 125));
         gDraw.fillRect(x, y, width, height);
 
@@ -114,13 +114,6 @@ public class GameMenu extends UIContainer
         Graphics2D g2d = (Graphics2D) g;
 
         customDrawAction.paint(g2d);
-    }
-
-    @Override
-    public void update() {
-        if (!show)
-            return;
-
     }
 
     /**

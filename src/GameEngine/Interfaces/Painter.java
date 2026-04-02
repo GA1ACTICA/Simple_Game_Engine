@@ -14,6 +14,6 @@ package GameEngine.Interfaces;
 import java.awt.Graphics2D;
 
 @FunctionalInterface
-public interface InterfacePainter {
+public interface Painter {
     void paint(Graphics2D g);
 }
