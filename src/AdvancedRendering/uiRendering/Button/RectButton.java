@@ -207,9 +207,9 @@ public class RectButton implements
     }
 
     @Override
-    public void translate(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void translatePosition(int dx, int dy) {
+        x += dx;
+        y += dy;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
@@ -219,6 +219,15 @@ public class RectButton implements
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
