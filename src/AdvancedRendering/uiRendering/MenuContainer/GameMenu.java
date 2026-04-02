@@ -24,7 +24,7 @@ public class GameMenu extends UIContainer
 
     private boolean show;
 
-    private int zIndex = 0;
+    private int zIndex = -1;
 
     private int x = 100;
     private int y = 100;
@@ -43,9 +43,35 @@ public class GameMenu extends UIContainer
 
     private EngineContext context;
 
+    /**
+     * Creates a standalone menu with no initial UI elements and registers it
+     * with the engine using the provided context.
+     * <p>
+     * The menu has a default z-index of -1, placing it behind standard UI
+     * components (which typically use a z-index of 0). This causes it to
+     * behave as a background layer.
+     *
+     * <p>
+     * As a subclass of {@link UIContainer}, GameMenu provides a graphical
+     * context for rendering.
+     *
+     * @param context the engine context containing objects used for rendering,
+     *                updating, and input handling
+     */
     public GameMenu(EngineContext context) {
         ClassFactory.create(this, context, zIndex);
     };
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
+    }
 
     @Override
     public void show() {
@@ -59,10 +85,6 @@ public class GameMenu extends UIContainer
         super.hide();
     }
 
-    /**
-     * @param width
-     * @param height
-     */
     @Override
     public void setSize(int width, int height) {
         this.width = width;
@@ -70,10 +92,13 @@ public class GameMenu extends UIContainer
         super.setSize(width, height);
     }
 
-    /**
-     * @param x
-     * @param y
-     */
+    @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
+        super.translateSize(dWidth, dHeight);
+    }
+
     @Override
     public void setPosition(int x, int y) {
         this.x = x;
@@ -81,9 +106,6 @@ public class GameMenu extends UIContainer
         super.setPosition(x, y);
     }
 
-    /**
-     * @param position
-     */
     @Override
     public void setPosition(Point position) {
         x = position.x;
@@ -91,21 +113,13 @@ public class GameMenu extends UIContainer
         super.setPosition(position);
     }
 
-    /**
-     * @param dx
-     * @param dy
-     */
     @Override
-    public void translate(int dx, int dy) {
-        this.x += x;
-        this.y += y;
-        super.translate(dx, dy);
-
+    public void translatePosition(int dx, int dy) {
+        x += dx;
+        y += dy;
+        super.translatePosition(dx, dy);
     }
 
-    /**
-     * @param g
-     */
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -117,20 +131,29 @@ public class GameMenu extends UIContainer
     }
 
     /**
-     * @param zIndex
+     * Sets a custom drawing action used to render the menu background.
+     * <p>
+     * Unlike standard UI components, menus may require more flexible or
+     * complex rendering. This method allows a custom {@link Painter} to be
+     * provided for drawing the menu's background.
+     * <p>
+     * This is used internally for the background:
+     * 
+     * <pre>
+     * private Painter customDrawAction = (gDraw) -> {
+     *     gDraw.setColor(new Color(10, 10, 10, 125));
+     *     gDraw.fillRect(x, y, width, height);
+     * 
+     *     gDraw.setColor(Color.BLACK);
+     *     gDraw.setFont(new Font("SansSerif", Font.PLAIN, 25));
+     *     AdvancedGraphics.centerAlignedString(gDraw, x + width / 2, (int) (y + height * 0.2),
+     *             "This is a menu");
+     * };
+     * </pre>
+     *
+     * @param customDrawAction the drawing logic used to render the background
      */
-    @Override
-    public void setZIndex(int zIndex) {
-        ClassFactory.updatePriority(this, context, zIndex);
-        this.zIndex = zIndex;
-        return;
-    }
-
-    /**
-     * @return int
-     */
-    @Override
-    public int getZIndex() {
-        return zIndex;
+    public void setCustomDrawAction(Painter customDrawAction) {
+        this.customDrawAction = customDrawAction;
     }
 }

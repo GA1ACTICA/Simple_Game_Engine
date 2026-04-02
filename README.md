@@ -34,8 +34,8 @@ Checkbox
 
 MenuContainer
 
-- [ ] GameMenu.java
-- [ ] UIContainer.java
+- [x] GameMenu.java
+- [x] UIContainer.java
 
 Misc
 
@@ -65,7 +65,7 @@ Interfaces
 - [x] Clickable.java
 - [ ] Hoverable.java
 - [ ] InterfacePainter.java
-- [ ] MenuInterface.java
+- [x] MenuInterface.java
 - [ ] Updatable.java
 - [ ] ZIndexable.java
 

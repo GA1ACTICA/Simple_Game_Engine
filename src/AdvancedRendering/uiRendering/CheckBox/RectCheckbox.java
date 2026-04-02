@@ -34,7 +34,7 @@ import GameEngine.Interfaces.Drawables.UIDrawable;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
+        MenuSetHoverVisual, MenuSetToggleVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
 
     private int zIndex = 0;
 
@@ -217,7 +217,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     @Override
-    public void translate(int dx, int dy) {
+    public void translatePosition(int dx, int dy) {
         x += dx;
         y += dy;
         baseShape.setFrame(x, y, width, height);
@@ -234,15 +234,27 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         updateRotatedShape();
     }
 
+    @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
     // ————————— Set colors ——————————
+    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
-    public void setToggleColorTrue(Color toggleColorTrue) {
+    @Override
+    public void setToggleColor(Color toggleColorTrue) {
         this.toggleColorTrue = toggleColorTrue;
     }
 
+    @Override
     public void setHoverColor(Color hoveColor) {
         this.hoverColor = hoveColor;
     }
@@ -252,14 +264,17 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     // —————————— Set images ——————————
+    @Override
     public void setImage(Image image) {
         this.image = image;
     }
 
-    public void setToggleImageTrue(Image toggleImage) {
+    @Override
+    public void setToggleImage(Image toggleImage) {
         this.toggleImage = toggleImage;
     }
 
+    @Override
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }
@@ -334,6 +349,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         this.enabled = enabled;
     }
 
+    /**
+     * 
+     * @param state
+     */
     public void setCheckboxState(boolean state) {
         toggled = state;
 
@@ -376,6 +395,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     @Override
     public boolean isHovered() {
         return isHovered;
+    }
+
+    public boolean getCheckboxState() {
+        return toggled;
     }
 
     @Override
@@ -604,5 +627,4 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     public void onPressed() {
         clicked = true;
     }
-
 }

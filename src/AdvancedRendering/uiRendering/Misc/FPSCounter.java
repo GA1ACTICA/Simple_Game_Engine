@@ -115,7 +115,7 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
      * @param dy
      */
     @Override
-    public void translate(int dx, int dy) {
+    public void translatePosition(int dx, int dy) {
         x += dx;
         y += dy;
     }

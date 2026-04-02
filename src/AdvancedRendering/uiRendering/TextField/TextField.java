@@ -200,7 +200,7 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
      * @param dy
      */
     @Override
-    public void translate(int dx, int dy) {
+    public void translatePosition(int dx, int dy) {
         x += dx;
         y += dy;
         baseShape.setFrame(x, y, width, height);
@@ -216,6 +216,15 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     public void setSize(int width, int height) {
         this.width = width;
         this.height = height;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
