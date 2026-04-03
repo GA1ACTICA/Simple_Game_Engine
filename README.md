@@ -39,7 +39,7 @@ MenuContainer
 
 Misc
 
-- [ ] FPSCounter.java
+- [x] FPSCounter.java
 
 Slider
 

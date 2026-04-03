@@ -55,6 +55,7 @@ public class GameUpdate implements Runnable {
         FPSCounter fps = new FPSCounter(context);
         fps.setColor(Color.RED);
         fps.show();
+        fps.setZIndex(100);
 
         RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(200, 200));
         b.show();
