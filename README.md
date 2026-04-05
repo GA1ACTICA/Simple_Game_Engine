@@ -43,7 +43,7 @@ Misc
 
 Slider
 
-- [ ] Slider.java
+- [x] Slider.java
 
 TextField
 
@@ -73,7 +73,6 @@ Records
 
 - [x] CursorInformation.java
 - [ ] FixResult.java
-- [ ] SliderInformation.java
 
 Json
 
