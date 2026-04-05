@@ -67,6 +67,11 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
     }
 
     @Override
+    public boolean isVisible() {
+        return show;
+    }
+
+    @Override
     public void show() {
         show = true;
     }
@@ -109,10 +114,6 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
 
     public int getY() {
         return y;
-    }
-
-    public Color getColor() {
-        return color;
     }
 
     public int getUPS() {

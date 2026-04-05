@@ -17,9 +17,6 @@ import java.awt.Point;
 import javax.swing.JFrame;
 
 import AdvancedRendering.uiRendering.Button.RectButton;
-import AdvancedRendering.uiRendering.Button.RoundRectButton;
-import AdvancedRendering.uiRendering.CheckBox.RectCheckbox;
-import AdvancedRendering.uiRendering.CheckBox.RoundRectCheckbox;
 import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.uiRendering.Slider.Slider;
 import Game.*;
@@ -57,17 +54,20 @@ public class GameUpdate implements Runnable {
         fps.show();
         fps.setZIndex(100);
 
-        RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(200, 200));
+        s = new Slider(context, panel, mouse, new Point(100, 100), new Point(900, 200));
+        s.show();
+
+        RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(20, 20));
         b.show();
+        b.setRotation(360);
 
-        RoundRectCheckbox c = new RoundRectCheckbox(context, panel, mouse, new Point(500, 500), 25);
-        c.setHoverEffectEnabled(false);
-        c.setClickEffectEnabled(false);
-        c.show();
-
-        b.onClick(() -> {
-            c.setCheckboxState(false);
+        RectButton b2 = new RectButton(context, panel, mouse, new Point(0, 0), new Point(20, 20));
+        b2.show();
+        b2.onClick(() -> {
+            s.setSliderPoints(s.getPointOne(), new Point(1000, 700), false);
         });
+
+        s.setHandle(b);
 
         // constructors for menu
         // constructors for game

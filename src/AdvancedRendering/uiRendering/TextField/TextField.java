@@ -37,6 +37,8 @@ import GameEngine.Interfaces.Drawables.UIDrawable;
 public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetSize, MenuSetPosition, MenuSetColor,
         MenuSetImage, MenuSetHoverVisual {
 
+    private int zIndex = 0;
+
     private boolean show;
 
     private int x;
@@ -160,6 +162,10 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
 
     }
 
+    public boolean isVisible() {
+        return show;
+    }
+
     @Override
     public void show() {
         show = true;
@@ -168,6 +174,17 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     @Override
     public void hide() {
         show = false;
+    }
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
     }
 
     /**
@@ -381,23 +398,4 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     private void updateFontMetrics(Font fieldFont) {
 
     }
-
-    /**
-     * @param zIndex
-     */
-    @Override
-    public void setZIndex(int zIndex) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setZIndex'");
-    }
-
-    /**
-     * @return int
-     */
-    @Override
-    public int getZIndex() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getZIndex'");
-    }
-
 }

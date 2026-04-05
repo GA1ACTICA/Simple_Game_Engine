@@ -152,4 +152,17 @@ public class ClassFactory {
         ErrorManagement.reportError(e, "Invalid object passed to getPriority");
         throw e;
     }
+
+    // remove from all lists
+    public static void remove(Object object, EngineContext context) {
+        for (List<?> list : context.getAllLists()) {
+            list.remove(object);
+        }
+    }
+
+    // remove from specific list
+    public static void remove(Object object, List<?> list) {
+        list.remove(object);
+    }
+
 }
