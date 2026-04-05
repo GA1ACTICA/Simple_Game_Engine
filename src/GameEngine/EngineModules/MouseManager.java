@@ -30,6 +30,8 @@ public class MouseManager {
     private static Clickable topMost = null;
     private static Clickable currentTopMost = null; // only gets set when left mouse button is pressed down
 
+    private static Hoverable lastHovered = null;
+
     /**
      * @param context
      * @param mousePoint
@@ -97,14 +99,28 @@ public class MouseManager {
      * @param mousePoint
      */
     public static void handleHover(EngineContext context, Point mousePoint) {
+        Hoverable currentHovered = null;
 
-        // Update hover states
-        for (Clickable clickable : context.getClickables()) {
-            if (!clickable.isVisible() || !clickable.isEnabled() || !(clickable instanceof Hoverable hoverable))
-                continue;
+        if (topMost != null &&
+                topMost.isVisible() &&
+                topMost.isEnabled() &&
+                topMost instanceof Hoverable hoverable &&
+                topMost.contains(mousePoint.x, mousePoint.y)) {
+            currentHovered = hoverable;
+        }
 
-            // Check if current clickable is the top clickable on the mouse
-            hoverable.setHovered((clickable == topMost));
+        // If hover target changed
+        if (lastHovered != currentHovered) {
+
+            // Fire exit on previous
+            if (lastHovered != null)
+                lastHovered.setHovered(false);
+
+            // Fire enter on new
+            if (currentHovered != null)
+                currentHovered.setHovered(true);
+
+            lastHovered = currentHovered;
         }
     }
 }
