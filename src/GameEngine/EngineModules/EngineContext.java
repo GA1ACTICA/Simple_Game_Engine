@@ -29,6 +29,17 @@ public class EngineContext {
 
     private final List<Clickable> clickables = new ArrayList<>();
 
+    private List<List<?>> allLists = List.of(
+            worldDrawables,
+            uiDrawables,
+            cursorDrawables,
+            updatables,
+            clickables);
+
+    public List<List<?>> getAllLists() {
+        return allLists;
+    }
+
     /**
      * @return List<Drawable>
      */

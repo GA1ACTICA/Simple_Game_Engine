@@ -99,79 +99,79 @@ public class CursorManager implements CursorDrawable {
                             Path.of(defaultCursorPath + "default.png")));
             put(CursorType.E_RESIZE,
                     new CursorInformation(new Point(76, 52),
-                            Path.of(defaultCursorPath + "e-resize.png"))); // e-resize
+                            Path.of(defaultCursorPath + "e-resize.png")));
             put(CursorType.EW_RESIZE,
                     new CursorInformation(new Point(48, 48),
-                            Path.of(defaultCursorPath + "ew-resize.png"))); // ew-resize
+                            Path.of(defaultCursorPath + "ew-resize.png")));
             put(CursorType.GRAB,
                     new CursorInformation(new Point(44, 8),
-                            Path.of(defaultCursorPath + "grab.png"))); // grab
+                            Path.of(defaultCursorPath + "grab.png")));
             put(CursorType.GRABBING,
                     new CursorInformation(new Point(36, 20),
-                            Path.of(defaultCursorPath + "grabbing.png"))); // grabbing
+                            Path.of(defaultCursorPath + "grabbing.png")));
             put(CursorType.HELP,
                     new CursorInformation(new Point(48, 84),
-                            Path.of(defaultCursorPath + "help.png"))); // help
+                            Path.of(defaultCursorPath + "help.png")));
             put(CursorType.MOVE,
                     new CursorInformation(new Point(12, 4),
-                            Path.of(defaultCursorPath + "move.png"))); // move
+                            Path.of(defaultCursorPath + "move.png")));
             put(CursorType.NE_RESIZE,
                     new CursorInformation(new Point(60, 40),
-                            Path.of(defaultCursorPath + "ne-resize.png"))); // ne-resize
+                            Path.of(defaultCursorPath + "ne-resize.png")));
             put(CursorType.NESW_RESIZE,
                     new CursorInformation(new Point(44, 44),
-                            Path.of(defaultCursorPath + "nesw-resize.png")));// nesw-resize
+                            Path.of(defaultCursorPath + "nesw-resize.png")));
             put(CursorType.NO_DROP,
                     new CursorInformation(new Point(12, 4),
-                            Path.of(defaultCursorPath + "no-drop.png"))); // no-drop
+                            Path.of(defaultCursorPath + "no-drop.png")));
             put(CursorType.NOT_ALLOWED,
                     new CursorInformation(new Point(48, 48),
-                            Path.of(defaultCursorPath + "not-allowed.png")));// not-allowed
+                            Path.of(defaultCursorPath + "not-allowed.png")));
             put(CursorType.N_RESIZE,
                     new CursorInformation(new Point(52, 24),
-                            Path.of(defaultCursorPath + "n-resize.png"))); // n-resize
+                            Path.of(defaultCursorPath + "n-resize.png")));
             put(CursorType.NS_RESIZE,
                     new CursorInformation(new Point(48, 52),
-                            Path.of(defaultCursorPath + "ns-resize.png"))); // ns-resize
+                            Path.of(defaultCursorPath + "ns-resize.png")));
             put(CursorType.NW_RESIZE,
                     new CursorInformation(new Point(40, 40),
-                            Path.of(defaultCursorPath + "nw-resize.png"))); // nw-resize
+                            Path.of(defaultCursorPath + "nw-resize.png")));
             put(CursorType.NWSE_RESIZE,
                     new CursorInformation(new Point(44, 44),
-                            Path.of(defaultCursorPath + "nwse-resize.png")));// nwse-resize
+                            Path.of(defaultCursorPath + "nwse-resize.png")));
             put(CursorType.POINTER,
                     new CursorInformation(new Point(28, 20),
-                            Path.of(defaultCursorPath + "pointer.png"))); // pointer
+                            Path.of(defaultCursorPath + "pointer.png")));
             put(CursorType.ROW_RESIZE,
                     new CursorInformation(new Point(48, 52),
-                            Path.of(defaultCursorPath + "row-resize.png"))); // row-resize
+                            Path.of(defaultCursorPath + "row-resize.png")));
             put(CursorType.SE_RESIZE,
                     new CursorInformation(new Point(60, 60),
-                            Path.of(defaultCursorPath + "se-resize.png"))); // se-resize
+                            Path.of(defaultCursorPath + "se-resize.png")));
             put(CursorType.S_RESIZE,
                     new CursorInformation(new Point(52, 72),
-                            Path.of(defaultCursorPath + "s-resize.png"))); // s-resize
+                            Path.of(defaultCursorPath + "s-resize.png")));
             put(CursorType.SW_RESIZE,
                     new CursorInformation(new Point(40, 60),
-                            Path.of(defaultCursorPath + "sw-resize.png"))); // sw-resize
+                            Path.of(defaultCursorPath + "sw-resize.png")));
             put(CursorType.TEXT,
                     new CursorInformation(new Point(44, 48),
-                            Path.of(defaultCursorPath + "text.png"))); // text
+                            Path.of(defaultCursorPath + "text.png")));
             put(CursorType.VERTICAL_TEXT,
                     new CursorInformation(new Point(48, 44),
-                            Path.of(defaultCursorPath + "vertical-text.png"))); // vertical-text
+                            Path.of(defaultCursorPath + "vertical-text.png")));
             put(CursorType.W_RESIZE,
                     new CursorInformation(new Point(24, 52),
-                            Path.of(defaultCursorPath + "w-resize.png"))); // w-resize
+                            Path.of(defaultCursorPath + "w-resize.png")));
             put(CursorType.X_CURSOR,
                     new CursorInformation(new Point(44, 48),
-                            Path.of(defaultCursorPath + "X_curs.png"))); // X_curs
+                            Path.of(defaultCursorPath + "X_curs.png")));
             put(CursorType.ZOOM_IN,
                     new CursorInformation(new Point(44, 40),
-                            Path.of(defaultCursorPath + "zoom-in.png"))); // zoom-in
+                            Path.of(defaultCursorPath + "zoom-in.png")));
             put(CursorType.ZOOM_OUT,
                     new CursorInformation(new Point(44, 40),
-                            Path.of(defaultCursorPath + "zoom-out.png"))); // zoom-out
+                            Path.of(defaultCursorPath + "zoom-out.png")));
 
             // animated
             // put(CursorType.PROGRESS, new CursorInformation(new Point(12, 4), null, true,
