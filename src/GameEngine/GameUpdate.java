@@ -59,15 +59,13 @@ public class GameUpdate implements Runnable {
 
         RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(20, 20));
         b.show();
-        b.setRotation(360);
 
-        RectButton b2 = new RectButton(context, panel, mouse, new Point(0, 0), new Point(20, 20));
+        RectButton b2 = new RectButton(context, panel, mouse, new Point(20, 20), new Point(40, 40));
         b2.show();
-        b2.onClick(() -> {
-            s.setSliderPoints(s.getPointOne(), new Point(1000, 700), false);
-        });
 
-        s.setHandle(b);
+        b2.onClick(() -> {
+            s.setSliderPoints(s.getPointOne(), new Point(900, 700), false);
+        });
 
         // constructors for menu
         // constructors for game

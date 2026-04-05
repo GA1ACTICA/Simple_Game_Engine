@@ -66,7 +66,6 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
         return zIndex;
     }
 
-    @Override
     public boolean isVisible() {
         return show;
     }
