@@ -22,23 +22,58 @@ import Utils.ErrorManagement;
 public class ClassFactory {
 
     /**
-     * @param object
-     * @param context
-     * @return Object
+     * Adds an object to a reference list, making it eligible to receive drawing,
+     * update, and other engine calls.
+     * <p>
+     * When used in a drawing context, the object is assigned a default z-index of
+     * 0.
+     * The z-index can be set manually using
+     * {@link #create(Object, EngineContext, int)}.
+     *
+     * @param object  the object to add to the reference list
+     * 
+     * @param context the engine context containing objects involved in
+     *                rendering, updating, and input handling
      */
-    public static Object create(Object object, EngineContext context) {
-        return create(object, context, -1);
+    public static void create(Object object, EngineContext context) {
+        create(object, context, 0);
     }
 
     /**
-     * @param object
-     * @param context
-     * @param zIndex
-     * @return Object
+     * Adds an object to a reference list, making it eligible to receive drawing,
+     * update, and other engine calls.
+     * <p>
+     * The provided z-index determines the object's rendering order.
+     * <p>
+     * <b>Tip:</b> If this method is used outside the object's class, it is
+     * generally
+     * recommended to use the object's own z-index. This can be retrieved via
+     * {@link GameEngine.Interfaces.ZIndexable#getZIndex()}.
+     *
+     * <pre>
+     * Entity player = new Entity(...);
+     *
+     * ClassFactory.create(player, context, player.getZIndex());
+     * </pre>
+     *
+     * Another common pattern is registering the object in its constructor:
+     *
+     * <pre>
+     * private int zIndex = 0;
+     *
+     * public Entity(EngineContext context) {
+     *     ClassFactory.create(this, context, zIndex);
+     * }
+     * </pre>
+     *
+     * @param object  the object to add to the reference list
+     * 
+     * @param context the engine context containing objects involved in
+     *                rendering, updating, and input handling
+     * 
+     * @param zIndex  the z-index assigned to the object
      */
-    // TODO: seperate adding to list into seperate method for better docstring
-
-    public static Object create(Object object, EngineContext context, int zIndex) {
+    public static void create(Object object, EngineContext context, int zIndex) {
 
         if (object instanceof Drawable drawable) {
 
@@ -80,17 +115,34 @@ public class ClassFactory {
 
             list.add(index, clickable);
         }
-
-        return object;
     }
 
     /**
-     * @param object
-     * @param context
-     * @param zIndex
-     * @return Object
+     * Updates the rendering priority of an object by removing its current entry
+     * and re-inserting it in the correct order.
+     * <p>
+     * This ensures the object is rendered according to its updated z-index.
+     *
+     * @param object  the object whose order is updated
+     * 
+     * @param context the engine context containing objects involved in
+     *                rendering, updating, and input handling
+     * 
+     * @param zIndex  the new z-index assigned to the object
+     *
+     * @throws IllegalArgumentException if {@code object} does not implement
+     *                                  {@link GameEngine.Interfaces.ZIndexable
+     *                                  ZIndexable}
      */
-    public static Object updatePriority(Object object, EngineContext context, int zIndex) {
+    public static void updatePriority(Object object, EngineContext context, int zIndex)
+            throws IllegalArgumentException {
+        if (!(object instanceof ZIndexable)) {
+            IllegalArgumentException e = new IllegalArgumentException(
+                    object.getClass().getSimpleName() + " must implement ZIndexable");
+
+            ErrorManagement.reportError(e, "Invalid object passed to getPriority");
+            throw e;
+        }
 
         if (object instanceof Drawable drawable) {
 
@@ -133,34 +185,34 @@ public class ClassFactory {
             // Add sorted entry
             list.add(index, clickable);
         }
-
-        return object;
     }
 
     /**
-     * @param object
-     * @return int
-     * @throws Exception
+     * Removes the object from all available context list making is uneligible to
+     * receive engine calls like updates or drawing.
+     * 
+     * @param object  the object that is being removed from the lists
+     * 
+     * @param context the engine context containing objects involved in
+     *                rendering, updating, and input handling
      */
-    public static int getPriority(Object object) throws Exception {
-        if (object instanceof ZIndexable zIndexable)
-            return zIndexable.getZIndex();
-
-        Exception e = new IllegalArgumentException(
-                object.getClass().getSimpleName() + " must implement ZIndexable");
-
-        ErrorManagement.reportError(e, "Invalid object passed to getPriority");
-        throw e;
-    }
-
-    // remove from all lists
     public static void remove(Object object, EngineContext context) {
         for (List<?> list : context.getAllLists()) {
             list.remove(object);
         }
     }
 
-    // remove from specific list
+    /**
+     * Removes an object from a specific context list, making it ineligible to
+     * receive engine calls such as updates or drawing.
+     * <p>
+     * The available lists can be accessed using the {@code get} methods in
+     * {@link GameEngine.EngineModules.EngineContext EngineContext}.
+     *
+     * @param object the object to remove from the list
+     * 
+     * @param list   the list from which the object is removed
+     */
     public static void remove(Object object, List<?> list) {
         list.remove(object);
     }

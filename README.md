@@ -51,7 +51,7 @@ TextField
 
 GameEngine
 
-- [ ] ClassFActory.java
+- [x] ClassFActory.java
 - [x] CursorManager.java
 - [ ] EngineContext.java
 - [ ] Keys.java
