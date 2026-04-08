@@ -16,8 +16,7 @@ import java.util.List;
 
 import GameEngine.Interfaces.Clickable;
 import GameEngine.Interfaces.Updatable;
-import GameEngine.Interfaces.Drawables.CursorDrawable;
-import GameEngine.Interfaces.Drawables.Drawable;
+import GameEngine.Interfaces.Drawables.*;
 
 public class EngineContext {
     private final List<Drawable> worldDrawables = new ArrayList<>();
@@ -41,35 +40,50 @@ public class EngineContext {
     }
 
     /**
-     * @return List<Drawable>
+     * Returns the internal list of objects registered with the game engine that
+     * implement {@link Drawable}.
+     *
+     * @return the mutable list of drawable objects
      */
     public List<Drawable> getWorldDrawables() {
         return worldDrawables;
     }
 
     /**
-     * @return List<Drawable>
+     * Returns the internal list of objects registered with the game engine that
+     * implement {@link UIDrawable}.
+     *
+     * @return the mutable list of drawable objects
      */
     public List<Drawable> getUiDrawables() {
         return uiDrawables;
     }
 
     /**
-     * @return List<CursorDrawable>
+     * Returns the internal list of objects registered with the game engine that
+     * implement {@link CursorDrawable}.
+     *
+     * @return the mutable list of drawable objects
      */
     public List<CursorDrawable> getCursorDrawables() {
         return cursorDrawables;
     }
 
     /**
-     * @return List<Updatable>
+     * Returns the internal list of objects registered with the game engine that
+     * implement {@link Updatable}.
+     *
+     * @return the mutable list of updatable objects
      */
     public List<Updatable> getUpdatables() {
         return updatables;
     }
 
     /**
-     * @return List<Clickable>
+     * Returns the internal list of objects registered with the game engine that
+     * implement {@link Clickable}.
+     *
+     * @return the mutable list of clickable objects
      */
     public List<Clickable> getClickables() {
         return clickables;

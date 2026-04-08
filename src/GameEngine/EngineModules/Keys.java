@@ -30,7 +30,11 @@ public class Keys implements KeyListener {
     }
 
     /**
-     * @param e
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.KeyEvent} received from AWT
      */
     @Override
     public void keyPressed(KeyEvent e) {
@@ -49,7 +53,11 @@ public class Keys implements KeyListener {
     }
 
     /**
-     * @param e
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.KeyEvent} received from AWT
      */
     @Override
     public void keyReleased(KeyEvent e) {
@@ -62,7 +70,11 @@ public class Keys implements KeyListener {
     }
 
     /**
-     * @param e
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.KeyEvent} received from AWT
      */
     @Override
     public void keyTyped(KeyEvent e) {
