@@ -2,6 +2,8 @@ bin/
 src/recources/
 *.py
 .vscode/
+devTools/
+javadoc/
 
 # Compiled class file
 *.class

@@ -29,8 +29,8 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
     private int zIndex = 0;
 
     private int frames = 0;
-    private int fps = 0;
-    private long timer = System.currentTimeMillis();
+    private int ups = 0;
+    private long timer = System.nanoTime();
 
     private int x = 10;
     private int y = 25;
@@ -39,7 +39,19 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
 
     private EngineContext context;
 
+    /**
+     * Creates and registers an FPS/UPS counter.
+     * <p>
+     * In Swing/AWT-based applications, frame rate cannot be measured directly with
+     * high accuracy. Instead, this class measures the number of {@link Updatable}
+     * update calls per second (UPS). If rendering occurs on every update, this
+     * value can be used as an approximation of the frame rate (FPS).
+     *
+     * @param context the engine context containing components related to rendering,
+     *                updating, and input handling
+     */
     public FPSCounter(EngineContext context) {
+        this.context = context;
         ClassFactory.create(this, context);
     }
 
@@ -54,16 +66,8 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
         return zIndex;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public Color getColor() {
-        return color;
+    public boolean isVisible() {
+        return show;
     }
 
     @Override
@@ -89,7 +93,7 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
     }
 
     @Override
-    public void translate(int dx, int dy) {
+    public void translatePosition(int dx, int dy) {
         x += dx;
         y += dy;
     }
@@ -103,6 +107,18 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
         this.font = font;
     }
 
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getUPS() {
+        return ups;
+    }
+
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -110,20 +126,21 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
 
         g.setFont(font);
         g.setColor(color);
-        g.drawString("FPS/UPS: " + Integer.toString(fps), x, y);
+        g.drawString("FPS/UPS: " + Integer.toString(ups), x, y);
     }
 
     @Override
     public void update() {
-        if (!show)
-            return;
 
         frames++;
 
-        if (System.currentTimeMillis() - timer >= 1000) {
-            fps = frames;
+        long now = System.nanoTime();
+        long interval = 1_000_000_000L; // 1 second in nanoseconds
+
+        while (now - timer >= interval) {
+            ups = frames;
             frames = 0;
-            timer += 1000;
+            timer += interval;
         }
     }
 }

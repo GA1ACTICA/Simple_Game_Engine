@@ -20,18 +20,18 @@ import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 
 public class GameMenu extends UIContainer
-        implements UIDrawable, Updatable {
+        implements UIDrawable {
 
     private boolean show;
 
-    private int zIndex = 0;
+    private int zIndex = -1;
 
     private int x = 100;
     private int y = 100;
     private int width = 200;
     private int height = 200;
 
-    private InterfacePainter customDrawAction = (gDraw) -> {
+    private Painter customDrawAction = (gDraw) -> {
         gDraw.setColor(new Color(10, 10, 10, 125));
         gDraw.fillRect(x, y, width, height);
 
@@ -43,9 +43,35 @@ public class GameMenu extends UIContainer
 
     private EngineContext context;
 
+    /**
+     * Creates a standalone menu with no initial UI elements and registers it
+     * with the engine using the provided context.
+     * <p>
+     * The menu has a default z-index of -1, placing it behind standard UI
+     * components (which typically use a z-index of 0). This causes it to
+     * behave as a background layer.
+     *
+     * <p>
+     * As a subclass of {@link UIContainer}, GameMenu provides a graphical
+     * context for rendering.
+     *
+     * @param context the engine context containing objects used for rendering,
+     *                updating, and input handling
+     */
     public GameMenu(EngineContext context) {
         ClassFactory.create(this, context, zIndex);
     };
+
+    @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
+    }
 
     @Override
     public void show() {
@@ -67,6 +93,13 @@ public class GameMenu extends UIContainer
     }
 
     @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
+        super.translateSize(dWidth, dHeight);
+    }
+
+    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -81,11 +114,10 @@ public class GameMenu extends UIContainer
     }
 
     @Override
-    public void translate(int dx, int dy) {
-        this.x += x;
-        this.y += y;
-        super.translate(dx, dy);
-
+    public void translatePosition(int dx, int dy) {
+        x += dx;
+        y += dy;
+        super.translatePosition(dx, dy);
     }
 
     @Override
@@ -98,22 +130,30 @@ public class GameMenu extends UIContainer
         customDrawAction.paint(g2d);
     }
 
-    @Override
-    public void update() {
-        if (!show)
-            return;
-
-    }
-
-    @Override
-    public void setZIndex(int zIndex) {
-        ClassFactory.updatePriority(this, context, zIndex);
-        this.zIndex = zIndex;
-        return;
-    }
-
-    @Override
-    public int getZIndex() {
-        return zIndex;
+    /**
+     * Sets a custom drawing action used to render the menu background.
+     * <p>
+     * Unlike standard UI components, menus may require more flexible or
+     * complex rendering. This method allows a custom {@link Painter} to be
+     * provided for drawing the menu's background.
+     * <p>
+     * This is used internally for the background:
+     * 
+     * <pre>
+     * private Painter customDrawAction = (gDraw) -> {
+     *     gDraw.setColor(new Color(10, 10, 10, 125));
+     *     gDraw.fillRect(x, y, width, height);
+     * 
+     *     gDraw.setColor(Color.BLACK);
+     *     gDraw.setFont(new Font("SansSerif", Font.PLAIN, 25));
+     *     AdvancedGraphics.centerAlignedString(gDraw, x + width / 2, (int) (y + height * 0.2),
+     *             "This is a menu");
+     * };
+     * </pre>
+     *
+     * @param customDrawAction the drawing logic used to render the background
+     */
+    public void setCustomDrawAction(Painter customDrawAction) {
+        this.customDrawAction = customDrawAction;
     }
 }

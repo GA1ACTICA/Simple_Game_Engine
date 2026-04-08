@@ -21,18 +21,23 @@ import GameEngine.EngineModules.Mouse;
 public class OvalButton extends RectButton {
 
     /**
+     * Creates and registers a oval button with the specified dimensions.
      * 
-     * @param mouse
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param context
+     * @param panel   The panel on which the button is drawn to.
      * 
-     * @param x
+     * @param mouse   The mouse input handler used for interaction with the
+     *                button.
      * 
-     * @param y
+     * @param x       The x-coordinate of the oval's top-left point.
      * 
-     * @param width
+     * @param y       The y-coordinate of the oval's top-left point.
      * 
-     * @param height
+     * @param width   The width of the oval.
+     * 
+     * @param height  The height of the oval.
      */
     public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
 
@@ -46,14 +51,19 @@ public class OvalButton extends RectButton {
     }
 
     /**
+     * Creates and registers a oval button with the specified points.
      * 
-     * @param mouse
+     * @param context     The engine context containing objects involved in
+     *                    rendering, updating, and input handling.
      * 
-     * @param context
+     * @param panel       The panel on which the button is drawn to.
      * 
-     * @param topLeft
+     * @param mouse       The mouse input handler used for interaction with the
+     *                    button.
      * 
-     * @param bottomRight
+     * @param topLeft     The top-left point of the oval.
+     * 
+     * @param bottomRight The bottom-left point of the oval.
      */
     public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
@@ -72,21 +82,27 @@ public class OvalButton extends RectButton {
     }
 
     /**
+     * Creates and registers a oval button with the specified dimensions and center
+     * point.
+     *
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param mouse
+     * @param panel   The panel on which the button is drawn to.
      * 
-     * @param context
+     * @param mouse   The mouse input handler used for interaction with the
+     *                button.
      * 
-     * @param middle
+     * @param center  The center point of the oval.
      * 
-     * @param width
+     * @param width   The width of the oval.
      * 
-     * @param height
+     * @param height  The height of the oval.
      */
-    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
+    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int width, int height) {
 
-        int x = (int) middle.getX() - width / 2;
-        int y = (int) middle.getY() - height / 2;
+        int x = (int) center.getX() - width / 2;
+        int y = (int) center.getY() - height / 2;
 
         super(context, panel, mouse, x, y, width, height);
 
@@ -98,28 +114,34 @@ public class OvalButton extends RectButton {
     }
 
     /**
-     * Creates a circle
+     * Creates and registers a circular button with the specified dimensions and
+     * center point.
+     *
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param mouse
+     * @param panel   The panel on which the button is drawn to.
      * 
-     * @param context
+     * @param mouse   The mouse input handler used for interaction with the
+     *                button.
      * 
-     * @param middle
+     * @param center  The circle's center point.
      * 
-     * @param radius
+     * @param radius  The circle's radius.
      */
-    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int radius) {
+    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int radius) {
 
-        int x = (int) middle.getX() - radius;
-        int y = (int) middle.getY() - radius;
+        int x = (int) center.getX() - radius;
+        int y = (int) center.getY() - radius;
 
-        super(context, panel, mouse, x, y, radius * 2, radius * 2);
+        int length = radius * 2;
 
-        this.baseShape = new Ellipse2D.Float(x, y, radius * 2, radius * 2);
+        super(context, panel, mouse, x, y, length, length);
+
+        this.baseShape = new Ellipse2D.Float(x, y, length, length);
         this.rotatedShape = baseShape;
 
         updateRotatedShape();
-
     }
 
 }

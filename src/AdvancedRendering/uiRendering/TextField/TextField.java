@@ -37,6 +37,8 @@ import GameEngine.Interfaces.Drawables.UIDrawable;
 public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetSize, MenuSetPosition, MenuSetColor,
         MenuSetImage, MenuSetHoverVisual {
 
+    private int zIndex = 0;
+
     private boolean show;
 
     private int x;
@@ -160,6 +162,10 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
 
     }
 
+    public boolean isVisible() {
+        return show;
+    }
+
     @Override
     public void show() {
         show = true;
@@ -171,6 +177,21 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     }
 
     @Override
+    public void setZIndex(int zIndex) {
+        ClassFactory.updatePriority(this, context, zIndex);
+        this.zIndex = zIndex;
+    }
+
+    @Override
+    public int getZIndex() {
+        return zIndex;
+    }
+
+    /**
+     * @param x
+     * @param y
+     */
+    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -179,6 +200,9 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
         updateRotatedShape();
     }
 
+    /**
+     * @param position
+     */
     @Override
     public void setPosition(Point position) {
         this.x = position.x;
@@ -188,8 +212,12 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
         updateRotatedShape();
     }
 
+    /**
+     * @param dx
+     * @param dy
+     */
     @Override
-    public void translate(int dx, int dy) {
+    public void translatePosition(int dx, int dy) {
         x += dx;
         y += dy;
         baseShape.setFrame(x, y, width, height);
@@ -197,6 +225,10 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
         updateRotatedShape();
     }
 
+    /**
+     * @param width
+     * @param height
+     */
     @Override
     public void setSize(int width, int height) {
         this.width = width;
@@ -207,25 +239,49 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     }
 
     @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    /**
+     * @param color
+     */
+    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
+    /**
+     * @param hoverColor
+     */
     @Override
     public void setHoverColor(Color hoverColor) {
         this.hoverColor = hoverColor;
     }
 
+    /**
+     * @param image
+     */
     @Override
     public void setImage(Image image) {
         this.image = image;
     }
 
+    /**
+     * @param hoverImage
+     */
     @Override
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }
 
+    /**
+     * @param middle
+     */
     public void setMiddle(Point middle) {
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
@@ -234,40 +290,67 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
         updateRotatedShape();
     }
 
+    /**
+     * @param angle
+     */
     public void setRotation(double angle) {
         this.angle = angle;
 
         updateRotatedShape();
     }
 
+    /**
+     * @return int
+     */
     public int getX() {
         return x;
     }
 
+    /**
+     * @return int
+     */
     public int getY() {
         return y;
     }
 
+    /**
+     * @return int
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * @return int
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * @return Point
+     */
     public Point getMiddlePoint() {
         return new Point(x + width / 2, y + height / 2);
     }
 
+    /**
+     * @return double
+     */
     public double getAngle() {
         return angle;
     }
 
+    /**
+     * @return Color
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     * @param g
+     */
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -309,20 +392,10 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
+    /**
+     * @param fieldFont
+     */
     private void updateFontMetrics(Font fieldFont) {
 
     }
-
-    @Override
-    public void setZIndex(int zIndex) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setZIndex'");
-    }
-
-    @Override
-    public int getZIndex() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getZIndex'");
-    }
-
 }

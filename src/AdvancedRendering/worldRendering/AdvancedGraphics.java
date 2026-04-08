@@ -16,6 +16,14 @@ import java.awt.Graphics;
 
 public class AdvancedGraphics {
 
+    // I do not even know if I'm gonna keep this tbh
+
+    /**
+     * @param g
+     * @param x
+     * @param y
+     * @param str
+     */
     public static void centerAlignedString(Graphics g, int x, int y, String str) {
 
         Font font = g.getFont();

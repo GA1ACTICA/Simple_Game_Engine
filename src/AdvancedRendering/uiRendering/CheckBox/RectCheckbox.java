@@ -23,6 +23,8 @@ import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.ClassFactory;
+import GameEngine.EngineModules.CursorManager;
+import GameEngine.EngineModules.CursorManager.CursorType;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Mouse;
@@ -32,7 +34,7 @@ import GameEngine.Interfaces.Drawables.UIDrawable;
 import Utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
+        MenuSetHoverVisual, MenuSetToggleVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
 
     private int zIndex = 0;
 
@@ -64,27 +66,32 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     private boolean clicked = false;
 
     private boolean toggled = false;
-    private boolean showHover = false;
 
     // private Runnable hoverAction; // TODO: look into this
-    private boolean isHovered;
+    private boolean isHovered = false;
+    private boolean showHover = false;
 
     private Mouse mouse;
     private EngineContext context;
 
     /**
+     * Creates and registers a rectangular checkbox with the specified dimensions.
      * 
-     * @param mouse
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param context
+     * @param panel   The panel on which the checkbox is drawn to.
      * 
-     * @param x
+     * @param mouse   The mouse input handler used for interaction with the
+     *                checkbox.
      * 
-     * @param y
+     * @param x       The x-coordinate of the rectangle's topLeft point.
      * 
-     * @param width
+     * @param y       The y-coordinate of the rectangle's topLeft point.
      * 
-     * @param height
+     * @param width   The width of the rectangle.
+     * 
+     * @param height  The height of the rectangle.
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
 
@@ -98,14 +105,19 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     /**
+     * Creates and registers a rectangular checkbox with the specified points.
      * 
-     * @param mouse
+     * @param context     The engine context containing objects involved in
+     *                    rendering, updating, and input handling.
      * 
-     * @param context
+     * @param panel       The panel on which the checkbox is drawn to.
      * 
-     * @param topLeft
+     * @param mouse       The mouse input handler used for interaction with the
+     *                    checkbox.
      * 
-     * @param bottomRight
+     * @param topLeft     The top left point of the rectangle.
+     * 
+     * @param bottomRight The bottom left point of the rectangle.
      */
     public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
@@ -119,21 +131,28 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     /**
+     * Creates and registers a rectangular checkbox with the specified dimensions
+     * and
+     * center point.
+     *
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param mouse
+     * @param panel   The panel on which the checkbox is drawn to.
      * 
-     * @param context
+     * @param mouse   The mouse input handler used for interaction with the
+     *                checkbox.
      * 
-     * @param middle
+     * @param center  The center point of the rectangle.
      * 
-     * @param width
+     * @param width   The width of the rectangle.
      * 
-     * @param height
+     * @param height  The height of the rectangle.
      */
-    public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
+    public RectCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int width, int height) {
 
-        x = (int) middle.getX() - width / 2;
-        y = (int) middle.getY() - height / 2;
+        x = (int) center.getX() - width / 2;
+        y = (int) center.getY() - height / 2;
         this.width = width;
         this.height = height;
 
@@ -179,14 +198,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         show = false;
     }
 
-    public void setSize(int width, int height) {
-        this.width = width;
-        this.height = height;
-        baseShape.setFrame(x, y, width, height);
-
-        updateRotatedShape();
-    }
-
+    @Override
     public void setPosition(int x, int y) {
         this.x = x;
         this.y = y;
@@ -205,7 +217,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     @Override
-    public void translate(int dx, int dy) {
+    public void translatePosition(int dx, int dy) {
         x += dx;
         y += dy;
         baseShape.setFrame(x, y, width, height);
@@ -213,29 +225,36 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         updateRotatedShape();
     }
 
-    public void setCenter(Point middle) {
-        x = (int) middle.getX() - width / 2;
-        y = (int) middle.getY() - height / 2;
+    @Override
+    public void setSize(int width, int height) {
+        this.width = width;
+        this.height = height;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
     }
 
-    public void setRotation(double angle) {
-        this.angle = angle;
+    @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
+        baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
     }
 
     // ————————— Set colors ——————————
+    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
-    public void setToggleColorTrue(Color toggleColorTrue) {
+    @Override
+    public void setToggleColor(Color toggleColorTrue) {
         this.toggleColorTrue = toggleColorTrue;
     }
 
+    @Override
     public void setHoverColor(Color hoveColor) {
         this.hoverColor = hoveColor;
     }
@@ -245,14 +264,17 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     // —————————— Set images ——————————
+    @Override
     public void setImage(Image image) {
         this.image = image;
     }
 
-    public void setToggleImageTrue(Image toggleImage) {
+    @Override
+    public void setToggleImage(Image toggleImage) {
         this.toggleImage = toggleImage;
     }
 
+    @Override
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }
@@ -260,15 +282,86 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     public void setDisabledImage(Image disabledImage) {
         this.disabledImage = disabledImage;
     }
-
     // ————————————————————————————————
 
+    /**
+     * Sets the center position of the button. This recalculates the
+     * top-left coordinates based on the current width and height,
+     * updates the base shape, and refreshes the rotated shape.
+     *
+     * @param center the new center position
+     */
+    public void setCenter(Point center) {
+        x = (int) Math.round(center.getX() - width / 2);
+        y = (int) Math.round(center.getY() - height / 2);
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
+    }
+
+    /**
+     * Sets the rotation of the button.
+     * Positive angles rotate clockwise, negative angles rotate counterclockwise.
+     *
+     * <p>
+     * <b>Note:</b> Positioning methods return values based on the unrotated
+     * shape, not the visually rotated one.
+     * </p>
+     *
+     * @param angle the rotation angle in degrees
+     */
+    public void setRotation(double angle) {
+        this.angle = angle;
+
+        updateRotatedShape();
+    }
+
+    /**
+     * Enables or disables the visual click effect (color or image change)
+     * when the button is pressed.
+     *
+     * @param clickEffect true to enable the click effect, false to disable it
+     */
+    public void setClickEffectEnabled(boolean enabled) {
+        clickEffect = enabled;
+    }
+
+    /**
+     * Enables or disables the visual hover effect (color or image change)
+     * when the button is hovered.
+     *
+     * @param hoverEffect true to enable the hover effect, false to disable it
+     */
+    public void setHoverEffectEnabled(boolean hoverEffect) {
+        showHover = hoverEffect;
+    }
+
+    /**
+     * Set the ability to interact with the checkbox. This also changes the
+     * appearances to the disabled state.
+     * 
+     * @param enabled true to disable the checkbox, false to enable it
+     * 
+     * @see #setDisabledColor(Color)
+     * @see #setDisabledImage(Image)
+     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public void setShowHover(boolean showHover) {
-        this.showHover = showHover;
+    /**
+     * 
+     * @param state
+     */
+    public void setCheckboxState(boolean state) {
+        toggled = state;
+
+        executeToggleAction();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 
     public int getX() {
@@ -299,25 +392,71 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         return color;
     }
 
-    /**
-     * This lets you run code when the button is pressed with the method:
-     * 
-     * <p>
-     * {@code onClick(() -> {});}
-     * <p>
-     * 
-     * @param action
-     */
+    @Override
+    public boolean isHovered() {
+        return isHovered;
+    }
+
+    public boolean getCheckboxState() {
+        return toggled;
+    }
+
     @Override
     public void onClick(Runnable onClickAction) {
         this.onClickAction = onClickAction;
 
     }
 
+    /**
+     * Sets the action to be executed whenever the checkbox is set to {@code true}.
+     *
+     * <p>
+     * The provided {@link Runnable} is invoked whenever the checkbox is set to the
+     * {@code true} state. This can be achieved either by calling
+     * {@link #executeOnClick()} were the previous state was {@code false} or by
+     * calling {@link #setCheckboxState(boolean)} with the parameter {@code true}.
+     * </p>
+     *
+     * <p>
+     * Example usage:
+     * </p>
+     * 
+     * <pre>
+     * checkbox.onToggleTrue(() -> {
+     *     System.out.println("Checkbox is true!");
+     * });
+     * </pre>
+     *
+     * @param onToggleTrueAction the action to execute when the checkbox becomes
+     *                           {@code true}
+     */
     public void onToggleTrue(Runnable onToggleTrueAction) {
         this.onToggleTrueAction = onToggleTrueAction;
     }
 
+    /**
+     * Sets the action to be executed whenever the checkbox is set to {@code false}.
+     *
+     * <p>
+     * The provided {@link Runnable} is invoked whenever the checkbox is set to the
+     * {@code false} state. This can be achieved either by calling
+     * {@link #executeOnClick()} were the previous state was {@code true} or by
+     * calling {@link #setCheckboxState(boolean)} with the parameter {@code false}.
+     * </p>
+     *
+     * <p>
+     * Example usage:
+     * </p>
+     * 
+     * <pre>
+     * checkbox.onToggleFalse(() -> {
+     *     System.out.println("Checkbox is false!");
+     * });
+     * </pre>
+     *
+     * @param onToggleFalseAction the action to execute when the checkbox becomes
+     *                            {@code false}
+     */
     public void onToggleFalse(Runnable onToggleFalseAction) {
         this.onToggleFalseAction = onToggleFalseAction;
     }
@@ -361,7 +500,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
                     g2d.drawImage(buffer, x, y, null);
                 }
 
-            } else if (toggled) {
+            } else {
 
                 // Draw if the toggleImage is not set
                 if (image == null) {
@@ -383,7 +522,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
                 }
             }
 
-            if (showHover) {
+            if (isHovered && showHover) {
 
                 // Draw if the hoverImage is not set and inside is true
                 if (hoverImage == null) {
@@ -406,7 +545,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
             }
 
             if (clickEffect && clicked) {
-                // Draws this if button is clicked
+                // Draws this if checkbox is clicked
                 if (clickImage == null) {
                     g2d.setColor(clickColor);
                     g2d.fill(baseShape);
@@ -430,13 +569,19 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
 
     }
 
-    // Call updateRotatedShape every time the position, size or rotation changes
+    /**
+     * Updates the rotated version of the base shape based on the current angle.
+     * The rotation is performed around the shape's center point.
+     *
+     * This method should be called whenever the position, size, or rotation
+     * changes.
+     */
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();
-        Point middle = getCenter();
+        Point center = getCenter();
 
-        transform.rotate(Math.toRadians(angle), middle.x, middle.y);
+        transform.rotate(Math.toRadians(angle), center.x, center.y);
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
@@ -453,6 +598,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         if (onClickAction != null)
             onClickAction.run();
 
+        executeToggleAction();
+    }
+
+    private void executeToggleAction() {
         if (toggled && onToggleTrueAction != null)
             onToggleTrueAction.run();
         else if (!toggled && onToggleFalseAction != null)
@@ -460,28 +609,22 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Override
-    public boolean isHovered() {
-        return isHovered;
-    }
-
-    @Override
     public void setHovered(boolean isHovered) {
         this.isHovered = isHovered;
+
+        if (isHovered)
+            CursorManager.setCursor(CursorType.POINTER);
+        else
+            CursorManager.setCursor(CursorType.DEFAULT);
     }
 
     @Override
-    public void released() {
+    public void onReleased() {
         clicked = false;
     }
 
     @Override
-    public void pressed() {
+    public void onPressed() {
         clicked = true;
     }
-
 }

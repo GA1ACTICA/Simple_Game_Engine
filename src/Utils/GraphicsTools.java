@@ -22,7 +22,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-import GameEngine.Interfaces.InterfacePainter;
+import GameEngine.Interfaces.Painter;
 
 public class GraphicsTools {
 
@@ -149,7 +149,7 @@ public class GraphicsTools {
                         Shape mask,
                         int width,
                         int height,
-                        InterfacePainter painter) {
+                        Painter painter) {
 
                 Objects.requireNonNull(mask, "mask must not be null");
 

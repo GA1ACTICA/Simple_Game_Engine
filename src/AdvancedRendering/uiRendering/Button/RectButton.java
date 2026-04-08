@@ -23,6 +23,7 @@ import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.*;
+import GameEngine.EngineModules.CursorManager.CursorType;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 import GameEngine.Interfaces.MenuInterface.*;
@@ -51,7 +52,6 @@ public class RectButton implements
     private Image clickImage;
     private Image disabledImage;
 
-    public boolean isHandle = false;
     private boolean enabled = true;
     private boolean clicked = false;
     private boolean clickEffect = true;
@@ -60,23 +60,29 @@ public class RectButton implements
 
     // private Runnable hoverAction; // TODO: look into this
     private boolean isHovered = false;
+    private boolean showHover = false;
 
     private Mouse mouse;
     private EngineContext context;
 
     /**
+     * Creates and registers a rectangular button with the specified dimensions.
      * 
-     * @param mouse
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param context
+     * @param panel   The panel on which the button is drawn to.
      * 
-     * @param x
+     * @param mouse   The mouse input handler used for interaction with the
+     *                button.
      * 
-     * @param y
+     * @param x       The x-coordinate of the rectangle's top-left point.
      * 
-     * @param width
+     * @param y       The y-coordinate of the rectangle's top-left point.
      * 
-     * @param height
+     * @param width   The width of the rectangle.
+     * 
+     * @param height  The height of the rectangle.
      */
     public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
 
@@ -90,14 +96,19 @@ public class RectButton implements
     }
 
     /**
+     * Creates and registers a rectangular button with the specified points.
      * 
-     * @param mouse
+     * @param context     The engine context containing objects involved in
+     *                    rendering, updating, and input handling.
      * 
-     * @param context
+     * @param panel       The panel on which the button is drawn to.
      * 
-     * @param topLeft
+     * @param mouse       The mouse input handler used for interaction with the
+     *                    button.
      * 
-     * @param bottomRight
+     * @param topLeft     The top-left point of the rectangle.
+     * 
+     * @param bottomRight The bottom-left point of the rectangle.
      */
     public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
@@ -111,21 +122,27 @@ public class RectButton implements
     }
 
     /**
+     * Creates and registers a rectangular button with the specified dimensions and
+     * center point.
+     *
+     * @param context The engine context containing objects involved in rendering,
+     *                updating, and input handling.
      * 
-     * @param mouse
+     * @param panel   The panel on which the button is drawn to.
      * 
-     * @param context
+     * @param mouse   The mouse input handler used for interaction with the
+     *                button.
      * 
-     * @param middle
+     * @param center  The center point of the rectangle.
      * 
-     * @param width
+     * @param width   The width of the rectangle.
      * 
-     * @param height
+     * @param height  The height of the rectangle.
      */
-    public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point middle, int width, int height) {
+    public RectButton(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int width, int height) {
 
-        x = (int) middle.getX() - width / 2;
-        y = (int) middle.getY() - height / 2;
+        x = (int) center.getX() - width / 2;
+        y = (int) center.getY() - height / 2;
         this.width = width;
         this.height = height;
 
@@ -190,9 +207,9 @@ public class RectButton implements
     }
 
     @Override
-    public void translate(int x, int y) {
-        this.x += x;
-        this.y += y;
+    public void translatePosition(int dx, int dy) {
+        x += dx;
+        y += dy;
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
@@ -207,8 +224,13 @@ public class RectButton implements
         updateRotatedShape();
     }
 
-    public void setClickEffect(boolean clickEffect) {
-        this.clickEffect = clickEffect;
+    @Override
+    public void translateSize(int dWidth, int dHeight) {
+        width += dWidth;
+        height += dHeight;
+        baseShape.setFrame(x, y, width, height);
+
+        updateRotatedShape();
     }
 
     // ————————— Set colors ——————————
@@ -251,18 +273,56 @@ public class RectButton implements
 
     // ————————————————————————————————
 
-    public void setCenter(Point middle) {
-        x = (int) middle.getX() - width / 2;
-        y = (int) middle.getY() - height / 2;
+    /**
+     * Sets the center position of the button. This recalculates the
+     * top-left coordinates based on the current width and height,
+     * updates the base shape, and refreshes the rotated shape.
+     *
+     * @param center the new center position
+     */
+    public void setCenter(Point center) {
+        x = (int) Math.round(center.getX() - width / 2);
+        y = (int) Math.round(center.getY() - height / 2);
         baseShape.setFrame(x, y, width, height);
 
         updateRotatedShape();
     }
 
+    /**
+     * Sets the rotation of the button.
+     * Positive angles rotate clockwise, negative angles rotate counterclockwise.
+     *
+     * <p>
+     * <b>Note:</b> Positioning methods return values based on the unrotated
+     * shape, not the visually rotated one.
+     * </p>
+     *
+     * @param angle the rotation angle in degrees
+     */
     public void setRotation(double angle) {
         this.angle = angle;
 
         updateRotatedShape();
+    }
+
+    /**
+     * Enables or disables the visual click effect (color or image change)
+     * when the button is pressed.
+     *
+     * @param clickEffect true to enable the click effect, false to disable it
+     */
+    public void setClickEffectEnabled(boolean enabled) {
+        clickEffect = enabled;
+    }
+
+    /**
+     * Enables or disables the visual hover effect (color or image change)
+     * when the button is hovered.
+     *
+     * @param hoverEffect true to enable the hover effect, false to disable it
+     */
+    public void setHoverEffectEnabled(boolean hoverEffect) {
+        showHover = hoverEffect;
     }
 
     public void setEnabled(boolean enabled) {
@@ -302,23 +362,15 @@ public class RectButton implements
         return angle;
     }
 
-    /**
-     * This lets you run code when the button is pressed with the method:
-     * 
-     * <p>
-     * onClick(() -> {});
-     * <p>
-     * 
-     * @param action
-     */
+    @Override
+    public boolean isHovered() {
+        return isHovered;
+    }
+
     @Override
     public void onClick(Runnable action) {
         this.clickAction = action;
 
-    }
-
-    public boolean getInside() {
-        return rotatedShape.contains(mouse.getPoint().x, mouse.getPoint().y);
     }
 
     @Override
@@ -341,29 +393,10 @@ public class RectButton implements
                 return;
             }
 
-            if (!isHovered) {
+            if (isHovered && showHover) {
 
                 // Draw if the button is not hovered
                 if (image == null) {
-                    g2d.setColor(color);
-                    g2d.fill(baseShape);
-
-                } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-                                gMask.drawImage(image, 0, 0, width, height, null);
-                            });
-                    g2d.drawImage(buffer, x, y, null);
-                }
-
-            } else {
-
-                // Draws this if button is hovered
-                if (hoverImage == null) {
                     g2d.setColor(hoverColor);
                     g2d.fill(baseShape);
 
@@ -374,8 +407,27 @@ public class RectButton implements
                             width,
                             height,
                             gMask -> {
-
                                 gMask.drawImage(hoverImage, 0, 0, width, height, null);
+                            });
+                    g2d.drawImage(buffer, x, y, null);
+                }
+
+            } else {
+
+                // Draws this if button is hovered
+                if (hoverImage == null) {
+                    g2d.setColor(color);
+                    g2d.fill(baseShape);
+
+                } else {
+
+                    BufferedImage buffer = GraphicsTools.createMask(
+                            baseShape,
+                            width,
+                            height,
+                            gMask -> {
+
+                                gMask.drawImage(image, 0, 0, width, height, null);
 
                             });
                     g2d.drawImage(buffer, x, y, null);
@@ -405,13 +457,19 @@ public class RectButton implements
         });
     }
 
-    // Call updateRotatedShape every time the position, size or rotation changes
+    /**
+     * Updates the rotated version of the base shape based on the current angle.
+     * The rotation is performed around the shape's center point.
+     *
+     * This method should be called whenever the position, size, or rotation
+     * changes.
+     */
     protected void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();
-        Point middle = getCenter();
+        Point center = getCenter();
 
-        transform.rotate(Math.toRadians(angle), middle.x, middle.y);
+        transform.rotate(Math.toRadians(angle), center.x, center.y);
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
@@ -427,22 +485,31 @@ public class RectButton implements
     }
 
     @Override
-    public boolean isHovered() {
-        return isHovered;
-    }
-
-    @Override
     public void setHovered(boolean isHovered) {
         this.isHovered = isHovered;
+
+        if (isHovered)
+            CursorManager.setCursor(CursorType.POINTER);
+        else
+            CursorManager.setCursor(CursorType.DEFAULT);
+
     }
 
     @Override
-    public void pressed() {
+    public void onPressed() {
         clicked = true;
     }
 
     @Override
-    public void released() {
+    public void onReleased() {
         clicked = false;
+    }
+
+    public boolean isPressed() {
+        return clicked;
+    }
+
+    public boolean isReleased() {
+        return !clicked;
     }
 }

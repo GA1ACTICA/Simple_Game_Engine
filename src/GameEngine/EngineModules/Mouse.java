@@ -44,17 +44,26 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         this.state = state;
     }
 
+    /**
+     * @param arg0
+     */
     // MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent arg0) {
         updateMouseMovement(arg0);
     }
 
+    /**
+     * @param arg0
+     */
     @Override
     public void mouseMoved(MouseEvent arg0) {
         updateMouseMovement(arg0);
     }
 
+    /**
+     * @param arg0
+     */
     private void updateMouseMovement(MouseEvent arg0) {
         x = arg0.getX();
         y = arg0.getY();
@@ -69,32 +78,51 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         MouseManager.handleHover(context, getPoint());
     }
 
+    /**
+     * @param e
+     */
     // MouseListener
     @Override
     public void mouseClicked(MouseEvent e) {
         // unused
     }
 
+    /**
+     * @param e
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
         onScreen = true;
     }
 
+    /**
+     * @param e
+     */
     @Override
     public void mouseExited(MouseEvent e) {
         onScreen = false;
     }
 
+    /**
+     * @param e
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         setButton(e.getButton(), true);
     }
 
+    /**
+     * @param e
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         setButton(e.getButton(), false);
     }
 
+    /**
+     * @param button
+     * @param down
+     */
     private void setButton(int button, boolean down) {
         switch (button) {
             case MouseEvent.BUTTON1:
@@ -115,6 +143,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         }
     }
 
+    /**
+     * @param button
+     * @param down
+     */
     private void buttonPrintout(int button, boolean down) {
         if (!state.data().debugVerbose)
             return;
@@ -150,6 +182,9 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     }
 
+    /**
+     * @param e
+     */
     // MouseWheelListener
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
@@ -167,34 +202,58 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         mouseWheelDelta = 0;
     }
 
+    /**
+     * @return Point
+     */
     public Point getPoint() {
         return new Point(x, y);
     }
 
-    public boolean getLeftDown() {
+    /**
+     * @return boolean
+     */
+    public boolean leftDown() {
         return leftDown;
     }
 
-    public boolean getMiddleDown() {
+    /**
+     * @return boolean
+     */
+    public boolean middleDown() {
         return middleDown;
     }
 
-    public boolean getRightDown() {
+    /**
+     * @return boolean
+     */
+    public boolean rightDown() {
         return rightDown;
     }
 
-    public boolean getOnScreen() {
+    /**
+     * @return boolean
+     */
+    public boolean onScreen() {
         return onScreen;
     }
 
+    /**
+     * @return int
+     */
     public int getDeltaX() {
         return deltaX;
     }
 
+    /**
+     * @return int
+     */
     public int getDeltaY() {
         return deltaY;
     }
 
+    /**
+     * @return float
+     */
     public float getMouseWheelDelta() {
         return mouseWheelDelta;
     }

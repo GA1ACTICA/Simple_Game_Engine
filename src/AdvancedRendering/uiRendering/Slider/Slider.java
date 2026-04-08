@@ -17,6 +17,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Line2D;
+import java.util.Objects;
 
 import AdvancedRendering.uiRendering.Button.RectButton;
 import GameEngine.EngineModules.ClassFactory;
@@ -26,7 +27,7 @@ import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.MenuInterface;
 import GameEngine.Interfaces.Updatable;
 import GameEngine.Interfaces.Drawables.UIDrawable;
-import GameEngine.Records.SliderInformation;
+import GameEngine.Records.FixResult;
 import Utils.MathTools;
 
 public class Slider implements UIDrawable, Updatable, MenuInterface {
@@ -49,8 +50,6 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     private int handleWidth = sliderWidth + 8;
     private int handleHeight = 25;
     private double handleAngle;
-
-    private boolean holding;
 
     private RectButton handle;
     private final Mouse mouse;
@@ -75,7 +74,6 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
 
         handle.setRotation(handleAngle);
 
-        handle.isHandle = true;
     }
 
     @Override
@@ -88,6 +86,10 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     @Override
     public int getZIndex() {
         return zIndex;
+    }
+
+    public boolean isVisible() {
+        return show;
     }
 
     @Override
@@ -103,25 +105,17 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     }
 
     public double getLength() {
-
-        double length = MathTools.pythagoras(pointOne, pointTwo);
-
-        return length;
+        return MathTools.pythagoras(pointOne, pointTwo);
     }
 
+    /**
+     * Calculates and returns the slider value based on its current percentage
+     * multiplied the slider's max-value.
+     * 
+     * @return the current value of the slider
+     */
     public double getSliderValue() {
         return sliderPercentage * sliderMax;
-    }
-
-    // TODO: fix better javadoc
-    /**
-     * Returns information about the values of the current "handle" position on the
-     * slider.
-     * 
-     * @return SliderInformation
-     */
-    public SliderInformation getSliderInformation() {
-        return new SliderInformation(sliderPercentage * sliderMax, sliderPercentage);
     }
 
     public int getSliderMin() {
@@ -140,12 +134,16 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         return sliderColor;
     }
 
+    /**
+     * Returns the {@link RectButton} representing the slider handle.
+     * <p>
+     * Allows customization of the handle's appearance.
+     * Modifying the returned instance affects this slider directly.
+     *
+     * @return the internal RectButton used as the handle
+     */
     public RectButton getHandle() {
         return handle;
-    }
-
-    public double getHandleAngle() {
-        return handleAngle;
     }
 
     public Point getPointOne() {
@@ -156,37 +154,87 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         return pointTwo;
     }
 
-    public void setHandle(RectButton handle) {
+    public void setColor(Color sliderColor) {
+        this.sliderColor = sliderColor;
+    }
+
+    /**
+     * Replaces the internally used {@link RectButton} representing the slider
+     * handle.
+     * <p>
+     * The previous handle is removed and the new one is assigned. Its position will
+     * be updated automatically, so it does not need to match the previous handle's
+     * position.
+     *
+     * @param handle           the new handle
+     * 
+     * @param preserveRotation decides if the handel retains it's rotation
+     * 
+     * @throws NullPointerException if {@code handle} is {@code null}
+     */
+    public void setHandle(RectButton handle, boolean preserveRotation) {
+        Objects.requireNonNull(handle, "Handle must not be null");
+
+        ClassFactory.remove(this.handle, context);
         this.handle = handle;
 
-        // Sets the handle at the correct x and y even if the new handles constructor
-        // was wrong
+        // Ensure correct position regardless of constructor values
+        updateSlider();
 
-        // If it works it works I guess (;
-        setPercentage(sliderPercentage);
-
-        // Update handle angle if a custom angle is not set
-        if (handleAngle == Math.toDegrees(Math.atan2(
-                pointTwo.y - pointOne.y,
-                pointTwo.x - pointOne.x)) - 90)
+        if (!preserveRotation)
             handle.setRotation(handleAngle);
 
     }
 
-    public void setHandleAngle(double angle) {
-        handleAngle = angle;
-        handle.setRotation(handleAngle);
-
+    /**
+     * Replaces the internally used {@link RectButton} representing the slider
+     * handle.
+     * <p>
+     * The previous handle is removed and the new one is assigned. Its position will
+     * be updated automatically, so it does not need to match the previous handle's
+     * position.
+     *
+     * <p>
+     * <b>Note:</b> The handle's rotation will be aligned with the slider.
+     * Any custom rotation will be overridden. To preserve rotation, use
+     * {@link #setHandle(RectButton, boolean)}.
+     *
+     * @param handle the new handle
+     * 
+     * @throws NullPointerException if {@code handle} is {@code null}
+     */
+    public void setHandle(RectButton handle) {
+        setHandle(handle, false); // default: align with slider
     }
 
+    /**
+     * Both sets the slider current value and updates the handle's position on the
+     * slider based on the slider's max-value.
+     * 
+     * @param value the new value of the slider
+     */
     public void setSliderValue(int value) {
-        setPercentage((double) value / sliderMax * 100);
+        setPercentage((double) value / sliderMax);
     }
 
+    /**
+     * Sets the new max-value for the slider.
+     * <p>
+     * The default value of sliderMax in {@code 100}
+     * 
+     * @param sliderMax the new max-value
+     */
     public void setSliderMax(int sliderMax) {
         this.sliderMax = sliderMax;
     }
 
+    /**
+     * Sets the new min-value for the slider.
+     * <p>
+     * The default value of sliderMin in {@code 0}
+     * 
+     * @param sliderMin the new min-value
+     */
     public void setSliderMin(int sliderMin) {
         this.sliderMin = sliderMin;
     }
@@ -195,43 +243,83 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         this.sliderWidth = sliderWidth;
     }
 
-    public void setSliderPoints(Point pointOne, Point pointTwo) {
+    /**
+     * Sets a new position for both {@code pointOne} and {@code pointTwo} and
+     * updates the slider.
+     * <p>
+     * The handle's rotation will be updated automatically to align with the slider,
+     * unless {@code preserveRotation} is set to {@code true}.
+     *
+     * @param pointOne         the first point
+     * 
+     * @param pointTwo         the second point
+     * 
+     * @param preserveRotation if {@code true}, the handle retains its current
+     *                         rotation
+     * 
+     * @throws NullPointerException if {@code pointOne} or {@code pointTwo} is
+     *                              {@code null}
+     */
+    public void setSliderPoints(Point pointOne, Point pointTwo, boolean preserveRotation) {
+        Objects.requireNonNull(pointOne, "pointOne must not be null");
+        Objects.requireNonNull(pointTwo, "pointTwo must not be null");
 
-        // Update handle angle if a custom angle is not set
-        if (handleAngle == Math.toDegrees(Math.atan2(
-                this.pointTwo.y - this.pointOne.y,
-                this.pointTwo.x - this.pointOne.x)) - 90) {
-
+        if (!preserveRotation) {
             handleAngle = Math.toDegrees(Math.atan2(
                     pointTwo.y - pointOne.y,
                     pointTwo.x - pointOne.x)) - 90;
 
             handle.setRotation(handleAngle);
-
         }
 
         this.pointOne = pointOne;
         this.pointTwo = pointTwo;
 
-        setPercentage(sliderPercentage);
-
+        updateSlider();
     }
 
-    public void setColor(Color sliderColor) {
-        this.sliderColor = sliderColor;
+    /**
+     * Sets a new position for both {@code pointOne} and {@code pointTwo} and
+     * updates the slider.
+     * <p>
+     * <b>Note:</b> The handle's rotation will be aligned with the slider. Any
+     * custom rotation will be overridden. To preserve rotation, use
+     * {@link #setSliderPoints(Point, Point, boolean)}.
+     *
+     * @param pointOne the first point
+     * 
+     * @param pointTwo the second point
+     * 
+     * @throws NullPointerException if {@code pointOne} or {@code pointTwo} is
+     *                              {@code null}
+     */
+    public void setSliderPoints(Point pointOne, Point pointTwo) {
+        setSliderPoints(pointOne, pointTwo, false);
     }
 
+    /**
+     * Both set the slider current percentage and updates the handle's position on
+     * the slider.
+     * 
+     * @param value The new percentage of the slider
+     */
     public void setPercentage(double percentage) {
+        this.sliderPercentage = percentage;
 
+        updateSlider();
+    }
+
+    /**
+     * Updates the handel's position based on the slider's current percentage.
+     */
+    public void updateSlider() {
         double deltaX = pointTwo.x - pointOne.x;
         double deltaY = pointTwo.y - pointOne.y;
 
-        int px = (int) Math.round(pointOne.x + percentage * deltaX);
-        int py = (int) Math.round(pointOne.y + percentage * deltaY);
+        int px = (int) Math.round(pointOne.x + sliderPercentage * deltaX);
+        int py = (int) Math.round(pointOne.y + sliderPercentage * deltaY);
 
         handle.setCenter(new Point(px, py));
-
-        this.sliderPercentage = percentage;
     }
 
     @Override
@@ -254,25 +342,13 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         if (!show)
             return;
 
-        if (handle.contains(mouse.getPoint().x, mouse.getPoint().y) && mouse.getLeftDown() && !holding
-                && !handle.isEnabled()) {
-            holding = true;
-            handle.setEnabled(false);
-        }
+        // Only run when holding / dragging
+        if (handle.isPressed()) {
 
-        if (!mouse.getLeftDown() && holding) {
-            holding = false;
-            handle.setEnabled(true);
-        }
+            FixResult sliderResult = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo);
 
-        // Only run when holding / draging
-        if (holding) {
-
-            // Update "sliderProcentage"
-            sliderPercentage = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).progress();
-
-            // Update "handle" position
-            handle.setCenter(MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo).point());
+            sliderPercentage = sliderResult.progress();
+            handle.setCenter(sliderResult.point());
 
         }
     }
