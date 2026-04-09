@@ -32,6 +32,8 @@ public class EnginePanel extends JPanel {
 
     private boolean exceptionReported;
 
+    private AffineTransform viewportTransform;
+
     public EnginePanel(GameState state, EngineContext context) {
         this.state = state;
         this.context = context;
@@ -64,6 +66,9 @@ public class EnginePanel extends JPanel {
                     (getWidth() - logicalWidth * scale) / 2,
                     (getHeight() - logicalHeight * scale) / 2);
             g2d.scale(scale, scale);
+
+            // Gets the scaled transform
+            viewportTransform = g2d.getTransform();
 
             g2d.setColor(state.data().backgroundColor);
             g2d.fillRect(0, 0, logicalWidth, logicalHeight);
@@ -99,5 +104,36 @@ public class EnginePanel extends JPanel {
             // Skip rendering this frame
         }
 
+    }
+
+    /**
+     * Returns the transform used to map logical (world) coordinates to screen
+     * space.
+     * <p>
+     * This transform scales the logical resolution to fit the current window size
+     * while preserving aspect ratio, and centers the result within the window.
+     * <p>
+     * The transform is equivalent to:
+     *
+     * <pre>
+     * double scaleX = getWidth() / (double) logicalWidth;
+     * double scaleY = getHeight() / (double) logicalHeight;
+     * double scale = Math.min(scaleX, scaleY);
+     *
+     * g2d.translate(
+     *         (getWidth() - logicalWidth * scale) / 2,
+     *         (getHeight() - logicalHeight * scale) / 2);
+     * g2d.scale(scale, scale);
+     * 
+     * AffineTransform viewportTransform = g2d.getTransform();
+     * </pre>
+     * 
+     * The resulting transform corresponds to {@code g2d.getTransform()} after
+     * these operations.
+     *
+     * @return the transform used when rendering {@link Drawable} objects
+     */
+    public AffineTransform getViewportTransform() {
+        return viewportTransform;
     }
 }

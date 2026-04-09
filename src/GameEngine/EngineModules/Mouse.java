@@ -13,9 +13,13 @@ package GameEngine.EngineModules;
 
 import java.awt.Point;
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
+import java.awt.geom.Point2D;
 
 import Game.Configs.GameState.GameState;
 import GameEngine.Interfaces.Updatable;
+import Utils.ErrorManagement;
 
 public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener, Updatable {
 
@@ -77,18 +81,28 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         MouseManager.handlePriority(context, getPoint());
         MouseManager.handleHover(context, getPoint());
     }
+    // MouseListener
 
     /**
-     * @param e
+     * 
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.MouseEvent} received from AWT
      */
-    // MouseListener
     @Override
     public void mouseClicked(MouseEvent e) {
         // unused
     }
 
     /**
-     * @param e
+     * 
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.MouseEvent} received from AWT
      */
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -96,7 +110,12 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     }
 
     /**
-     * @param e
+     * 
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.MouseEvent} received from AWT
      */
     @Override
     public void mouseExited(MouseEvent e) {
@@ -104,7 +123,12 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     }
 
     /**
-     * @param e
+     * 
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.MouseEvent} received from AWT
      */
     @Override
     public void mousePressed(MouseEvent e) {
@@ -112,7 +136,12 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     }
 
     /**
-     * @param e
+     * 
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.MouseEvent} received from AWT
      */
     @Override
     public void mouseReleased(MouseEvent e) {
@@ -181,11 +210,16 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         System.out.println("Mouse moved to Y: " + y + '\n');
 
     }
+    // MouseWheelListener
 
     /**
-     * @param e
+     * 
+     * This method is strictly intended for use by the game engine.
+     * It is public only because it is defined in an interface, and external
+     * callers should avoid invoking it directly.
+     * 
+     * @param e the {@link java.awt.event.MouseWheelEvent} received from AWT
      */
-    // MouseWheelListener
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         float delta = (float) e.getPreciseWheelRotation();
@@ -203,36 +237,66 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     }
 
     /**
-     * @return Point
+     * Returns the mouse position in screen (untransformed) coordinates.
+     * <p>
+     * If a transformation has been applied to the graphics context, these
+     * coordinates will not align with that transformed space.
+     * <p>
+     * To obtain the mouse position relative to a specific
+     * {@link java.awt.geom.AffineTransform}, use
+     * {@link #getTransformedPoint(AffineTransform)}.
+     *
+     * @return the mouse position in screen coordinates
      */
     public Point getPoint() {
         return new Point(x, y);
     }
 
     /**
-     * @return boolean
+     * Returns the mouse position transformed into the coordinate space defined by
+     * the given {@link AffineTransform}.
+     * <p>
+     * This method applies the inverse of the provided transform to the current
+     * mouse position.
+     * <p>
+     * If the transform is not invertible, this method returns {@code null}.
+     *
+     * @param transform the transform defining the target coordinate space
+     * 
+     * @return the transformed mouse position, or {@code null} if the transform
+     *         cannot be inverted
      */
+    public Point getTransformedPoint(AffineTransform transform) {
+
+        try {
+            AffineTransform inverse = transform.createInverse();
+
+            Point2D transformed = inverse.transform(
+                    new Point2D.Double(x, y), null);
+
+            return new Point(
+                    (int) transformed.getX(),
+                    (int) transformed.getY());
+
+        } catch (NoninvertibleTransformException e) {
+
+            ErrorManagement.reportError(e, "The provided transform is not invertible");
+            return null;
+        }
+    }
+
     public boolean leftDown() {
         return leftDown;
     }
 
-    /**
-     * @return boolean
-     */
     public boolean middleDown() {
         return middleDown;
     }
 
-    /**
-     * @return boolean
-     */
     public boolean rightDown() {
         return rightDown;
     }
 
-    /**
-     * @return boolean
-     */
     public boolean onScreen() {
         return onScreen;
     }

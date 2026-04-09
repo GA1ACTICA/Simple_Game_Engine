@@ -1,6 +1,17 @@
 ## **Simple Game Engine**
 
-### This is not realy a game engine. It's more like the ground work for my friend or other people to start developing simple games.
+> [!NOTE]
+> 
+>  ## License Change
+> 
+> As of 09-04-2026 (dd-mm-yyyy), this project has been  relicensed from the GNU General Public License  v3.0 (GPL-3.0) to the MIT License.
+> 
+> All versions from this date forward are  licensed under the MIT License.
+> Previous versions remain licensed under GPL-3.0.
+> 
+> If you are using an older version of this  project and want to take advantage of the MIT  license (for example, for closed-source or  commercial use), you must update to a version  released on or after this date.
+
+### This is not really a game engine. It's more like the ground work for my friend or other people to start developing simple games.
 
 #### It includes the ability to draw from multiple classes, a KeyListener, MouseListener and much more that I'm constantly implementing!
 
@@ -8,6 +19,7 @@
 
 #### (This README will also become more detailed on how to use it when I come closer to what I would consider a "release")
 
+<<<<<<< HEAD
 > [!NOTE]
 >
 > ## Included Third-Party Asset
@@ -15,6 +27,8 @@
 > This project includes a cursor image from the GNOME Adwaita Icon Theme
 > distributed under LGPL-3.0-only OR CC-BY-SA-3.0. See
 > `licenses/ADWAITA-CURSOR-NOTICE.txt` for details..
+=======
+>>>>>>> dev
 
 ### Javadocs
 
@@ -53,9 +67,15 @@ GameEngine
 
 - [x] ClassFActory.java
 - [x] CursorManager.java
+<<<<<<< HEAD
 - [ ] EngineContext.java
 - [ ] Keys.java
 - [ ] Mouse.java
+=======
+- [x] EngineContext.java
+- [x] Keys.java
+- [x] Mouse.java
+>>>>>>> dev
 - [ ] MouseManager.java
 
 Interfaces
