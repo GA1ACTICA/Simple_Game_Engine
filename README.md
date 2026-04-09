@@ -19,16 +19,6 @@
 
 #### (This README will also become more detailed on how to use it when I come closer to what I would consider a "release")
 
-<<<<<<< HEAD
-> [!NOTE]
->
-> ## Included Third-Party Asset
->
-> This project includes a cursor image from the GNOME Adwaita Icon Theme
-> distributed under LGPL-3.0-only OR CC-BY-SA-3.0. See
-> `licenses/ADWAITA-CURSOR-NOTICE.txt` for details..
-=======
->>>>>>> dev
 
 ### Javadocs
 
@@ -67,15 +57,9 @@ GameEngine
 
 - [x] ClassFActory.java
 - [x] CursorManager.java
-<<<<<<< HEAD
-- [ ] EngineContext.java
-- [ ] Keys.java
-- [ ] Mouse.java
-=======
 - [x] EngineContext.java
 - [x] Keys.java
 - [x] Mouse.java
->>>>>>> dev
 - [ ] MouseManager.java
 
 Interfaces
