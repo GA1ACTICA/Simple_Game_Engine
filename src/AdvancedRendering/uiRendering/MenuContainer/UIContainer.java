@@ -37,7 +37,7 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
      * <p>
      * Example usage:
      * 
-     * <pre>
+     * <pre>{@code
      * Slider volumeSlider = new Slider(...);
      * RectCheckbox fullscreenToggle = new RectCheckbox(...);
      *
@@ -49,7 +49,7 @@ public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition 
      * openMenuButton.onClick(() -> {
      *     settingsMenu.show();
      * });
-     * </pre>
+     * }</pre>
      *
      * @param item the menu item to add
      */

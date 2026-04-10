@@ -81,7 +81,7 @@ public class EnginePanel extends JPanel {
             // Restore transform
             g2d.setTransform(old);
 
-            // TODO: Watch how other games handle UI (This dosen't look good)
+            // TODO: Watch how other games handle UI (This doesn't look good)
 
             // Draw game objects in UI space
             for (Drawable drawable : context.getUiDrawables()) {
@@ -115,7 +115,7 @@ public class EnginePanel extends JPanel {
      * <p>
      * The transform is equivalent to:
      *
-     * <pre>
+     * <pre>{@code
      * double scaleX = getWidth() / (double) logicalWidth;
      * double scaleY = getHeight() / (double) logicalHeight;
      * double scale = Math.min(scaleX, scaleY);
@@ -126,7 +126,7 @@ public class EnginePanel extends JPanel {
      * g2d.scale(scale, scale);
      * 
      * AffineTransform viewportTransform = g2d.getTransform();
-     * </pre>
+     * }</pre>
      * 
      * The resulting transform corresponds to {@code g2d.getTransform()} after
      * these operations.

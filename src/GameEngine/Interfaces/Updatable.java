@@ -11,6 +11,7 @@
 
 package GameEngine.Interfaces;
 
+@FunctionalInterface
 public interface Updatable {
     void update();
 }
