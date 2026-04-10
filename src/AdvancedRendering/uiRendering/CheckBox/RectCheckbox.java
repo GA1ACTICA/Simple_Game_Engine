@@ -421,11 +421,11 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
      * Example usage:
      * </p>
      * 
-     * <pre>
+     * <pre>{@code
      * checkbox.onToggleTrue(() -> {
      *     System.out.println("Checkbox is true!");
      * });
-     * </pre>
+     * }</pre>
      *
      * @param onToggleTrueAction the action to execute when the checkbox becomes
      *                           {@code true}
@@ -448,11 +448,11 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
      * Example usage:
      * </p>
      * 
-     * <pre>
+     * <pre>{@code
      * checkbox.onToggleFalse(() -> {
      *     System.out.println("Checkbox is false!");
      * });
-     * </pre>
+     * }</pre>
      *
      * @param onToggleFalseAction the action to execute when the checkbox becomes
      *                            {@code false}

@@ -60,7 +60,7 @@ public class RectButton implements
 
     // private Runnable hoverAction; // TODO: look into this
     private boolean isHovered = false;
-    private boolean showHover = false;
+    private boolean showHover = true;
 
     private Mouse mouse;
     private EngineContext context;

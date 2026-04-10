@@ -50,21 +50,21 @@ public class ClassFactory {
      * recommended to use the object's own z-index. This can be retrieved via
      * {@link GameEngine.Interfaces.ZIndexable#getZIndex()}.
      *
-     * <pre>
+     * <pre>{@code
      * Entity player = new Entity(...);
      *
      * ClassFactory.create(player, context, player.getZIndex());
-     * </pre>
+     * }</pre>
      *
      * Another common pattern is registering the object in its constructor:
      *
-     * <pre>
+     * <pre>{@code
      * private int zIndex = 0;
      *
      * public Entity(EngineContext context) {
      *     ClassFactory.create(this, context, zIndex);
      * }
-     * </pre>
+     * }</pre>
      *
      * @param object  the object to add to the reference list
      * 
@@ -103,8 +103,8 @@ public class ClassFactory {
             context.getCursorDrawables().add(cursorDrawable);
         }
 
-        if (object instanceof Clickable clickable) {
-            List<Clickable> list = context.getClickables();
+        if (object instanceof Hoverable hoverable) {
+            List<Hoverable> list = context.getHoverables();
 
             // Find the appropriate index for insertion (Descending order)
             int index = 0;
@@ -113,7 +113,7 @@ public class ClassFactory {
                 index++;
             }
 
-            list.add(index, clickable);
+            list.add(index, hoverable);
         }
     }
 
@@ -167,14 +167,14 @@ public class ClassFactory {
             list.add(index, drawable);
         }
 
-        if (object instanceof Clickable clickable) {
+        if (object instanceof Hoverable hoverable) {
 
-            List<Clickable> list;
+            List<Hoverable> list;
 
-            list = context.getClickables();
+            list = context.getHoverables();
 
             // Remove old entry
-            list.removeIf(entry -> entry == clickable);
+            list.removeIf(entry -> entry == hoverable);
 
             // Find the appropriate index for insertion (Descending order)
             int index = 0;
@@ -183,7 +183,7 @@ public class ClassFactory {
             }
 
             // Add sorted entry
-            list.add(index, clickable);
+            list.add(index, hoverable);
         }
     }
 

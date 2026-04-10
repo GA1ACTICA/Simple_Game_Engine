@@ -31,13 +31,13 @@ public class GameMenu extends UIContainer
     private int width = 200;
     private int height = 200;
 
-    private Painter customDrawAction = (gDraw) -> {
-        gDraw.setColor(new Color(10, 10, 10, 125));
-        gDraw.fillRect(x, y, width, height);
+    private Painter customDrawAction = (g) -> {
+        g.setColor(new Color(10, 10, 10, 125));
+        g.fillRect(x, y, width, height);
 
-        gDraw.setColor(Color.BLACK);
-        gDraw.setFont(new Font("SansSerif", Font.PLAIN, 25));
-        AdvancedGraphics.centerAlignedString(gDraw, x + width / 2, (int) (y + height * 0.2),
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("SansSerif", Font.PLAIN, 25));
+        AdvancedGraphics.centerAlignedString(g, x + width / 2, (int) (y + height * 0.2),
                 "This is a menu");
     };
 
@@ -139,17 +139,17 @@ public class GameMenu extends UIContainer
      * <p>
      * This is used internally for the background:
      * 
-     * <pre>
-     * private Painter customDrawAction = (gDraw) -> {
-     *     gDraw.setColor(new Color(10, 10, 10, 125));
-     *     gDraw.fillRect(x, y, width, height);
+     * <pre>{@code
+     * private Painter customDrawAction = (g) -> {
+     *     g.setColor(new Color(10, 10, 10, 125));
+     *     g.fillRect(x, y, width, height);
      * 
-     *     gDraw.setColor(Color.BLACK);
-     *     gDraw.setFont(new Font("SansSerif", Font.PLAIN, 25));
-     *     AdvancedGraphics.centerAlignedString(gDraw, x + width / 2, (int) (y + height * 0.2),
+     *     g.setColor(Color.BLACK);
+     *     g.setFont(new Font("SansSerif", Font.PLAIN, 25));
+     *     AdvancedGraphics.centerAlignedString(g, x + width / 2, (int) (y + height * 0.2),
      *             "This is a menu");
      * };
-     * </pre>
+     * }</pre>
      *
      * @param customDrawAction the drawing logic used to render the background
      */

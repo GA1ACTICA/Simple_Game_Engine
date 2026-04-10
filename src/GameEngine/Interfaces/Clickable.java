@@ -11,7 +11,7 @@
 
 package GameEngine.Interfaces;
 
-public interface Clickable extends ZIndexable {
+public interface Clickable {
 
     /**
      * Sets the action to be executed when the clickable object is clicked.
@@ -25,11 +25,11 @@ public interface Clickable extends ZIndexable {
      * <p>
      * Example usage:
      * 
-     * <pre>
+     * <pre>{@code
      * clickableObject.onClick(() -> {
      *     System.out.println("Object clicked!");
      * });
-     * </pre>
+     * }</pre>
      *
      * @param action the action to execute on click
      */
@@ -80,9 +80,7 @@ public interface Clickable extends ZIndexable {
      * 
      * @return true if the point is inside the clickable area, false otherwise
      */
-    boolean contains(int mouseX, int mouseY);
 
     boolean isEnabled();
 
-    boolean isVisible();
 }

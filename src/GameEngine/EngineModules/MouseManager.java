@@ -12,39 +12,24 @@ package GameEngine.EngineModules;
 
 import java.awt.Point;
 
-import Game.Configs.GameState.GameState;
 import GameEngine.Interfaces.Clickable;
 import GameEngine.Interfaces.Hoverable;
 
 public class MouseManager {
 
-    private static GameState state;
-
-    /**
-     * @param getState
-     */
-    public static void setObjects(GameState getState) {
-        state = getState;
-    }
-
-    private static Clickable topMost = null;
-    private static Clickable currentTopMost = null; // only gets set when left mouse button is pressed down
-
     private static Hoverable lastHovered = null;
+    private static Hoverable topMost = null;
+    private static Clickable currentTopMost = null;
 
-    /**
-     * @param context
-     * @param mousePoint
-     */
     public static void handlePriority(EngineContext context, Point mousePoint) {
 
-        // Find the topmost clickable under the mouse
-        for (Clickable clickable : context.getClickables()) {
-            if (!clickable.isVisible() || !clickable.isEnabled())
+        // Find the topmost hoverable under the mouse
+        for (Hoverable hoverable : context.getHoverables()) {
+            if (!hoverable.isVisible())
                 continue;
 
-            if (clickable.contains(mousePoint.x, mousePoint.y)) {
-                topMost = clickable;
+            if (hoverable.contains(mousePoint.x, mousePoint.y)) {
+                topMost = hoverable;
                 return;
             } else {
                 topMost = null;
@@ -53,74 +38,45 @@ public class MouseManager {
 
     }
 
-    /**
-     * @param context
-     * @param mousePoint
-     * @param mouseState
-     */
     public static void handleClick(EngineContext context, Point mousePoint, boolean mouseState) {
 
+        // mouse DOWN
         if (mouseState) {
-            currentTopMost = topMost;
 
-            for (Clickable clickable : context.getClickables()) {
-                if (!clickable.isVisible() || !clickable.isEnabled())
-                    continue;
-
-                // Prints all buttons and zIndex
-                if (state.data().debugVerbose)
-                    System.out.println("%s %s".formatted(clickable, clickable.getZIndex()));
-
-                if ((clickable == currentTopMost) && clickable.contains(mousePoint.x, mousePoint.y)) {
-                    clickable.onPressed();
-
-                    // Print only pressed button and zIndex
-                    if (state.data().debug && !state.data().debugVerbose)
-                        System.out.println("%s %s".formatted(clickable, clickable.getZIndex()));
-
-                    return;
-                }
-
+            if (currentTopMost == null && topMost instanceof Clickable clickable) {
+                currentTopMost = clickable;
+                clickable.onPressed();
             }
 
-        } else if (currentTopMost != null) {
+            // mouse UP
+        } else {
 
-            if ((topMost == currentTopMost))
-                currentTopMost.executeOnClick();
+            if (currentTopMost != null) {
 
-            currentTopMost.onReleased();
+                if (currentTopMost == topMost) {
+                    currentTopMost.executeOnClick();
+                }
 
+                currentTopMost.onReleased();
+                currentTopMost = null;
+            }
         }
-
     }
 
-    /**
-     * @param context
-     * @param mousePoint
-     */
     public static void handleHover(EngineContext context, Point mousePoint) {
-        Hoverable currentHovered = null;
-
-        if (topMost != null &&
-                topMost.isVisible() &&
-                topMost.isEnabled() &&
-                topMost instanceof Hoverable hoverable &&
-                topMost.contains(mousePoint.x, mousePoint.y)) {
-            currentHovered = hoverable;
-        }
 
         // If hover target changed
-        if (lastHovered != currentHovered) {
+        if (lastHovered != topMost) {
 
             // Fire exit on previous
             if (lastHovered != null)
                 lastHovered.setHovered(false);
 
             // Fire enter on new
-            if (currentHovered != null)
-                currentHovered.setHovered(true);
+            if (topMost != null)
+                topMost.setHovered(true);
 
-            lastHovered = currentHovered;
+            lastHovered = topMost;
         }
     }
 }

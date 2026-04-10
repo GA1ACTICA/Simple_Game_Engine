@@ -66,7 +66,7 @@ public class CursorManager implements CursorDrawable {
         WAIT
     }
 
-    private static String defaultCursorPath = "GameEngine/Assets/Cursors/Adwaita 96x96/";
+    private static String defaultCursorPath = "Assets/Cursors/Adwaita 96x96/";
 
     private static Map<CursorType, CursorInformation> cursors = new EnumMap<>(CursorType.class) {
         {
