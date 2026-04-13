@@ -2,10 +2,8 @@
  * Project: Simple_Game_Engine
  *
  * Author: Galactica
- * 
- * Description: This is an example game class and is only use as an example. I strongly recommend to delete this and create your own
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica

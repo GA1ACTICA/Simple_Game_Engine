@@ -3,7 +3,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -37,13 +37,22 @@ public interface Hoverable extends ZIndexable {
     void setHovered(boolean isHovered);
 
     /**
-     * Determines whether the given mouse coordinates are within this element.
+     * Checks whether the specified point is within this clickable component.
      *
-     * @param mouseX the mouse x-coordinate
+     * <p>
+     * <b>Note:</b> This method does not concern itself if other objects overlap.
+     * </p>
      * 
-     * @param mouseY the mouse y-coordinate
+     * <p>
+     * This method is used by the input handling system to determine whether
+     * the component should respond to mouse interactions.
+     * </p>
+     *
+     * @param mouseX the x-coordinate of the point
      * 
-     * @return {@code true} if the point is inside this element
+     * @param mouseY the y-coordinate of the point
+     * 
+     * @return true if the point is inside the clickable area, false otherwise
      */
     boolean contains(int mouseX, int mouseY);
 

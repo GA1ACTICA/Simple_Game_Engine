@@ -3,7 +3,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -61,25 +61,6 @@ public interface Clickable {
      * be called directly by user code.
      */
     void onReleased();
-
-    /**
-     * Checks whether the specified point is within this clickable component.
-     *
-     * <p>
-     * <b>Note:</b> This method does not concern itself if other objects overlap.
-     * </p>
-     * 
-     * <p>
-     * This method is used by the input handling system to determine whether
-     * the component should respond to mouse interactions.
-     * </p>
-     *
-     * @param mouseX the x-coordinate of the point
-     * 
-     * @param mouseY the y-coordinate of the point
-     * 
-     * @return true if the point is inside the clickable area, false otherwise
-     */
 
     boolean isEnabled();
 
