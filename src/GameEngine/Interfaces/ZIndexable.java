@@ -3,13 +3,23 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
  */
+
 package GameEngine.Interfaces;
 
+/**
+ * Marks an element as having a z-index that controls its ordering in the
+ * rendering pipeline.
+ *
+ * <p>
+ * This ordering defines the visual stacking of elements and may also be
+ * used for resolving overlapping interactions.
+ * </p>
+ */
 public interface ZIndexable {
 
     /**
