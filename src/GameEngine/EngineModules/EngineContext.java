@@ -3,7 +3,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -14,7 +14,7 @@ package GameEngine.EngineModules;
 import java.util.ArrayList;
 import java.util.List;
 
-import GameEngine.Interfaces.Clickable;
+import GameEngine.Interfaces.Hoverable;
 import GameEngine.Interfaces.Updatable;
 import GameEngine.Interfaces.Drawables.*;
 
@@ -26,14 +26,14 @@ public class EngineContext {
 
      private final List<Updatable> updatables = new ArrayList<>();
 
-     private final List<Clickable> clickables = new ArrayList<>();
+     private final List<Hoverable> hoverables = new ArrayList<>();
 
      private List<List<?>> allLists = List.of(
                worldDrawables,
                uiDrawables,
                cursorDrawables,
                updatables,
-               clickables);
+               hoverables);
 
      public List<List<?>> getAllLists() {
           return allLists;
@@ -81,12 +81,12 @@ public class EngineContext {
 
      /**
       * Returns the internal list of objects registered with the game engine that
-      * implement {@link Clickable}.
+      * implement {@link Hoverable}.
       *
-      * @return the mutable list of clickable objects
+      * @return the mutable list of hoverable objects
       */
-     public List<Clickable> getClickables() {
-          return clickables;
+     public List<Hoverable> getHoverables() {
+          return hoverables;
      }
 
 }

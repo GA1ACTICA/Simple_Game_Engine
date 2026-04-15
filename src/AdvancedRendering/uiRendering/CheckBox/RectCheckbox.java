@@ -3,7 +3,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -421,11 +421,19 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
      * Example usage:
      * </p>
      * 
+<<<<<<< HEAD
      * <pre>
      * checkbox.onToggleTrue(() -> {
      *     System.out.println("Checkbox is true!");
      * });
      * </pre>
+=======
+     * <pre>{@code
+     * checkbox.onToggleTrue(() -> {
+     *     System.out.println("Checkbox is true!");
+     * });
+     * }</pre>
+>>>>>>> dev
      *
      * @param onToggleTrueAction the action to execute when the checkbox becomes
      *                           {@code true}
@@ -448,11 +456,19 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
      * Example usage:
      * </p>
      * 
+<<<<<<< HEAD
      * <pre>
      * checkbox.onToggleFalse(() -> {
      *     System.out.println("Checkbox is false!");
      * });
      * </pre>
+=======
+     * <pre>{@code
+     * checkbox.onToggleFalse(() -> {
+     *     System.out.println("Checkbox is false!");
+     * });
+     * }</pre>
+>>>>>>> dev
      *
      * @param onToggleFalseAction the action to execute when the checkbox becomes
      *                            {@code false}

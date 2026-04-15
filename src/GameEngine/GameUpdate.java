@@ -3,7 +3,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -55,12 +55,14 @@ public class GameUpdate implements Runnable {
         fps.setZIndex(100);
 
         s = new Slider(context, panel, mouse, new Point(100, 100), new Point(900, 200));
+        s.setZIndex(1);
         s.show();
 
-        RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(20, 20));
+        RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(200, 200));
         b.show();
 
-        RectButton b2 = new RectButton(context, panel, mouse, new Point(20, 20), new Point(40, 40));
+        RectButton b2 = new RectButton(context, panel, mouse, new Point(100, 100), new Point(300, 300));
+        b2.setHoverColor(Color.BLACK);
         b2.show();
 
         b2.onClick(() -> {

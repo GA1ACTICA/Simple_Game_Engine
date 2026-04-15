@@ -4,7 +4,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -60,9 +60,6 @@ public class Game {
         frame.setResizable(true);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-
-        // sets objects in classes that need them
-        MouseManager.setObjects(state);
 
         new Thread(gu).start();
     }

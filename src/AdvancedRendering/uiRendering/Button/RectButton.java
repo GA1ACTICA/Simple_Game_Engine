@@ -3,7 +3,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -60,7 +60,7 @@ public class RectButton implements
 
     // private Runnable hoverAction; // TODO: look into this
     private boolean isHovered = false;
-    private boolean showHover = false;
+    private boolean showHover = true;
 
     private Mouse mouse;
     private EngineContext context;

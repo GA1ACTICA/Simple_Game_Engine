@@ -3,7 +3,7 @@
  *
  * Author: Galactica
  *
- * Licensed under the GPL 3.0 License.
+ * Licensed under the MIT License.
  * See LICENSE file in the project root for full license information.
  *
  * Copyright © 2026 Galactica
@@ -81,7 +81,7 @@ public class EnginePanel extends JPanel {
             // Restore transform
             g2d.setTransform(old);
 
-            // TODO: Watch how other games handle UI (This dosen't look good)
+            // TODO: Watch how other games handle UI (This doesn't look good)
 
             // Draw game objects in UI space
             for (Drawable drawable : context.getUiDrawables()) {
@@ -115,7 +115,12 @@ public class EnginePanel extends JPanel {
      * <p>
      * The transform is equivalent to:
      *
+     * <<<<<<< HEAD
+     * 
      * <pre>
+    =======
+     * <pre>{@code
+    >>>>>>> dev
      * double scaleX = getWidth() / (double) logicalWidth;
      * double scaleY = getHeight() / (double) logicalHeight;
      * double scale = Math.min(scaleX, scaleY);
@@ -126,7 +131,13 @@ public class EnginePanel extends JPanel {
      * g2d.scale(scale, scale);
      * 
      * AffineTransform viewportTransform = g2d.getTransform();
+    <<<<<<< HEAD
      * </pre>
+    
+    =======
+     * }
+     * </pre>
+     * >>>>>>> dev
      * 
      * The resulting transform corresponds to {@code g2d.getTransform()} after
      * these operations.
