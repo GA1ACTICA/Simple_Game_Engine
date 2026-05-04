@@ -19,19 +19,23 @@ import GameEngine.Interfaces.Updatable;
 import GameEngine.Interfaces.Drawables.*;
 
 public class EngineContext {
-    private final List<Drawable> worldDrawables = new ArrayList<>();
-    private final List<Drawable> uiDrawables = new ArrayList<>();
 
-    private final List<CursorDrawable> cursorDrawables = new ArrayList<>();
+    private final List<Drawable> backBufferDrawable = new ArrayList<>();
+    private final List<Drawable> backBufferUIDrawable = new ArrayList<>();
+    private final List<CursorDrawable> backBufferCursorDrawable = new ArrayList<>();
+
+    private volatile List<Drawable> frontBufferDrawable = new ArrayList<>();
+    private volatile List<Drawable> frontBufferUIDrawable = new ArrayList<>();
+    private volatile List<CursorDrawable> frontBufferCursorDrawable = new ArrayList<>();
 
     private final List<Updatable> updatables = new ArrayList<>();
 
     private final List<Hoverable> hoverables = new ArrayList<>();
 
     private List<List<?>> allLists = List.of(
-            worldDrawables,
-            uiDrawables,
-            cursorDrawables,
+            backBufferDrawable,
+            backBufferUIDrawable,
+            backBufferCursorDrawable,
             updatables,
             hoverables);
 
@@ -46,7 +50,7 @@ public class EngineContext {
      * @return the mutable list of drawable objects
      */
     public List<Drawable> getWorldDrawables() {
-        return worldDrawables;
+        return frontBufferDrawable;
     }
 
     /**
@@ -56,7 +60,7 @@ public class EngineContext {
      * @return the mutable list of drawable objects
      */
     public List<Drawable> getUiDrawables() {
-        return uiDrawables;
+        return frontBufferUIDrawable;
     }
 
     /**
@@ -66,7 +70,7 @@ public class EngineContext {
      * @return the mutable list of drawable objects
      */
     public List<CursorDrawable> getCursorDrawables() {
-        return cursorDrawables;
+        return frontBufferCursorDrawable;
     }
 
     /**
@@ -87,6 +91,28 @@ public class EngineContext {
      */
     public List<Hoverable> getHoverables() {
         return hoverables;
+    }
+
+    public List<Drawable> getWorldBackBuffer() {
+        return backBufferDrawable;
+    }
+
+    public List<Drawable> getUiBackBuffer() {
+        return backBufferUIDrawable;
+    }
+
+    public List<CursorDrawable> getCursorBackBuffer() {
+        return backBufferCursorDrawable;
+    }
+
+    public void endFrame() {
+        frontBufferDrawable = List.copyOf(backBufferDrawable);
+        frontBufferUIDrawable = List.copyOf(backBufferUIDrawable);
+        frontBufferCursorDrawable = List.copyOf(backBufferCursorDrawable);
+
+        // backBufferDrawable.clear();
+        // backBufferCursorDrawable.clear();
+        // backBufferUIDrawable.clear();
     }
 
 }

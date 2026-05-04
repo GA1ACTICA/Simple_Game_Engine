@@ -1,3 +1,4 @@
+
 /**
  * Project: Simple_Game_Engine
  *
@@ -9,7 +10,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine;
+package GameEngine.EngineModules;
 
 import java.awt.Color;
 import java.awt.Point;
@@ -21,7 +22,6 @@ import AdvancedRendering.uiRendering.Misc.FPSCounter;
 import AdvancedRendering.uiRendering.Slider.Slider;
 import Game.*;
 import Game.Configs.GameState.GameState;
-import GameEngine.EngineModules.*;
 import GameEngine.Interfaces.Updatable;
 
 public class GameUpdate implements Runnable {
@@ -69,8 +69,6 @@ public class GameUpdate implements Runnable {
             s.setSliderPoints(s.getPointOne(), new Point(900, 700), false);
         });
 
-        // constructors for menu
-        // constructors for game
         ClassFactory.create(new MainGameClass(), context, 8);
         ClassFactory.create(new SecondGameClass(), context, 8);
 
@@ -95,6 +93,7 @@ public class GameUpdate implements Runnable {
                 lastUpdateTime = currentTime;
             }
 
+            context.endFrame();
             panel.repaint();
 
             try {

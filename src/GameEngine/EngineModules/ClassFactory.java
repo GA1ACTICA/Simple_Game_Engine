@@ -80,9 +80,9 @@ public class ClassFactory {
             List<Drawable> list;
 
             if (object instanceof UIDrawable) {
-                list = context.getUiDrawables();
+                list = context.getUiBackBuffer();
             } else {
-                list = context.getWorldDrawables();
+                list = context.getWorldBackBuffer();
             }
 
             int index = 0;
@@ -100,7 +100,7 @@ public class ClassFactory {
         }
 
         if (object instanceof CursorDrawable cursorDrawable) {
-            context.getCursorDrawables().add(cursorDrawable);
+            context.getCursorBackBuffer().add(cursorDrawable);
         }
 
         if (object instanceof Hoverable hoverable) {
@@ -149,9 +149,9 @@ public class ClassFactory {
             List<Drawable> list;
 
             if (object instanceof UIDrawable) {
-                list = context.getUiDrawables();
+                list = context.getUiBackBuffer();
             } else {
-                list = context.getWorldDrawables();
+                list = context.getWorldBackBuffer();
             }
 
             // Remove old entry
@@ -201,20 +201,4 @@ public class ClassFactory {
             list.remove(object);
         }
     }
-
-    /**
-     * Removes an object from a specific context list, making it ineligible to
-     * receive engine calls such as updates or drawing.
-     * <p>
-     * The available lists can be accessed using the {@code get} methods in
-     * {@link GameEngine.EngineModules.EngineContext EngineContext}.
-     *
-     * @param object the object to remove from the list
-     * 
-     * @param list   the list from which the object is removed
-     */
-    public static void remove(Object object, List<?> list) {
-        list.remove(object);
-    }
-
 }
