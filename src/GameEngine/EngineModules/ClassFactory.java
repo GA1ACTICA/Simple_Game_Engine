@@ -80,9 +80,9 @@ public class ClassFactory {
             List<Drawable> list;
 
             if (object instanceof UIDrawable) {
-                list = context.getUiBackBuffer();
+                list = context.getBackBufferUIDrawable();
             } else {
-                list = context.getWorldBackBuffer();
+                list = context.getBackBufferDrawable();
             }
 
             int index = 0;
@@ -96,15 +96,15 @@ public class ClassFactory {
         }
 
         if (object instanceof Updatable updatable) {
-            context.getUpdatables().add(updatable);
+            context.getBackBufferUpdatables().add(updatable);
         }
 
         if (object instanceof CursorDrawable cursorDrawable) {
-            context.getCursorBackBuffer().add(cursorDrawable);
+            context.getBackBufferCursorDrawable().add(cursorDrawable);
         }
 
         if (object instanceof Hoverable hoverable) {
-            List<Hoverable> list = context.getHoverables();
+            List<Hoverable> list = context.getBackBufferHoverables();
 
             // Find the appropriate index for insertion (Descending order)
             int index = 0;
@@ -149,9 +149,9 @@ public class ClassFactory {
             List<Drawable> list;
 
             if (object instanceof UIDrawable) {
-                list = context.getUiBackBuffer();
+                list = context.getBackBufferUIDrawable();
             } else {
-                list = context.getWorldBackBuffer();
+                list = context.getBackBufferDrawable();
             }
 
             // Remove old entry
@@ -171,7 +171,7 @@ public class ClassFactory {
 
             List<Hoverable> list;
 
-            list = context.getHoverables();
+            list = context.getBackBufferHoverables();
 
             // Remove old entry
             list.removeIf(entry -> entry == hoverable);

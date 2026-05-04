@@ -21,31 +21,34 @@ import GameEngine.Interfaces.Drawables.*;
 public class EngineContext {
 
     private final List<Drawable> backBufferDrawable = new ArrayList<>();
-    private final List<Drawable> backBufferUIDrawable = new ArrayList<>();
-    private final List<CursorDrawable> backBufferCursorDrawable = new ArrayList<>();
-
     private volatile List<Drawable> frontBufferDrawable = new ArrayList<>();
+
+    private final List<Drawable> backBufferUIDrawable = new ArrayList<>();
     private volatile List<Drawable> frontBufferUIDrawable = new ArrayList<>();
+
+    private final List<CursorDrawable> backBufferCursorDrawable = new ArrayList<>();
     private volatile List<CursorDrawable> frontBufferCursorDrawable = new ArrayList<>();
 
-    private final List<Updatable> updatables = new ArrayList<>();
+    private final List<Updatable> backBufferUpdatables = new ArrayList<>();
+    private volatile List<Updatable> frontBufferUpdatables = new ArrayList<>();
 
-    private final List<Hoverable> hoverables = new ArrayList<>();
+    private final List<Hoverable> backBufferHoverables = new ArrayList<>();
+    private volatile List<Hoverable> frontBufferHoverables = new ArrayList<>();
 
     private List<List<?>> allLists = List.of(
             backBufferDrawable,
             backBufferUIDrawable,
             backBufferCursorDrawable,
-            updatables,
-            hoverables);
+            backBufferUpdatables,
+            backBufferHoverables);
 
-    public List<List<?>> getAllLists() {
+    List<List<?>> getAllLists() {
         return allLists;
     }
 
     /**
-     * Returns the internal list of objects registered with the game engine that
-     * implement {@link Drawable}.
+     * Returns the internal list of objects registered with the game engine during
+     * the current frame that also implement {@link Drawable}.
      *
      * @return the mutable list of drawable objects
      */
@@ -54,8 +57,8 @@ public class EngineContext {
     }
 
     /**
-     * Returns the internal list of objects registered with the game engine that
-     * implement {@link UIDrawable}.
+     * Returns the internal list of objects registered with the game engine during
+     * the current frame that also implement {@link UIDrawable}.
      *
      * @return the mutable list of drawable objects
      */
@@ -64,8 +67,8 @@ public class EngineContext {
     }
 
     /**
-     * Returns the internal list of objects registered with the game engine that
-     * implement {@link CursorDrawable}.
+     * Returns the internal list of objects registered with the game engine during
+     * the current frame that also implement {@link CursorDrawable}.
      *
      * @return the mutable list of drawable objects
      */
@@ -74,41 +77,51 @@ public class EngineContext {
     }
 
     /**
-     * Returns the internal list of objects registered with the game engine that
-     * implement {@link Updatable}.
+     * Returns the internal list of objects registered with the game engine during
+     * the current frame that also implement {@link Updatable}.
      *
      * @return the mutable list of updatable objects
      */
     public List<Updatable> getUpdatables() {
-        return updatables;
+        return frontBufferUpdatables;
     }
 
     /**
-     * Returns the internal list of objects registered with the game engine that
-     * implement {@link Hoverable}.
+     * Returns the internal list of objects registered with the game engine during
+     * the current frame that also implement {@link Hoverable}.
      *
      * @return the mutable list of hoverable objects
      */
     public List<Hoverable> getHoverables() {
-        return hoverables;
+        return frontBufferHoverables;
     }
 
-    public List<Drawable> getWorldBackBuffer() {
+    List<Drawable> getBackBufferDrawable() {
         return backBufferDrawable;
     }
 
-    public List<Drawable> getUiBackBuffer() {
+    List<Drawable> getBackBufferUIDrawable() {
         return backBufferUIDrawable;
     }
 
-    public List<CursorDrawable> getCursorBackBuffer() {
+    List<CursorDrawable> getBackBufferCursorDrawable() {
         return backBufferCursorDrawable;
     }
 
-    public void endFrame() {
+    List<Updatable> getBackBufferUpdatables() {
+        return backBufferUpdatables;
+    }
+
+    List<Hoverable> getBackBufferHoverables() {
+        return backBufferHoverables;
+    }
+
+    void endFrame() {
         frontBufferDrawable = List.copyOf(backBufferDrawable);
         frontBufferUIDrawable = List.copyOf(backBufferUIDrawable);
         frontBufferCursorDrawable = List.copyOf(backBufferCursorDrawable);
+        frontBufferUpdatables = List.copyOf(backBufferUpdatables);
+        frontBufferHoverables = List.copyOf(backBufferHoverables);
 
         // backBufferDrawable.clear();
         // backBufferCursorDrawable.clear();
