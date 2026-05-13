@@ -13,13 +13,12 @@
 package gameEngine.engineModules;
 
 import java.awt.Color;
-import java.awt.Point;
 
 import javax.swing.JFrame;
 
-import advancedRendering.uiRendering.button.RectButton;
-import advancedRendering.uiRendering.misc.FPSCounter;
+import advancedRendering.uiRendering.misc.UPSCounter;
 import advancedRendering.uiRendering.slider.Slider;
+import advancedRendering.uiRendering.textField.TextField;
 import game.*;
 import game.configs.gameState.GameState;
 import gameEngine.interfaces.Updatable;
@@ -49,25 +48,13 @@ public class GameUpdate implements Runnable {
         state.setGameStateData(state);
 
         // constructors from engine
-        FPSCounter fps = new FPSCounter(context);
+        UPSCounter fps = new UPSCounter(context);
         fps.setColor(Color.RED);
         fps.show();
         fps.setZIndex(100);
 
-        s = new Slider(context, panel, mouse, new Point(100, 100), new Point(900, 200));
-        s.setZIndex(1);
-        s.show();
-
-        RectButton b = new RectButton(context, panel, mouse, new Point(0, 0), new Point(200, 200));
-        b.show();
-
-        RectButton b2 = new RectButton(context, panel, mouse, new Point(100, 100), new Point(300, 300));
-        b2.setHoverColor(Color.BLACK);
-        b2.show();
-
-        b2.onClick(() -> {
-            s.setSliderPoints(s.getPointOne(), new Point(900, 700), false);
-        });
+        TextField t = new TextField(context, panel, mouse, keys, 10, 10, 400, 10);
+        t.show();
 
         ClassFactory.create(new MainGameClass(), context, 8);
         ClassFactory.create(new SecondGameClass(), context, 8);
@@ -77,17 +64,19 @@ public class GameUpdate implements Runnable {
     @Override
     public void run() {
 
-        lastUpdateTime = System.currentTimeMillis();
+        lastUpdateTime = System.nanoTime();
 
         while (running) {
 
-            currentTime = System.currentTimeMillis();
+            currentTime = System.nanoTime();
+
+            float deltaTime = (currentTime - lastUpdateTime) / 1000000000.0f;
 
             if (currentTime - lastUpdateTime >= state.data().exampleUpdateInterval) {
 
                 // update all updatables
                 for (Updatable u : context.getUpdatables()) {
-                    u.update();
+                    u.update(deltaTime);
                 }
 
                 lastUpdateTime = currentTime;

@@ -352,7 +352,7 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
      */
     @Override
     public void draw(Graphics g) {
-        if (!show)
+        if (!show || cursorVisible)
             return;
 
         Graphics2D g2d = (Graphics2D) g;
@@ -374,10 +374,20 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
         });
     }
 
+    private float cursorTimer = 0f;
+    private boolean cursorVisible = true;
+
     @Override
-    public void update() {
+    public void update(float deltaTime) {
         if (!show)
             return;
+
+        cursorTimer += deltaTime;
+
+        if (cursorTimer >= 0.5f) {
+            cursorTimer -= 0.5f;
+            cursorVisible = !cursorVisible;
+        }
 
     }
 
@@ -394,7 +404,7 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     /**
      * @param fieldFont
      */
-    private void updateFontMetrics(Font fieldFont) {
+    private void updateFont(Font fieldFont) {
 
     }
 }

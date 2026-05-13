@@ -218,7 +218,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     }
 
     @Override
-    public void update() {
+    public void update(float deltaTime) {
 
         deltaX = 0;
         deltaY = 0;

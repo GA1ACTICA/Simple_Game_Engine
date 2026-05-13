@@ -338,7 +338,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     }
 
     @Override
-    public void update() {
+    public void update(float deltaTime) {
         if (!show)
             return;
 

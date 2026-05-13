@@ -40,7 +40,7 @@ public class MainGameClass implements Drawable, Updatable {
     }
 
     @Override
-    public void update() {
+    public void update(float deltaTime) {
         // here you update game logic
     }
 

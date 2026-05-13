@@ -17,7 +17,7 @@ import java.awt.Point;
 
 import advancedRendering.uiRendering.button.RectButton;
 import advancedRendering.uiRendering.checkBox.RectCheckbox;
-import advancedRendering.uiRendering.misc.FPSCounter;
+import advancedRendering.uiRendering.misc.UPSCounter;
 
 /**
  * Base interface for all menu components.
@@ -67,7 +67,7 @@ public interface MenuInterface {
     /**
      * Capability for components that support positioning.
      * <p>
-     * Implemented by components such as {@link FPSCounter}
+     * Implemented by components such as {@link UPSCounter}
      */
     public interface MenuSetPosition {
         void setPosition(int x, int y);

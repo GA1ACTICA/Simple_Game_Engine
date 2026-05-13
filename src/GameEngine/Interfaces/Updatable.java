@@ -29,5 +29,5 @@ public interface Updatable {
      * This method is typically called once per frame by the game loop.
      * </p>
      */
-    void update();
+    void update(float deltaTime);
 }
