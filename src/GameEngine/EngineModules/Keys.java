@@ -9,14 +9,14 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import Game.Configs.GameState.GameState;
+import game.configs.gameState.GameState;
 
 public class Keys implements KeyListener {
 

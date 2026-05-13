@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package Utils;
+package utils;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -22,7 +22,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
-import GameEngine.Interfaces.Painter;
+import gameEngine.interfaces.Painter;
 
 public class GraphicsTools {
 

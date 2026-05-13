@@ -9,15 +9,15 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import Game.Configs.GameState.GameState;
-import GameEngine.Interfaces.Drawables.CursorDrawable;
-import GameEngine.Interfaces.Drawables.Drawable;
+import game.configs.gameState.GameState;
+import gameEngine.interfaces.drawables.CursorDrawable;
+import gameEngine.interfaces.drawables.Drawable;
 
 import java.awt.*;
 

@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 public interface Clickable {
 

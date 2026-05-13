@@ -9,13 +9,12 @@
  * Copyright © 2026 Galactica
  */
 
-package Game;
+package game;
 
 import java.awt.*;
 
-import AdvancedRendering.worldRendering.AdvancedGraphics;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.Drawable;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.drawables.Drawable;
 
 public class MainGameClass implements Drawable, Updatable {
 
@@ -36,7 +35,7 @@ public class MainGameClass implements Drawable, Updatable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        AdvancedGraphics.centerAlignedString(g, 500, 500, "Hello");
+        g.drawString("Hello", 500, 500);
 
     }
 

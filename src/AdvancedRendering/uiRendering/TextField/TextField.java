@@ -9,10 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.TextField;
-
-import GameEngine.Interfaces.MenuInterface.*;
-import Utils.GraphicsTools;
+package advancedRendering.uiRendering.textField;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -25,13 +22,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EnginePanel;
-import GameEngine.EngineModules.Keys;
-import GameEngine.EngineModules.Mouse;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.UIDrawable;
+import gameEngine.engineModules.ClassFactory;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.engineModules.EnginePanel;
+import gameEngine.engineModules.Keys;
+import gameEngine.engineModules.Mouse;
+import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.MenuInterface.*;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.drawables.UIDrawable;
+import utils.GraphicsTools;
 
 public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetSize, MenuSetPosition, MenuSetColor,
         MenuSetImage, MenuSetHoverVisual {

@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.Slider;
+package advancedRendering.uiRendering.slider;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -19,16 +19,16 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.util.Objects;
 
-import AdvancedRendering.uiRendering.Button.RectButton;
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EnginePanel;
-import GameEngine.EngineModules.Mouse;
-import GameEngine.Interfaces.MenuInterface;
-import GameEngine.Interfaces.Updatable;
-import GameEngine.Interfaces.Drawables.UIDrawable;
-import GameEngine.Records.FixResult;
-import Utils.MathTools;
+import advancedRendering.uiRendering.button.RectButton;
+import gameEngine.engineModules.ClassFactory;
+import utils.MathTools;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.engineModules.EnginePanel;
+import gameEngine.engineModules.Mouse;
+import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.drawables.UIDrawable;
+import gameEngine.records.FixResult;
 
 public class Slider implements UIDrawable, Updatable, MenuInterface {
 

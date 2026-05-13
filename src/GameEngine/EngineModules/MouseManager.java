@@ -9,12 +9,12 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.Point;
 
-import GameEngine.Interfaces.Clickable;
-import GameEngine.Interfaces.Hoverable;
+import gameEngine.interfaces.Clickable;
+import gameEngine.interfaces.Hoverable;
 
 public class MouseManager {
 

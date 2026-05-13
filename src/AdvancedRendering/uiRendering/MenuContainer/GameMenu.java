@@ -9,15 +9,14 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.MenuContainer;
+package advancedRendering.uiRendering.menuContainer;
 
 import java.awt.*;
 
-import AdvancedRendering.worldRendering.AdvancedGraphics;
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.UIDrawable;
+import gameEngine.engineModules.ClassFactory;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.interfaces.Painter;
+import gameEngine.interfaces.drawables.UIDrawable;
 
 public class GameMenu extends UIContainer
         implements UIDrawable {
@@ -37,8 +36,7 @@ public class GameMenu extends UIContainer
 
         g.setColor(Color.BLACK);
         g.setFont(new Font("SansSerif", Font.PLAIN, 25));
-        AdvancedGraphics.centerAlignedString(g, x + width / 2, (int) (y + height * 0.2),
-                "This is a menu");
+        g.drawString("This is a menu", x + (int) (width / 2), y + (int) (height / 2));
     };
 
     private EngineContext context;

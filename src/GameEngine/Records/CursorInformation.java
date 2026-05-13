@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Records;
+package gameEngine.records;
 
 import java.awt.Point;
 import java.nio.file.Path;

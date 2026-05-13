@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 /**
  * Represents an object that participates in the game loop and updates

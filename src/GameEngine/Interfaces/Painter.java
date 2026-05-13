@@ -9,10 +9,11 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 import java.awt.Graphics2D;
-import AdvancedRendering.uiRendering.MenuContainer.GameMenu;
+
+import advancedRendering.uiRendering.menuContainer.GameMenu;
 
 /**
  * Functional interface representing a custom drawing action.

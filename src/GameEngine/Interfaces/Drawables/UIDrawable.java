@@ -9,9 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces.Drawables;
-
-import GameEngine.Interfaces.ZIndexable;
+package gameEngine.interfaces.drawables;
 
 /**
  * Represents a drawable UI element in the engine.

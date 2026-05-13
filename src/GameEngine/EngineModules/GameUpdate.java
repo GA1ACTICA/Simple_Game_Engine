@@ -10,19 +10,19 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.Color;
 import java.awt.Point;
 
 import javax.swing.JFrame;
 
-import AdvancedRendering.uiRendering.Button.RectButton;
-import AdvancedRendering.uiRendering.Misc.FPSCounter;
-import AdvancedRendering.uiRendering.Slider.Slider;
-import Game.*;
-import Game.Configs.GameState.GameState;
-import GameEngine.Interfaces.Updatable;
+import advancedRendering.uiRendering.button.RectButton;
+import advancedRendering.uiRendering.misc.FPSCounter;
+import advancedRendering.uiRendering.slider.Slider;
+import game.*;
+import game.configs.gameState.GameState;
+import gameEngine.interfaces.Updatable;
 
 public class GameUpdate implements Runnable {
 

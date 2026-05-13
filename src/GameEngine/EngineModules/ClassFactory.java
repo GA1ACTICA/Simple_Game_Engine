@@ -9,15 +9,17 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.util.List;
 
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.CursorDrawable;
-import GameEngine.Interfaces.Drawables.Drawable;
-import GameEngine.Interfaces.Drawables.UIDrawable;
-import Utils.ErrorManagement;
+import gameEngine.interfaces.Hoverable;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.ZIndexable;
+import gameEngine.interfaces.drawables.CursorDrawable;
+import gameEngine.interfaces.drawables.Drawable;
+import gameEngine.interfaces.drawables.UIDrawable;
+import utils.ErrorManagement;
 
 public class ClassFactory {
 
@@ -48,7 +50,7 @@ public class ClassFactory {
      * <b>Tip:</b> If this method is used outside the object's class, it is
      * generally
      * recommended to use the object's own z-index. This can be retrieved via
-     * {@link GameEngine.Interfaces.ZIndexable#getZIndex()}.
+     * {@link gameEngine.Interfaces.ZIndexable#getZIndex()}.
      *
      * <pre>{@code
      * Entity player = new Entity(...);
@@ -131,7 +133,7 @@ public class ClassFactory {
      * @param zIndex  the new z-index assigned to the object
      *
      * @throws IllegalArgumentException if {@code object} does not implement
-     *                                  {@link GameEngine.Interfaces.ZIndexable
+     *                                  {@link gameEngine.Interfaces.ZIndexable
      *                                  ZIndexable}
      */
     public static void updatePriority(Object object, EngineContext context, int zIndex)

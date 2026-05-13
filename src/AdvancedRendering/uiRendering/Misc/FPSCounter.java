@@ -9,18 +9,19 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.Misc;
+package advancedRendering.uiRendering.misc;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.Interfaces.MenuInterface.*;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.UIDrawable;
+import gameEngine.engineModules.ClassFactory;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.MenuInterface.*;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.drawables.UIDrawable;
 
 public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetColor {
 

@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.Button;
+package advancedRendering.uiRendering.button;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,12 +22,12 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
-import GameEngine.EngineModules.*;
-import GameEngine.EngineModules.CursorManager.CursorType;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.UIDrawable;
-import GameEngine.Interfaces.MenuInterface.*;
-import Utils.GraphicsTools;
+import gameEngine.engineModules.*;
+import gameEngine.engineModules.CursorManager.CursorType;
+import gameEngine.interfaces.*;
+import gameEngine.interfaces.MenuInterface.*;
+import gameEngine.interfaces.drawables.UIDrawable;
+import utils.GraphicsTools;
 
 public class RectButton implements
         UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,

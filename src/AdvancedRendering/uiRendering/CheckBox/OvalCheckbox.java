@@ -9,14 +9,14 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.CheckBox;
+package advancedRendering.uiRendering.checkBox;
 
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
 
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EnginePanel;
-import GameEngine.EngineModules.Mouse;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.engineModules.EnginePanel;
+import gameEngine.engineModules.Mouse;
 
 public class OvalCheckbox extends RectCheckbox {
 

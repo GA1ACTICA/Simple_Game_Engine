@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package Game.Configs.GameState;
+package game.configs.gameState;
 
 import java.awt.Color;
 

@@ -9,15 +9,15 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Point;
 
-import AdvancedRendering.uiRendering.Button.RectButton;
-import AdvancedRendering.uiRendering.CheckBox.RectCheckbox;
-import AdvancedRendering.uiRendering.Misc.FPSCounter;
+import advancedRendering.uiRendering.button.RectButton;
+import advancedRendering.uiRendering.checkBox.RectCheckbox;
+import advancedRendering.uiRendering.misc.FPSCounter;
 
 /**
  * Base interface for all menu components.

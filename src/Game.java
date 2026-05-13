@@ -13,8 +13,8 @@
 import java.awt.Dimension;
 import javax.swing.*;
 
-import Game.Configs.GameState.GameState;
-import GameEngine.EngineModules.*;
+import game.configs.gameState.GameState;
+import gameEngine.engineModules.*;
 
 public class Game {
 
