@@ -1,4 +1,4 @@
-package GameEngine.EngineModules.Cursor;
+package gameEngine.engineModules.cursor;
 
 import java.util.List;
 

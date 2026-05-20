@@ -1,6 +1,6 @@
-package GameEngine.EngineModules.Cursor;
+package gameEngine.engineModules.cursor;
 
-import Utils.JsonUtils.JsonBacked;
+import utils.jsonUtils.JsonBacked;
 
 public class AnimatedCursor extends JsonBacked<AnimatedCursorData> {
 

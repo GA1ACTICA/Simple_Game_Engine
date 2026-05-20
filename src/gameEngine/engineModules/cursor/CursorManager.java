@@ -8,8 +8,7 @@
  *
  * Copyright © 2026 Galactica
  */
-
-package gameEngine.engineModules;
+package gameEngine.engineModules.cursor;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -23,9 +22,13 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
 
-import GameEngine.Interfaces.Drawables.CursorDrawable;
-import GameEngine.Records.CursorInformation;
-import Utils.FileTools;
+import gameEngine.engineModules.ClassFactory;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.engineModules.EnginePanel;
+import gameEngine.engineModules.Mouse;
+import gameEngine.interfaces.drawables.CursorDrawable;
+import gameEngine.records.CursorInformation;
+import utils.FileTools;
 
 public class CursorManager implements CursorDrawable {
         public enum CursorType {
