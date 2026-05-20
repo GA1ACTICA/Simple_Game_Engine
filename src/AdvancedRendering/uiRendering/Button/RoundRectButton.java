@@ -9,14 +9,14 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.Button;
+package advancedRendering.uiRendering.button;
 
 import java.awt.Point;
 import java.awt.geom.RoundRectangle2D;
 
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EnginePanel;
-import GameEngine.EngineModules.Mouse;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.engineModules.EnginePanel;
+import gameEngine.engineModules.Mouse;
 
 public class RoundRectButton extends RectButton {
 

@@ -9,15 +9,15 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.MenuContainer;
+package advancedRendering.uiRendering.menuContainer;
 
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
-import GameEngine.Interfaces.MenuInterface;
-import GameEngine.Interfaces.MenuInterface.MenuSetPosition;
-import GameEngine.Interfaces.MenuInterface.MenuSetSize;
+import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.MenuInterface.MenuSetPosition;
+import gameEngine.interfaces.MenuInterface.MenuSetSize;
 
 public class UIContainer implements MenuInterface, MenuSetSize, MenuSetPosition {
 

@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package Utils.JsonUtils;
+package utils.jsonUtils;
 
 import java.awt.Color;
 import java.io.FileReader;
@@ -18,8 +18,8 @@ import java.io.FileWriter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import Utils.ErrorManagement;
-import Utils.JsonUtils.Adapters.ColorAdapter;
+import utils.ErrorManagement;
+import utils.jsonUtils.adapters.ColorAdapter;
 
 public abstract class JsonBacked<T> {
 

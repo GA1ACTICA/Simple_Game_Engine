@@ -9,13 +9,12 @@
  * Copyright © 2026 Galactica
  */
 
-package Game;
+package game;
 
 import java.awt.*;
 
-import AdvancedRendering.worldRendering.AdvancedGraphics;
-import GameEngine.Interfaces.Updatable;
-import GameEngine.Interfaces.Drawables.Drawable;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.drawables.Drawable;
 
 public class SecondGameClass implements Drawable, Updatable {
 
@@ -36,12 +35,12 @@ public class SecondGameClass implements Drawable, Updatable {
         g.setFont(stringFont);
 
         g.setColor(Color.BLACK);
-        AdvancedGraphics.centerAlignedString(g, 500, 575, "World!");
+        g.drawString("World", 500, 550);
 
     }
 
     @Override
-    public void update() {
+    public void update(float deltaTime) {
         // here you update game logic
     }
 

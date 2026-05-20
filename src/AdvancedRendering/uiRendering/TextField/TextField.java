@@ -9,10 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.TextField;
-
-import GameEngine.Interfaces.MenuInterface.*;
-import Utils.GraphicsTools;
+package advancedRendering.uiRendering.textField;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -25,13 +22,16 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EnginePanel;
-import GameEngine.EngineModules.Keys;
-import GameEngine.EngineModules.Mouse;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.UIDrawable;
+import gameEngine.engineModules.ClassFactory;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.engineModules.EnginePanel;
+import gameEngine.engineModules.Keys;
+import gameEngine.engineModules.Mouse;
+import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.MenuInterface.*;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.drawables.UIDrawable;
+import utils.GraphicsTools;
 
 public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetSize, MenuSetPosition, MenuSetColor,
         MenuSetImage, MenuSetHoverVisual {
@@ -352,7 +352,7 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
      */
     @Override
     public void draw(Graphics g) {
-        if (!show)
+        if (!show || cursorVisible)
             return;
 
         Graphics2D g2d = (Graphics2D) g;
@@ -374,10 +374,20 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
         });
     }
 
+    private float cursorTimer = 0f;
+    private boolean cursorVisible = true;
+
     @Override
-    public void update() {
+    public void update(float deltaTime) {
         if (!show)
             return;
+
+        cursorTimer += deltaTime;
+
+        if (cursorTimer >= 0.5f) {
+            cursorTimer -= 0.5f;
+            cursorVisible = !cursorVisible;
+        }
 
     }
 
@@ -394,7 +404,7 @@ public class TextField implements UIDrawable, Updatable, MenuInterface, MenuSetS
     /**
      * @param fieldFont
      */
-    private void updateFontMetrics(Font fieldFont) {
+    private void updateFont(Font fieldFont) {
 
     }
 }

@@ -9,12 +9,12 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Records;
+package gameEngine.records;
 
 import java.awt.Point;
 import java.util.Objects;
 
-import Utils.MathTools;
+import utils.MathTools;
 
 /**
  * The {@code FixResult} record encapsulates the result of the

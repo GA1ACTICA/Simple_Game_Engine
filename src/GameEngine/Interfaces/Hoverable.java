@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 /**
  * Represents an element that can be detected by the mouse cursor.

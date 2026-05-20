@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package Utils;
+package utils;
 
 public class ErrorManagement {
 

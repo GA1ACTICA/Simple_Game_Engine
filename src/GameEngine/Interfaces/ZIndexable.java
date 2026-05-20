@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 /**
  * Marks an element as having a z-index that controls its ordering in the

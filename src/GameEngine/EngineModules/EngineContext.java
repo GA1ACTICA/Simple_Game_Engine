@@ -9,14 +9,14 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import GameEngine.Interfaces.Hoverable;
-import GameEngine.Interfaces.Updatable;
-import GameEngine.Interfaces.Drawables.*;
+import gameEngine.interfaces.drawables.*;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.Hoverable;
 
 public class EngineContext {
 

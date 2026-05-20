@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.CheckBox;
+package advancedRendering.uiRendering.checkBox;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -22,16 +22,18 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.EngineModules.EnginePanel;
-import GameEngine.EngineModules.Mouse;
-import GameEngine.EngineModules.Cursor.CursorManager;
-import GameEngine.EngineModules.Cursor.CursorManager.CursorType;
-import GameEngine.Interfaces.MenuInterface.*;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.UIDrawable;
-import Utils.GraphicsTools;
+import gameEngine.engineModules.ClassFactory;
+import gameEngine.engineModules.CursorManager;
+import gameEngine.engineModules.CursorManager.CursorType;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.engineModules.EnginePanel;
+import gameEngine.engineModules.Mouse;
+import gameEngine.interfaces.Clickable;
+import gameEngine.interfaces.Hoverable;
+import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.MenuInterface.*;
+import gameEngine.interfaces.drawables.UIDrawable;
+import utils.GraphicsTools;
 
 public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize,
         MenuSetHoverVisual, MenuSetToggleVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {

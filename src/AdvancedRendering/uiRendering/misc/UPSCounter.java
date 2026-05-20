@@ -9,28 +9,30 @@
  * Copyright © 2026 Galactica
  */
 
-package AdvancedRendering.uiRendering.Misc;
+package advancedRendering.uiRendering.misc;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Point;
 
-import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.EngineContext;
-import GameEngine.Interfaces.MenuInterface.*;
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.UIDrawable;
+import gameEngine.engineModules.ClassFactory;
+import gameEngine.engineModules.EngineContext;
+import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.MenuInterface.*;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.drawables.UIDrawable;
 
-public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetColor {
+public class UPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetColor {
 
     private boolean show = false;
 
     private int zIndex = 0;
 
-    private int frames = 0;
     private int ups = 0;
-    private long timer = System.nanoTime();
+    private int upsCounter = 0;
+    private long lastTime = System.nanoTime();
+    private double timer = 0;
 
     private int x = 10;
     private int y = 25;
@@ -50,7 +52,7 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
      * @param context the engine context containing components related to rendering,
      *                updating, and input handling
      */
-    public FPSCounter(EngineContext context) {
+    public UPSCounter(EngineContext context) {
         this.context = context;
         ClassFactory.create(this, context);
     }
@@ -130,17 +132,18 @@ public class FPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
     }
 
     @Override
-    public void update() {
+    public void update(float deltaTime) {
 
-        frames++;
+        upsCounter++;
 
         long now = System.nanoTime();
-        long interval = 1_000_000_000L; // 1 second in nanoseconds
+        timer += (now - lastTime) / 1_000_000_000.0;
+        lastTime = now;
 
-        while (now - timer >= interval) {
-            ups = frames;
-            frames = 0;
-            timer += interval;
+        if (timer >= 1.0) {
+            ups = upsCounter;
+            upsCounter = 0;
+            timer -= 1.0;
         }
     }
 }

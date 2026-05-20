@@ -9,9 +9,9 @@
  * Copyright © 2026 Galactica
  */
 
-package Game.Configs.GameState;
+package game.configs.gameState;
 
-import Utils.JsonUtils.JsonBacked;
+import utils.jsonUtils.JsonBacked;
 
 public class GameState extends JsonBacked<GameStateData> {
 

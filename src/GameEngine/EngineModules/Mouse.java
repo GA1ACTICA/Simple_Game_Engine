@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.Point;
 import java.awt.event.*;
@@ -17,9 +17,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
-import Game.Configs.GameState.GameState;
-import GameEngine.Interfaces.Updatable;
-import Utils.ErrorManagement;
+import game.configs.gameState.GameState;
+import gameEngine.interfaces.Updatable;
+import utils.ErrorManagement;
 
 public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener, Updatable {
 
@@ -218,7 +218,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     }
 
     @Override
-    public void update() {
+    public void update(float deltaTime) {
 
         deltaX = 0;
         deltaY = 0;

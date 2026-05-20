@@ -9,12 +9,12 @@
  * Copyright © 2026 Galactica
  */
 
-package Utils;
+package utils;
 
 import java.awt.Point;
 import java.util.Objects;
 
-import GameEngine.Records.FixResult;
+import gameEngine.records.FixResult;
 
 public class MathTools {
 
