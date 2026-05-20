@@ -9,17 +9,24 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package GameEngine.EngineModules.Cursor;
 
 import java.awt.Graphics;
 import java.awt.Image;
+import java.util.List;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Map;
 
+import GameEngine.EngineModules.ClassFactory;
+import GameEngine.EngineModules.EngineContext;
+import GameEngine.EngineModules.EnginePanel;
+import GameEngine.EngineModules.Mouse;
 import GameEngine.Interfaces.Drawables.CursorDrawable;
 import GameEngine.Records.CursorInformation;
 import Utils.FileTools;
@@ -174,15 +181,22 @@ public class CursorManager implements CursorDrawable {
                             Path.of(defaultCursorPath + "zoom-out.png")));
 
             // animated
-            // put(CursorType.PROGRESS, new CursorInformation(new Point(12, 4), null, true,
-            // 50)); // progress
-            // put(CursorType.WAIT, new CursorInformation(new Point(44, 44), null, true,
-            // 50));// wait
+            put(CursorType.PROGRESS,
+                    new CursorInformation(null,
+                            Path.of(defaultCursorPath + "wait"), true,
+                            null));
+            put(CursorType.WAIT,
+                    new CursorInformation(null,
+                            Path.of(defaultCursorPath + "progress"), true,
+                            null));
 
         }
     };
 
     private static CursorInformation currentCursor = cursors.get(CursorType.DEFAULT);
+
+    private static List<CursorInformation> animatedCursor = new ArrayList<>();
+    private static List<Image> animatedCursorImages = new ArrayList<>();
 
     private int width = 24;
     private int height = 24;
@@ -203,6 +217,15 @@ public class CursorManager implements CursorDrawable {
         this.mouse = mouse;
         ClassFactory.create(this, context);
 
+        // Using File class create an object for specific directory
+        File[] files = new File("src/%swait".formatted(defaultCursorPath)).listFiles();
+
+        // Print name of the all files present in that path
+        if (files != null) {
+            for (File file : files) {
+                System.out.println(file.getName());
+            }
+        }
         // Hide system cursor
         panel.setCursor(
                 Toolkit.getDefaultToolkit().createCustomCursor(new BufferedImage(1, 1,
@@ -233,8 +256,15 @@ public class CursorManager implements CursorDrawable {
     public static boolean setCursor(CursorManager.CursorType cursorType) {
         if (overriding)
             return false;
+        // cursors.get(cursorType).cursorPath.getRoot().toString()
 
-        currentCursor = cursors.get(cursorType);
+        if (cursors.get(cursorType).animated()) {
+            while (true) {
+            }
+        } else {
+            currentCursor = cursors.get(cursorType);
+        }
+
         updateCursor();
         return true;
     }
@@ -284,7 +314,14 @@ public class CursorManager implements CursorDrawable {
         hotspot = currentCursor.hotspot();
         animated = currentCursor.animated();
         millis = currentCursor.millis();
-        cursorImage = FileTools.getImage(currentCursor.cursorPath());
+
+        if (!animated) {
+            cursorImage = FileTools.getImage(currentCursor.cursorPath());
+        } else {
+            for (CursorInformation information : animatedCursor) {
+                animatedCursorImages.add(FileTools.getImage(information.cursorPath()));
+            }
+        }
     }
 
 }

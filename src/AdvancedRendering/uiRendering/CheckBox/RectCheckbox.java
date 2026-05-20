@@ -23,11 +23,11 @@ import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.ClassFactory;
-import GameEngine.EngineModules.CursorManager;
-import GameEngine.EngineModules.CursorManager.CursorType;
 import GameEngine.EngineModules.EngineContext;
 import GameEngine.EngineModules.EnginePanel;
 import GameEngine.EngineModules.Mouse;
+import GameEngine.EngineModules.Cursor.CursorManager;
+import GameEngine.EngineModules.Cursor.CursorManager.CursorType;
 import GameEngine.Interfaces.MenuInterface.*;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;

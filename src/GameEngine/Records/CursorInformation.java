@@ -39,7 +39,6 @@ import java.util.Objects;
  */
 public record CursorInformation(Point hotspot, Path cursorPath, boolean animated, Integer millis) {
     public CursorInformation {
-        Objects.requireNonNull(hotspot, "hotspot must not be null");
         Objects.requireNonNull(cursorPath, "cursorPath must not be null");
     }
 

@@ -23,7 +23,8 @@ import java.awt.geom.RectangularShape;
 import java.awt.image.BufferedImage;
 
 import GameEngine.EngineModules.*;
-import GameEngine.EngineModules.CursorManager.CursorType;
+import GameEngine.EngineModules.Cursor.CursorManager;
+import GameEngine.EngineModules.Cursor.CursorManager.CursorType;
 import GameEngine.Interfaces.*;
 import GameEngine.Interfaces.Drawables.UIDrawable;
 import GameEngine.Interfaces.MenuInterface.*;

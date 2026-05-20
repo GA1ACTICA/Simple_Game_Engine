@@ -15,6 +15,7 @@ import javax.swing.*;
 
 import Game.Configs.GameState.GameState;
 import GameEngine.EngineModules.*;
+import GameEngine.EngineModules.Cursor.CursorManager;
 
 public class Game {
 
