@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Objects;
+
+import game.configs.gameState.GameState;
+
 import java.util.List;
 
 import gameEngine.engineModules.ClassFactory;
@@ -31,94 +35,11 @@ import gameEngine.engineModules.cursor.AnimatedCursorData.Frame;
 import gameEngine.interfaces.Updatable;
 import gameEngine.interfaces.drawables.CursorDrawable;
 import utils.FileTools;
+import utils.GraphicsTools;
 
 public class CursorManager implements CursorDrawable, Updatable {
-    public enum CursorType {
-        ALIAS,
-        ALL_RESIZE,
-        ALL_SCROLL,
-        CELL,
-        COL_RESIZE,
-        CONTEXT_MENU,
-        COPY,
-        CROSSHAIR,
-        DEFAULT,
-        E_RESIZE,
-        EW_RESIZE,
-        GRAB,
-        GRABBING,
-        HELP,
-        MOVE,
-        NE_RESIZE,
-        NESW_RESIZE,
-        NO_DROP,
-        NOT_ALLOWED,
-        N_RESIZE,
-        NS_RESIZE,
-        NW_RESIZE,
-        NWSE_RESIZE,
-        POINTER,
-        ROW_RESIZE,
-        SE_RESIZE,
-        S_RESIZE,
-        SW_RESIZE,
-        TEXT,
-        VERTICAL_TEXT,
-        W_RESIZE,
-        X_CURSOR,
-        ZOOM_IN,
-        ZOOM_OUT,
-
-        // Animated
-        PROGRESS,
-        WAIT
-    }
 
     private static String defaultCursorPath = "assets/cursors/Adwaita 96x96/";
-
-    private static Map<CursorType, String> cursors = new EnumMap<>(CursorType.class) {
-        {
-            put(CursorType.ALIAS, "alias.png");
-            put(CursorType.ALL_RESIZE, "all-resize.png");
-            put(CursorType.ALL_SCROLL, "all-scroll.png");
-            put(CursorType.CELL, "cell.png");
-            put(CursorType.COL_RESIZE, "col-resize.png");
-            put(CursorType.CONTEXT_MENU, "context-menu.png");
-            put(CursorType.COPY, "copy.png");
-            put(CursorType.CROSSHAIR, "crosshair.png");
-            put(CursorType.DEFAULT, "default.png");
-            put(CursorType.E_RESIZE, "e-resize.png");
-            put(CursorType.EW_RESIZE, "ew-resize.png");
-            put(CursorType.GRAB, "grab.png");
-            put(CursorType.GRABBING, "grabbing.png");
-            put(CursorType.HELP, "help.png");
-            put(CursorType.MOVE, "move.png");
-            put(CursorType.NE_RESIZE, "ne-resize.png");
-            put(CursorType.NESW_RESIZE, "nesw-resize.png");
-            put(CursorType.NO_DROP, "no-drop.png");
-            put(CursorType.NOT_ALLOWED, "not-allowed.png");
-            put(CursorType.N_RESIZE, "n-resize.png");
-            put(CursorType.NS_RESIZE, "ns-resize.png");
-            put(CursorType.NW_RESIZE, "nw-resize.png");
-            put(CursorType.NWSE_RESIZE, "nwse-resize.png");
-            put(CursorType.POINTER, "pointer.png");
-            put(CursorType.ROW_RESIZE, "row-resize.png");
-            put(CursorType.SE_RESIZE, "se-resize.png");
-            put(CursorType.S_RESIZE, "s-resize.png");
-            put(CursorType.SW_RESIZE, "sw-resize.png");
-            put(CursorType.TEXT, "text.png");
-            put(CursorType.VERTICAL_TEXT, "vertical-text.png");
-            put(CursorType.W_RESIZE, "w-resize.png");
-            put(CursorType.X_CURSOR, "x-cursor.png");
-            put(CursorType.ZOOM_IN, "zoom-in.png");
-            put(CursorType.ZOOM_OUT, "zoom-out.png");
-
-            // animated
-            put(CursorType.PROGRESS, "progress");
-            put(CursorType.WAIT, "wait");
-
-        }
-    };
 
     private static AnimatedCursor rawCursorData = new AnimatedCursor(null);
     private static Frame[] frameDataArray = null;
@@ -126,21 +47,23 @@ public class CursorManager implements CursorDrawable, Updatable {
     private static boolean show = true;
 
     private static boolean overriding = false;
-    private int width = 48;
-    private int height = 48;
+    private static int width = 96;
+    private static int height = 96;
 
-    private static List<Image> cursorImageCache = new ArrayList<Image>();
-    private static Image[] cursorImageArray;
+    private static List<BufferedImage> cursorImageCache = new ArrayList<BufferedImage>();
+    private static BufferedImage[] cursorImageArray;
     private static int cursorArrayIndex = 0;
 
-    private static float currentCursorMillis = 0;
+    private static float currentCursorMillis;
     private static boolean animated = false;
-    private static Image cursorImage = null;
+    private static BufferedImage cursorImage = null;
     private static Point hotspot = null;
 
+    private static GameState state;
     private Mouse mouse;
 
-    public CursorManager(EngineContext context, EnginePanel panel, Mouse mouse) {
+    public CursorManager(EngineContext context, EnginePanel panel, Mouse mouse, GameState state) {
+        CursorManager.state = state;
         this.mouse = mouse;
         ClassFactory.create(this, context);
 
@@ -150,7 +73,7 @@ public class CursorManager implements CursorDrawable, Updatable {
                         BufferedImage.TYPE_INT_ARGB),
                         new Point(0, 0), "Transparent cursor"));
 
-        setCursor(CursorType.DEFAULT);
+        setCursor(CursorType.WAIT);
 
     }
 
@@ -173,11 +96,13 @@ public class CursorManager implements CursorDrawable, Updatable {
      * @param cursorType
      * @return {@code true} if
      */
-    public static boolean setCursor(CursorManager.CursorType cursorType) {
+    public static boolean setCursor(CursorType cursorType) {
+        Objects.requireNonNull(cursorType, "The CursorType must not be null");
+
         if (overriding)
             return false;
 
-        Path currentCursorPath = Path.of(cursors.get(cursorType));
+        Path currentCursorPath = Path.of(cursorType.path());
         File resource = currentCursorPath.toFile();
 
         if (resource.toString().contains(".png")) {
@@ -186,12 +111,11 @@ public class CursorManager implements CursorDrawable, Updatable {
             System.out.println(
                     "Path to image for static cursor: " + cursor);
 
-            cursorImageCache.add(FileTools.getImage(cursor));
-            cursorImageArray = cursorImageCache.toArray(new Image[0]);
-            cursorImageCache.clear();
+            cursorImage = GraphicsTools.downscaleImage(FileTools.getBufferedImage(cursor, BufferedImage.TYPE_INT_ARGB),
+                    width, height);
+            hotspot = cursorType.hotspot();
             animated = false;
 
-            updateCursor();
         } else {
             // Loads in a animated cursor collection with the information from meta.json
 
@@ -199,7 +123,7 @@ public class CursorManager implements CursorDrawable, Updatable {
             rawCursorData.importJSON(AnimatedCursorData.class,
                     "src/" + defaultCursorPath + resource.toString() + "/meta.json");
 
-            frameDataArray = (Frame[]) rawCursorData.data().getFrames().toArray(new Frame[0]);
+            frameDataArray = rawCursorData.data().getFrames().toArray(new Frame[0]);
 
             if (frameDataArray != null) {
                 for (Frame frame : frameDataArray) {
@@ -212,14 +136,15 @@ public class CursorManager implements CursorDrawable, Updatable {
                     System.out.println("Delay duration: " + frame.getDurationMs() + '\n');
 
                     cursorImageCache.add(
-                            FileTools.getImage(imagePath));
+                            GraphicsTools.downscaleImage(
+                                    FileTools.getBufferedImage(imagePath, BufferedImage.TYPE_INT_ARGB),
+                                    width, height));
                 }
 
                 // Transform to a array for easier data handling.
-                cursorImageArray = cursorImageCache.toArray(new Image[0]);
+                cursorImageArray = cursorImageCache.toArray(new BufferedImage[0]);
                 cursorImageCache.clear();
 
-                System.out.println(Arrays.toString(cursorImageArray));
                 animated = true;
                 updateCursor();
             }
@@ -229,15 +154,13 @@ public class CursorManager implements CursorDrawable, Updatable {
     }
 
     /**
-     * Sets the current cursor and locks it, preventing it from being changed
+     * Locks the current cursor preventing it from being changed
      * via {@link #setCursor(CursorManager.CursorType) setCursor()}.
      * <p>
      * While the cursor is locked, calls to {@code setCursor(...)} will have
      * no effect and return {@code false}.
-     *
-     * @param cursorType the cursor type to set and lock
      */
-    public static void lockCursor(CursorManager.CursorType cursorType) {
+    public static void lockCursor() {
         overriding = true;
     }
 
@@ -270,25 +193,22 @@ public class CursorManager implements CursorDrawable, Updatable {
 
     @Override
     public void update(float deltaTime) {
-        if (!show)
+        if (!show || !animated)
             return;
 
         // Reset or set the iterator if it was missing
         if (cursorArrayIndex >= cursorImageArray.length - 1)
             cursorArrayIndex = 0;
 
-        if (animated != false) {
-            timer += deltaTime;
+        timer += deltaTime;
 
-            System.out.println("Timer: " + timer);
+        if (timer >= currentCursorMillis) {
+            timer -= currentCursorMillis;
 
-            if (timer >= currentCursorMillis) {
-                timer -= currentCursorMillis;
-
-                cursorArrayIndex++;
-                updateCursor();
-            }
+            updateCursor();
+            cursorArrayIndex++;
         }
+
     }
 
     /**
@@ -296,21 +216,14 @@ public class CursorManager implements CursorDrawable, Updatable {
      * delay)
      */
     private static void updateCursor() {
-        System.out.println("Updating cursor index: " + cursorArrayIndex);
-        System.out.println("Updating cursor image: " + cursorImageArray[cursorArrayIndex] + '\n');
+
+        if (state.data().debugVerbose)
+            System.out.println("Updating cursor index: " + cursorArrayIndex);
 
         cursorImage = cursorImageArray[cursorArrayIndex];
-
-        if (!animated)
-            return;
-
         currentCursorMillis = frameDataArray[cursorArrayIndex].getDurationMs() * 0.001f;
         hotspot = new Point(frameDataArray[cursorArrayIndex].getHotspotX(),
                 frameDataArray[cursorArrayIndex].getHotspotY());
-
-        System.out.println("Updating cursor millis: " + frameDataArray[cursorArrayIndex].getDurationMs());
-        System.out.println("Updating cursor hotspot:  [" + frameDataArray[cursorArrayIndex].getHotspot()[0] + "," + frameDataArray[cursorArrayIndex].getHotspot()[1] + "]");
-
     }
 
 }

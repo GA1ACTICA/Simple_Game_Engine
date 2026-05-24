@@ -16,10 +16,15 @@ public class ErrorManagement {
     /**
      * @param exception
      * @param message
+     * 
      */
     public static void reportError(Exception exception, String message) {
-        System.err.println('\n' + message + ": " + exception.getMessage() + '\n');
+        System.err.println(
+                '\n' + ConsoleColors.RED + message + ": " + ConsoleColors.YELLOW + exception.getMessage()
+                        + ConsoleColors.RESET + '\n');
+
         exception.printStackTrace();
+        System.exit(1);
     }
 
 }

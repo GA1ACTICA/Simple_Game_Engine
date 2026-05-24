@@ -16,7 +16,6 @@ public class AnimatedCursor extends JsonBacked<AnimatedCursorData> {
 
     protected AnimatedCursor(AnimatedCursorData initialData) {
         super(new AnimatedCursorData());
-
     }
 
     @Override

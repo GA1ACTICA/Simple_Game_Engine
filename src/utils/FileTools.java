@@ -30,8 +30,13 @@ public class FileTools {
      * @see Image
      */
     public static Image getImage(Path path) {
-        Image image = new ImageIcon(FileTools.class.getClassLoader().getResource(path.toString())).getImage();
-        return image;
+        try {
+            return new ImageIcon(FileTools.class.getClassLoader().getResource(path.toString())).getImage();
+        } catch (Exception e) {
+            ErrorManagement.reportError(e, "Failed to load image at %s".formatted(path));
+            return null;
+        }
+
     }
 
     /**

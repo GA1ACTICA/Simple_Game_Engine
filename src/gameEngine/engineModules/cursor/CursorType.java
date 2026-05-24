@@ -11,7 +11,6 @@
 package gameEngine.engineModules.cursor;
 
 import java.awt.Point;
-import java.util.Objects;
 
 /**
  * Creates a new record of CursorType
@@ -25,20 +24,9 @@ import java.util.Objects;
  * 
  * @param animated Toggle for animated cursor
  */
-public record CursorType(boolean animated, String path, Point hotspot) {
+public record CursorType(String path, Point hotspot) {
 
-    /**
-     * Creates a new record of CursorType where the default values for animated is
-     * false and for hotspot null.
-     * 
-     * This constructor is only intended to be used when adding a new <b>non
-     * animated</b> cursor.
-     * 
-     * @param path Path to the cursor image
-     */
-    public CursorType(String path) {
-        Objects.requireNonNull(path, "Path must not be null");
-        this(false, path, null);
-    }
-
+    public static CursorType ALIAS = new CursorType("alias.png", new Point(0, 0));
+    // TODO: add the rest of the cursor types
+    public static CursorType WAIT = new CursorType("wait", null);
 }

@@ -24,7 +24,7 @@ import java.awt.image.BufferedImage;
 
 import gameEngine.engineModules.*;
 import gameEngine.engineModules.cursor.CursorManager;
-import gameEngine.engineModules.cursor.CursorManager.CursorType;
+import gameEngine.engineModules.cursor.CursorType;
 import gameEngine.interfaces.*;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
@@ -490,9 +490,9 @@ public class RectButton implements
         this.isHovered = isHovered;
 
         if (isHovered)
-            CursorManager.setCursor(CursorType.POINTER);
+            CursorManager.setCursor(CursorType.ALIAS);
         else
-            CursorManager.setCursor(CursorType.DEFAULT);
+            CursorManager.setCursor(CursorType.WAIT);
 
     }
 
