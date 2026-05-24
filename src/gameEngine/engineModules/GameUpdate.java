@@ -13,9 +13,11 @@
 package gameEngine.engineModules;
 
 import java.awt.Color;
+import java.awt.Point;
 
 import javax.swing.JFrame;
 
+import advancedRendering.uiRendering.button.RectButton;
 import advancedRendering.uiRendering.misc.UPSCounter;
 import advancedRendering.uiRendering.slider.Slider;
 import advancedRendering.uiRendering.textField.TextField;
@@ -55,6 +57,9 @@ public class GameUpdate implements Runnable {
 
         TextField t = new TextField(context, panel, mouse, keys, 10, 10, 400, 10);
         t.show();
+
+        RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(600, 600));
+        b.show();
 
         ClassFactory.create(new MainGameClass(), context, 8);
         ClassFactory.create(new SecondGameClass(), context, 8);

@@ -1,3 +1,13 @@
+/**
+ * Project: Simple_Game_Engine
+ *
+ * Author: Galactica
+ *
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for full license information.
+ *
+ * Copyright © 2026 Galactica
+ */
 package gameEngine.engineModules.cursor;
 
 import utils.jsonUtils.JsonBacked;
@@ -16,6 +26,6 @@ public class AnimatedCursor extends JsonBacked<AnimatedCursorData> {
 
     @Override
     protected void successfulImportLog(AnimatedCursorData data, String path) {
-        System.out.println();
+        System.out.println("Successfully imported" + path);
     }
 }

@@ -1,6 +1,18 @@
+/**
+ * Project: Simple_Game_Engine
+ *
+ * Author: Galactica
+ *
+ * Licensed under the MIT License.
+ * See LICENSE file in the project root for full license information.
+ *
+ * Copyright © 2026 Galactica
+ */
 package gameEngine.engineModules.cursor;
 
 import java.util.List;
+
+import com.google.gson.annotations.SerializedName;
 
 public class AnimatedCursorData {
 
@@ -12,12 +24,14 @@ public class AnimatedCursorData {
 
     static class Frame {
 
-        private String image;
+        @SerializedName("image")
+        private String imagePath;
+
         private int durationMs;
         private int[] hotspot;
 
-        String getImage() {
-            return image;
+        String getImagePath() {
+            return imagePath;
         }
 
         int getDurationMs() {
