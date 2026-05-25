@@ -47,8 +47,10 @@ public class CursorManager implements CursorDrawable, Updatable {
     private static boolean show = true;
 
     private static boolean overriding = false;
-    private static int width = 96;
-    private static int height = 96;
+    private static int width = 48;
+    private static int height = 48;
+    private static double scaleX;
+    private static double scaleY;
 
     private static List<BufferedImage> cursorImageCache = new ArrayList<BufferedImage>();
     private static BufferedImage[] cursorImageArray;
@@ -111,7 +113,13 @@ public class CursorManager implements CursorDrawable, Updatable {
             System.out.println(
                     "Path to image for static cursor: " + cursor);
 
-            cursorImage = GraphicsTools.downscaleImage(FileTools.getBufferedImage(cursor, BufferedImage.TYPE_INT_ARGB),
+            BufferedImage originalImage = FileTools.getBufferedImage(cursor, BufferedImage.TYPE_INT_ARGB);
+
+            // Get scale for hotspot calculation.
+            scaleX = (double) width / originalImage.getWidth(null);
+            scaleY = (double) height / originalImage.getHeight(null);
+
+            cursorImage = GraphicsTools.downscaleImage(originalImage,
                     width, height);
             hotspot = cursorType.hotspot();
             animated = false;
@@ -140,6 +148,16 @@ public class CursorManager implements CursorDrawable, Updatable {
                                     FileTools.getBufferedImage(imagePath, BufferedImage.TYPE_INT_ARGB),
                                     width, height));
                 }
+
+                // Get scale for hotspot calculation.
+                Path imagePath = Path.of(defaultCursorPath
+                        + resource.getName() + "/"
+                        + frameDataArray[0].getImagePath());
+
+                BufferedImage originalImage = FileTools.getBufferedImage(imagePath, BufferedImage.TYPE_INT_ARGB);
+
+                scaleX = (double) width / originalImage.getWidth(null);
+                scaleY = (double) height / originalImage.getHeight(null);
 
                 // Transform to a array for easier data handling.
                 cursorImageArray = cursorImageCache.toArray(new BufferedImage[0]);
@@ -180,13 +198,13 @@ public class CursorManager implements CursorDrawable, Updatable {
         if (!show || !mouse.onScreen())
             return;
 
-        double scaleX = (double) width / cursorImage.getWidth(null);
-        double scaleY = (double) height / cursorImage.getHeight(null);
-
         int drawX = (int) (mouse.getPoint().x - hotspot.x * scaleX);
         int drawY = (int) (mouse.getPoint().y - hotspot.y * scaleY);
 
         g.drawImage(cursorImage, drawX, drawY, width, height, null);
+        GraphicsTools.imageBoundingBox(g, cursorImage, drawX, drawY);
+
+        GraphicsTools.debugCircle(g, mouse.getPoint().x, mouse.getPoint().y);
     }
 
     private float timer;
