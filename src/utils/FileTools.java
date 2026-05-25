@@ -21,7 +21,7 @@ import javax.swing.ImageIcon;
 public class FileTools {
 
     /**
-     * Get an image from the specified file path.
+     * Get an image from the specified file path of the type {@code Image}.
      * 
      * @param path Path to the image file, relative to the project
      *             resources.
@@ -40,7 +40,7 @@ public class FileTools {
     }
 
     /**
-     * Get an image from the specified file path.
+     * Get an image from the specified file path of the type {@code BufferedImage}.
      * 
      * @param path Path to the image file, relative to the project
      *             resources.
@@ -56,15 +56,18 @@ public class FileTools {
     }
 
     /**
+     * Converts an {@code Image} to a {@code BufferedImage}.
+     *
+     * @param image the image to convert
      * 
-     * @param image Input Image to be cast to BufferedImage
-     * 
-     * @return The casted BufferedImage
-     * 
+     * @param type  the {@code BufferedImage} type,
+     *              e.g. {@link BufferedImage#TYPE_INT_ARGB}
+     *
+     * @return the converted {@code BufferedImage}
+     *
      * @see BufferedImage
      */
     public static BufferedImage convertToBufferedImage(Image image, int type) {
-
         if (image instanceof BufferedImage) {
             return (BufferedImage) image;
         }

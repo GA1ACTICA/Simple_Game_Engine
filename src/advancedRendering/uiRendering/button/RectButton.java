@@ -490,9 +490,9 @@ public class RectButton implements
         this.isHovered = isHovered;
 
         if (isHovered)
-            CursorManager.setCursor(CursorType.ALIAS);
+            CursorManager.setCursor(CursorType.POINTER);
         else
-            CursorManager.setCursor(CursorType.WAIT);
+            CursorManager.setCursor(CursorType.DEFAULT);
 
     }
 

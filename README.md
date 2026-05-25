@@ -61,6 +61,11 @@ GameEngine
 - [x] Mouse.java
 - [ ] MouseManager.java
 
+Cursor
+
+- [x] CursorType.java
+- [x] CursorManager.java
+
 Interfaces
 
 - [x] Drawable.java and UIDrawable.java
@@ -69,13 +74,12 @@ Interfaces
 - [x] Hoverable.java
 - [x] Painter.java
 - [x] MenuInterface.java
-- [ ] Updatable.java
-- [ ] ZIndexable.java
+- [x] Updatable.java
+- [x] ZIndexable.java
 
 Records
 
-- [x] CursorInformation.java
-- [ ] FixResult.java
+- [x] FixResult.java
 
 Json
 
@@ -84,7 +88,7 @@ Json
 Utils
 
 - [ ] ErrorManagement.java
-- [ ] FileTools.java
+- [x] FileTools.java
 - [ ] GraphicsTools.java
 - [ ] MathTools.java
 

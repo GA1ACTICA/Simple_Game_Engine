@@ -27,6 +27,7 @@ import gameEngine.engineModules.EngineContext;
 import gameEngine.engineModules.EnginePanel;
 import gameEngine.engineModules.Mouse;
 import gameEngine.engineModules.cursor.CursorManager;
+import gameEngine.engineModules.cursor.CursorType;
 import gameEngine.interfaces.Clickable;
 import gameEngine.interfaces.Hoverable;
 import gameEngine.interfaces.MenuInterface;
@@ -614,9 +615,9 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         this.isHovered = isHovered;
 
         if (isHovered)
-            CursorManager.setCursor(null);
+            CursorManager.setCursor(CursorType.POINTER);
         else
-            CursorManager.setCursor(null);
+            CursorManager.setCursor(CursorType.DEFAULT);
     }
 
     @Override

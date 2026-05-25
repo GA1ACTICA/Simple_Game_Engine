@@ -11,16 +11,12 @@
 package gameEngine.engineModules.cursor;
 
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.Map;
 import java.util.Objects;
 
 import game.configs.gameState.GameState;
@@ -47,8 +43,8 @@ public class CursorManager implements CursorDrawable, Updatable {
     private static boolean show = true;
 
     private static boolean overriding = false;
-    private static int width = 48;
-    private static int height = 48;
+    private static int width = 24;
+    private static int height = 24;
     private static double scaleX;
     private static double scaleY;
 
@@ -92,11 +88,22 @@ public class CursorManager implements CursorDrawable, Updatable {
     }
 
     /**
-     * Set a cursor predefined in {@link CursorType} or added with
-     * {@link #TEMPORARY_METHOD_NAME()}.
-     * 
-     * @param cursorType
-     * @return {@code true} if
+     * Sets and displays a cursor.
+     * <p>
+     * Cursors are predefined in {@link CursorType}, but custom cursor types can
+     * also be created by implementing your own {@code CursorType}.
+     * <p>
+     * The cursor can be locked from being changed using {@link #lockCursor()}.
+     * <p>
+     * <b>Note:</b> This method should not be called more often than necessary.
+     * This is especially important for animated cursors, as doing so may load
+     * many images in a short amount of time.
+     *
+     * @param cursorType the cursor type to set
+     *
+     * @return {@code true} if the cursor was successfully set,
+     *         {@code false} if the change was blocked by
+     *         {@link #lockCursor()}
      */
     public static boolean setCursor(CursorType cursorType) {
         Objects.requireNonNull(cursorType, "The CursorType must not be null");
@@ -173,7 +180,7 @@ public class CursorManager implements CursorDrawable, Updatable {
 
     /**
      * Locks the current cursor preventing it from being changed
-     * via {@link #setCursor(CursorManager.CursorType) setCursor()}.
+     * via {@link #setCursor(CursorType) setCursor()}.
      * <p>
      * While the cursor is locked, calls to {@code setCursor(...)} will have
      * no effect and return {@code false}.
@@ -184,7 +191,7 @@ public class CursorManager implements CursorDrawable, Updatable {
 
     /**
      * Unlocks the cursor, allowing it to be changed via
-     * {@link #setCursor(CursorManager.CursorType) setCursor()}.
+     * {@link #setCursor(CursorType) setCursor()}.
      * <p>
      * After calling this method, {@code setCursor(...)} will resume normal
      * behavior and return {@code true}.
@@ -202,9 +209,11 @@ public class CursorManager implements CursorDrawable, Updatable {
         int drawY = (int) (mouse.getPoint().y - hotspot.y * scaleY);
 
         g.drawImage(cursorImage, drawX, drawY, width, height, null);
-        GraphicsTools.imageBoundingBox(g, cursorImage, drawX, drawY);
 
-        GraphicsTools.debugCircle(g, mouse.getPoint().x, mouse.getPoint().y);
+        if (state.data().debug) {
+            GraphicsTools.imageBoundingBox(g, cursorImage, drawX, drawY);
+            GraphicsTools.debugCircle(g, mouse.getPoint().x, mouse.getPoint().y);
+        }
     }
 
     private float timer;
@@ -230,8 +239,8 @@ public class CursorManager implements CursorDrawable, Updatable {
     }
 
     /**
-     * Updates the information about the current cursor. (Hotspot, Image and time
-     * delay)
+     * Updates the information about the current animated cursor. (Hotspot, Image
+     * and time delay)
      */
     private static void updateCursor() {
 
