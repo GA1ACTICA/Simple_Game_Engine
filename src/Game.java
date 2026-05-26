@@ -25,7 +25,7 @@ public class Game {
     static final EnginePanel panel = new EnginePanel(state, context);
     static final JFrame frame = new JFrame("Game_Title");
 
-    static final Keys keys = new Keys(state);
+    static final Keys keys = new Keys(state, context);
     static final Mouse mouse = new Mouse(state, context, panel);
 
     static final CursorManager cursor = new CursorManager(context, panel, mouse, state);

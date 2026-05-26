@@ -43,8 +43,8 @@ public class CursorManager implements CursorDrawable, Updatable {
     private static boolean show = true;
 
     private static boolean overriding = false;
-    private static int width = 96;
-    private static int height = 96;
+    private static int width = 24;
+    private static int height = 24;
     private static double scaleX;
     private static double scaleY;
 
@@ -71,8 +71,7 @@ public class CursorManager implements CursorDrawable, Updatable {
                         BufferedImage.TYPE_INT_ARGB),
                         new Point(0, 0), "Transparent cursor"));
 
-        setCursor(CursorType.WAIT);
-
+        setCursor(CursorType.DEFAULT);
     }
 
     public static boolean isVisible() {

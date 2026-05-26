@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import game.configs.gameState.GameState;
+import gameEngine.interfaces.KeyNotifier;
 
 public class Keys implements KeyListener {
 
@@ -24,9 +25,11 @@ public class Keys implements KeyListener {
     private Set<Character> keysTyped = new HashSet<>();
 
     private final GameState state;
+    private final EngineContext context;
 
-    public Keys(GameState state) {
+    public Keys(GameState state, EngineContext context) {
         this.state = state;
+        this.context = context;
     }
 
     /**
@@ -67,6 +70,7 @@ public class Keys implements KeyListener {
 
         keysPressed.remove(e.getKeyCode());
         keysTyped.remove(e.getKeyChar());
+
     }
 
     /**
@@ -79,6 +83,11 @@ public class Keys implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {
         keysTyped.add(e.getKeyChar());
+
+        for (KeyNotifier notifier : context.getKeyNotifiers()) {
+            notifier.keyNotification();
+        }
+
     }
 
     /**

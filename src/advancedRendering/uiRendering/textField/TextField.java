@@ -18,19 +18,20 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
 
 import gameEngine.engineModules.ClassFactory;
 import gameEngine.engineModules.EngineContext;
-import gameEngine.engineModules.EnginePanel;
 import gameEngine.engineModules.Keys;
 import gameEngine.engineModules.Mouse;
 import gameEngine.engineModules.cursor.CursorManager;
 import gameEngine.engineModules.cursor.CursorType;
 import gameEngine.interfaces.Clickable;
 import gameEngine.interfaces.Hoverable;
+import gameEngine.interfaces.KeyNotifier;
 import gameEngine.interfaces.MenuInterface;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.Updatable;
@@ -38,9 +39,8 @@ import gameEngine.interfaces.drawables.UIDrawable;
 import utils.GraphicsTools;
 
 public class TextField
-        implements Clickable, Hoverable, UIDrawable, Updatable, MenuInterface, MenuSetSize, MenuSetPosition,
-        MenuSetColor,
-        MenuSetImage, MenuSetHoverVisual {
+        implements KeyNotifier, Clickable, Hoverable, UIDrawable, Updatable, MenuInterface, MenuSetSize,
+        MenuSetPosition, MenuSetColor, MenuSetImage, MenuSetHoverVisual {
 
     private int zIndex = 0;
 
@@ -65,6 +65,7 @@ public class TextField
     private Image hoverImage;
 
     private Font fieldFont = new Font("SansSerif", Font.PLAIN, 25);
+    private StringBuffer text = new StringBuffer("");
 
     private Runnable clickAction;
 
@@ -359,6 +360,8 @@ public class TextField
                 g2d.fillRect(x + 2, y + 2, 2, height - 4);
             }
 
+            g2d.drawString(text.toString(), x + 2, y + 2);
+
         });
     }
 
@@ -389,10 +392,7 @@ public class TextField
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
-    /**
-     * @param fieldFont
-     */
-    private void updateFont(Font font) {
+    private void setFont(Font font) {
 
     }
 
@@ -449,5 +449,22 @@ public class TextField
     public void notifyClick(Hoverable click) {
         if (click != this)
             focused = false;
+    }
+
+    @Override
+    public void keyNotification() {
+        if (!focused)
+            return;
+
+        text.append(keys.getKeysTyped().stream().findFirst().get());
+        System.out.println(keys.getKeysTyped().toString());
+        System.out.println(text);
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE)) {
+            System.out.println("delete");
+
+            text = text.deleteCharAt(text.length() - 1);
+        }
+
     }
 }
