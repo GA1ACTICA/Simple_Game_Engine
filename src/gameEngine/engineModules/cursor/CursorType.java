@@ -36,7 +36,7 @@ public record CursorType(String path, Point hotspot) {
     public static CursorType COL_RESIZE = new CursorType("col-resize.png", new Point(48, 48));
     public static CursorType CONTEXT_MENU = new CursorType("context-menu.png", new Point(12, 4));
     public static CursorType COPY = new CursorType("copy.png", new Point(12, 4));
-    public static CursorType CROSSHAIR = new CursorType("crosshair.png", new Point(44, 444));
+    public static CursorType CROSSHAIR = new CursorType("crosshair.png", new Point(44, 44));
     public static CursorType DEFAULT = new CursorType("default.png", new Point(12, 4));
     public static CursorType E_RESIZE = new CursorType("e-resize.png", new Point(76, 52));
     public static CursorType EW_RESIZE = new CursorType("ew-resize.png", new Point(48, 48));

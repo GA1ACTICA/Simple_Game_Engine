@@ -48,18 +48,12 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         this.state = state;
     }
 
-    /**
-     * @param arg0
-     */
     // MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent arg0) {
         updateMouseMovement(arg0);
     }
 
-    /**
-     * @param arg0
-     */
     @Override
     public void mouseMoved(MouseEvent arg0) {
         updateMouseMovement(arg0);

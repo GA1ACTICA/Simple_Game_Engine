@@ -25,6 +25,6 @@ public class AnimatedCursor extends JsonBacked<AnimatedCursorData> {
 
     @Override
     protected void successfulImportLog(AnimatedCursorData data, String path) {
-        System.out.println("Successfully imported" + path);
+        System.out.println("Successfully imported" + path + '\n');
     }
 }

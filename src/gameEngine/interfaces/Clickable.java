@@ -64,4 +64,22 @@ public interface Clickable {
 
     boolean isEnabled();
 
+    /**
+     * Called whenever a click is detected.
+     * <p>
+     * This can be used as a notifier when behavior should change after
+     * clicking somewhere other than the current {@code Hoverable}.
+     * <p>
+     * The provided {@code Hoverable} represents the object that was clicked,
+     * or {@code null} if the click did not target any {@code Hoverable}.
+     * <p>
+     * This method is invoked by the input handling system and should not
+     * be called directly by user code.
+     *
+     * @param click the {@code Hoverable} that was clicked, or {@code null}
+     *              if no {@code Hoverable} was pressed
+     */
+    default void notifyClick(Hoverable click) {
+    };
+
 }

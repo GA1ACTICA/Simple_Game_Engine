@@ -396,7 +396,7 @@ public class RectButton implements
 
             if (isHovered && showHover) {
 
-                // Draw if the button is not hovered
+                // Draw if the button is hovered
                 if (image == null) {
                     g2d.setColor(hoverColor);
                     g2d.fill(baseShape);
@@ -415,7 +415,7 @@ public class RectButton implements
 
             } else {
 
-                // Draws this if button is hovered
+                // Draws this if button is not hovered
                 if (hoverImage == null) {
                     g2d.setColor(color);
                     g2d.fill(baseShape);

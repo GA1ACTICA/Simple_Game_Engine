@@ -37,9 +37,6 @@ public class Game {
             frame,
             context);
 
-    /**
-     * @param args
-     */
     public static void main(String[] args) {
 
         // PANEL setup

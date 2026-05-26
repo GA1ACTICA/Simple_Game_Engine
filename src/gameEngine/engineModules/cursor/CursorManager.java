@@ -43,8 +43,8 @@ public class CursorManager implements CursorDrawable, Updatable {
     private static boolean show = true;
 
     private static boolean overriding = false;
-    private static int width = 24;
-    private static int height = 24;
+    private static int width = 96;
+    private static int height = 96;
     private static double scaleX;
     private static double scaleY;
 
@@ -117,8 +117,10 @@ public class CursorManager implements CursorDrawable, Updatable {
         if (resource.toString().contains(".png")) {
             // Loads in a static cursor image
             Path cursor = Path.of(defaultCursorPath.toString() + resource.toString());
-            System.out.println(
-                    "Path to image for static cursor: " + cursor);
+
+            if (state.data().debug)
+                System.out.println(
+                        "Path to image for static cursor: " + cursor);
 
             BufferedImage originalImage = FileTools.getBufferedImage(cursor, BufferedImage.TYPE_INT_ARGB);
 
@@ -146,9 +148,12 @@ public class CursorManager implements CursorDrawable, Updatable {
                             + resource.getName() + "/"
                             + frame.getImagePath());
 
-                    System.out.println("Image path: " + imagePath.toString());
-                    System.out.println("Image hotspot: [" + frame.getHotspot()[0] + "," + frame.getHotspot()[1] + "]");
-                    System.out.println("Delay duration: " + frame.getDurationMs() + '\n');
+                    if (state.data().debug) {
+                        System.out.println("Image path: " + imagePath.toString());
+                        System.out.println(
+                                "Image hotspot: [" + frame.getHotspot()[0] + "," + frame.getHotspot()[1] + "]");
+                        System.out.println("Delay duration: " + frame.getDurationMs() + '\n');
+                    }
 
                     cursorImageCache.add(
                             GraphicsTools.downscaleImage(

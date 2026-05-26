@@ -61,7 +61,16 @@ public class MouseManager {
                 currentTopMost.onReleased();
                 currentTopMost = null;
             }
+
+            for (Hoverable hoverable : context.getHoverables()) {
+                if (!hoverable.isVisible())
+                    continue;
+                if (hoverable instanceof Clickable clickable)
+                    clickable.notifyClick(topMost);
+
+            }
         }
+
     }
 
     public static void handleHover(EngineContext context, Point mousePoint) {
