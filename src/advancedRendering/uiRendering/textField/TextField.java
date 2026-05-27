@@ -13,6 +13,7 @@ package advancedRendering.uiRendering.textField;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -22,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.awt.image.BufferedImage;
 
 import gameEngine.engineModules.ClassFactory;
 import gameEngine.engineModules.EngineContext;
@@ -55,7 +57,6 @@ public class TextField
 
     private RectangularShape baseShape;
     private Shape rotatedShape;
-
     // Colors
     private Color color = new Color(173, 169, 169);
     private Color hoverColor = Color.LIGHT_GRAY;
@@ -64,7 +65,7 @@ public class TextField
     private Image image;
     private Image hoverImage;
 
-    private Font fieldFont = new Font("SansSerif", Font.PLAIN, 25);
+    private Font fieldFont;
     private StringBuffer text = new StringBuffer("");
 
     private Runnable clickAction;
@@ -98,7 +99,6 @@ public class TextField
      */
     public TextField(EngineContext context, Mouse mouse, Keys keys, int x, int y, int width,
             int height) {
-        ClassFactory.create(this, context);
 
         this.x = x;
         this.y = y;
@@ -107,10 +107,7 @@ public class TextField
         this.mouse = mouse;
         this.keys = keys;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
-
+        this(context);
     }
 
     /**
@@ -128,7 +125,6 @@ public class TextField
      */
     public TextField(EngineContext context, Mouse mouse, Keys keys, Point topLeft,
             Point bottomRight) {
-        ClassFactory.create(this, context);
 
         x = (int) topLeft.getX();
         y = (int) topLeft.getY();
@@ -137,9 +133,7 @@ public class TextField
         this.mouse = mouse;
         this.keys = keys;
 
-        this.baseShape = new Rectangle2D.Float(x, y, width, height);
-        this.rotatedShape = baseShape;
-        updateRotatedShape();
+        this(context);
     }
 
     /**
@@ -159,7 +153,6 @@ public class TextField
      */
     public TextField(EngineContext context, Mouse mouse, Keys keys, Point middle, int width,
             int height) {
-        ClassFactory.create(this, context);
 
         x = (int) middle.getX() - width / 2;
         y = (int) middle.getY() - height / 2;
@@ -168,10 +161,18 @@ public class TextField
         this.mouse = mouse;
         this.keys = keys;
 
+        this(context);
+
+    }
+
+    private TextField(EngineContext context) {
+        ClassFactory.create(this, context);
+
         this.baseShape = new Rectangle2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
+        fieldFont = GraphicsTools.createFontWithPixelHeight(Font.SANS_SERIF, Font.PLAIN, height - 2);
     }
 
     public boolean isVisible() {
@@ -357,10 +358,15 @@ public class TextField
 
             if (cursorVisible && focused) {
                 g2d.setColor(Color.BLACK);
-                g2d.fillRect(x + 2, y + 2, 2, height - 4);
+                g2d.fillRect(x + 10 + g2d.getFontMetrics(fieldFont).stringWidth(text.toString()), y + 2, 2, height - 4);
             }
 
-            g2d.drawString(text.toString(), x + 2, y + 2);
+            g2d.setFont(fieldFont);
+            g2d.setColor(Color.BLACK);
+            g2d.drawString(text.toString(), x + 10,
+                    y + g2d.getFontMetrics(fieldFont).getHeight() - g2d.getFontMetrics(fieldFont).getDescent());
+            GraphicsTools.debugShape(g2d, x,
+                    y + g2d.getFontMetrics(fieldFont).getHeight() - g2d.getFontMetrics(fieldFont).getDescent());
 
         });
     }
@@ -456,15 +462,12 @@ public class TextField
         if (!focused)
             return;
 
-        text.append(keys.getKeysTyped().stream().findFirst().get());
-        System.out.println(keys.getKeysTyped().toString());
-        System.out.println(text);
-
-        if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE)) {
-            System.out.println("delete");
-
+        if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE))
             text = text.deleteCharAt(text.length() - 1);
+        else {
+            Character inputChar = keys.getKeysTyped().stream().findFirst().get();
+            if (Character.isLetter(inputChar) || Character.isDigit(inputChar))
+                text.append(inputChar);
         }
-
     }
 }

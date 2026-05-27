@@ -14,6 +14,8 @@ package utils;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -298,7 +300,7 @@ public class GraphicsTools {
      * @throws NullPointerException if {@code g} is {@code null}.
      * 
      */
-    public static void debugCircle(Graphics g, int x, int y) {
+    public static void debugShape(Graphics g, int x, int y) {
         Objects.requireNonNull(g, "g must not be null");
         Graphics2D g2d = (Graphics2D) g;
 
@@ -338,5 +340,28 @@ public class GraphicsTools {
         g2d.setColor(Color.RED);
         g2d.setStroke(new BasicStroke(1));
         g2d.drawRect(x, y, width, height);
+    }
+
+    public static Font createFontWithPixelHeight(
+            String name,
+            int style,
+            int targetPixels) {
+
+        int size = 1;
+        Font font;
+
+        BufferedImage buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = buffer.createGraphics();
+
+        while (true) {
+            font = new Font(name, style, size);
+            FontMetrics fontMetrics = g.getFontMetrics(font);
+
+            if (fontMetrics.getHeight() >= targetPixels) {
+                return font;
+            }
+
+            size++;
+        }
     }
 }

@@ -55,7 +55,7 @@ public class GameUpdate implements Runnable {
         fps.show();
         fps.setZIndex(100);
 
-        TextField t = new TextField(context, mouse, keys, 50, 100, 400, 25);
+        TextField t = new TextField(context, mouse, keys, 50, 100, 400, 60);
         t.show();
 
         RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(600, 600));

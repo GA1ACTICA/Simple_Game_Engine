@@ -216,7 +216,7 @@ public class CursorManager implements CursorDrawable, Updatable {
 
         if (state.data().debug) {
             GraphicsTools.imageBoundingBox(g, cursorImage, drawX, drawY);
-            GraphicsTools.debugCircle(g, mouse.getPoint().x, mouse.getPoint().y);
+            GraphicsTools.debugShape(g, mouse.getPoint().x, mouse.getPoint().y);
         }
     }
 
