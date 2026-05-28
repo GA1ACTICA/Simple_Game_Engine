@@ -23,20 +23,11 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.awt.image.BufferedImage;
 
-import gameEngine.engineModules.ClassFactory;
-import gameEngine.engineModules.EngineContext;
-import gameEngine.engineModules.Keys;
-import gameEngine.engineModules.Mouse;
-import gameEngine.engineModules.cursor.CursorManager;
-import gameEngine.engineModules.cursor.CursorType;
-import gameEngine.interfaces.Clickable;
-import gameEngine.interfaces.Hoverable;
-import gameEngine.interfaces.KeyNotifier;
-import gameEngine.interfaces.MenuInterface;
+import gameEngine.interfaces.*;
+import gameEngine.engineModules.*;
+import gameEngine.engineModules.cursor.*;
 import gameEngine.interfaces.MenuInterface.*;
-import gameEngine.interfaces.Updatable;
 import gameEngine.interfaces.drawables.UIDrawable;
 import utils.GraphicsTools;
 
@@ -58,12 +49,14 @@ public class TextField
     private RectangularShape baseShape;
     private Shape rotatedShape;
     // Colors
-    private Color color = new Color(173, 169, 169);
-    private Color hoverColor = Color.LIGHT_GRAY;
+    private Color color = GraphicsTools.rgb(155, 155, 155);
+    private Color hoverColor = GraphicsTools.rgb(180, 180, 180);
+    private Color pressedColor = GraphicsTools.rgb(196, 196, 196);
 
     // Images
     private Image image;
     private Image hoverImage;
+    private Image pressedImage;
 
     private Font fieldFont;
     private StringBuffer text = new StringBuffer("");
@@ -279,58 +272,39 @@ public class TextField
         updateRotatedShape();
     }
 
-    /**
-     * @return int
-     */
+    public void setFont(Font font) {
+        fieldFont = font;
+        updateFont();
+    }
+
     public int getX() {
         return x;
     }
 
-    /**
-     * @return int
-     */
     public int getY() {
         return y;
     }
 
-    /**
-     * @return int
-     */
     public int getWidth() {
         return width;
     }
 
-    /**
-     * @return int
-     */
     public int getHeight() {
         return height;
     }
 
-    /**
-     * @return Point
-     */
     public Point getMiddlePoint() {
         return new Point(x + width / 2, y + height / 2);
     }
 
-    /**
-     * @return double
-     */
     public double getAngle() {
         return angle;
     }
 
-    /**
-     * @return Color
-     */
     public Color getColor() {
         return color;
     }
 
-    /**
-     * @param g
-     */
     @Override
     public void draw(Graphics g) {
         if (!show)
@@ -347,13 +321,20 @@ public class TextField
                     g2d.fillRect(x, y, width, height);
                 } else
                     g2d.drawImage(image, x, y, width, height, null);
-            } else {
+            } else if (!pressed) {
                 // Background when hovered
                 if (hoverImage == null) {
                     g2d.setColor(hoverColor);
                     g2d.fillRect(x, y, width, height);
                 } else
                     g2d.drawImage(hoverImage, x, y, width, height, null);
+            } else {
+                // Background when hovered and pressed
+                if (pressedImage == null) {
+                    g2d.setColor(pressedColor);
+                    g2d.fillRect(x, y, width, height);
+                } else
+                    g2d.drawImage(pressedImage, x, y, width, height, null);
             }
 
             if (cursorVisible && focused) {
@@ -389,7 +370,7 @@ public class TextField
     }
 
     // Call updateRotatedShape every time the position, size or rotation changes
-    protected void updateRotatedShape() {
+    private void updateRotatedShape() {
 
         AffineTransform transform = new AffineTransform();
         Point middle = getMiddlePoint();
@@ -398,7 +379,7 @@ public class TextField
         rotatedShape = transform.createTransformedShape(baseShape);
     }
 
-    private void setFont(Font font) {
+    private void updateFont() {
 
     }
 
@@ -462,12 +443,18 @@ public class TextField
         if (!focused)
             return;
 
-        if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE))
-            text = text.deleteCharAt(text.length() - 1);
-        else {
-            Character inputChar = keys.getKeysTyped().stream().findFirst().get();
-            if (Character.isLetter(inputChar) || Character.isDigit(inputChar))
-                text.append(inputChar);
+        Character input = keys.pollTypedCharacter();
+
+        if (input != null) {
+            text.append(input);
+        }
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE)) {
+            if (text.length() == 0)
+                return;
+
+            text.deleteCharAt(text.length() - 1);
+            return;
         }
     }
 }

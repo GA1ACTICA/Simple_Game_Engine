@@ -364,4 +364,49 @@ public class GraphicsTools {
             size++;
         }
     }
+
+    /**
+     * Creates a color from red, green, blue, and alpha components. Every value
+     * should fall between (0-255).
+     *
+     * @param r red channel value
+     * 
+     * @param g green channel value
+     * 
+     * @param b blue channel value
+     * 
+     * @param a alpha channel value
+     * 
+     * @return a new Color instance
+     * 
+     * @throws IllegalArgumentException if {@code r}, {@code g}, {@code b} or
+     *                                  {@code a} are outside the range of 0 to
+     *                                  255.
+     * 
+     * @see #rgb(int, int, int)
+     */
+    public static Color rgba(int r, int g, int b, int a) {
+        return new Color(r, g, b, a);
+    }
+
+    /**
+     * Creates an opaque color from red, green, and blue components. Every value
+     * should fall between (0-255).
+     *
+     * @param r red channel value
+     * 
+     * @param g green channel value
+     * 
+     * @param b blue channel value
+     * 
+     * @return a new Color instance
+     * 
+     * @throws IllegalArgumentException if {@code r}, {@code g} or {@code b} are
+     *                                  outside the range of 0 to 255.
+     * 
+     * @see #rgba(int, int, int, int)
+     */
+    public static Color rgb(int r, int g, int b) {
+        return new Color(r, g, b);
+    }
 }
