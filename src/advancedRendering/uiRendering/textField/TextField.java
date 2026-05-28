@@ -58,7 +58,7 @@ public class TextField
     private Image hoverImage;
     private Image pressedImage;
 
-    private Font fieldFont;
+    private Font fieldFont = new Font(Font.SANS_SERIF, Font.PLAIN, 0);
     private StringBuffer text = new StringBuffer("");
 
     private Runnable clickAction;
@@ -72,6 +72,8 @@ public class TextField
     private boolean focused;
     private boolean enabled;
     private boolean pressed;
+
+    private int caretOffset;
 
     /**
      * 
@@ -165,7 +167,8 @@ public class TextField
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
-        fieldFont = GraphicsTools.createFontWithPixelHeight(Font.SANS_SERIF, Font.PLAIN, height - 2);
+        fieldFont = GraphicsTools.matchFontToHeight(fieldFont, "ÅÄÖgjpqÉÁÂÂÂÂ",
+                height - 2);
     }
 
     public boolean isVisible() {
@@ -273,8 +276,8 @@ public class TextField
     }
 
     public void setFont(Font font) {
-        fieldFont = font;
-        updateFont();
+        fieldFont = GraphicsTools.matchFontToHeight(fieldFont, "ÅÄÖgjpqÉÁÂÂÂÂ",
+                height - 2);
     }
 
     public int getX() {
@@ -310,6 +313,8 @@ public class TextField
         if (!show)
             return;
 
+        FontMetrics fontMetrics = g.getFontMetrics(fieldFont);
+
         Graphics2D g2d = (Graphics2D) g;
 
         GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
@@ -339,15 +344,16 @@ public class TextField
 
             if (cursorVisible && focused) {
                 g2d.setColor(Color.BLACK);
-                g2d.fillRect(x + 10 + g2d.getFontMetrics(fieldFont).stringWidth(text.toString()), y + 2, 2, height - 4);
+                g2d.fillRect(
+                        x + 10 + fontMetrics.stringWidth(text.substring(0, text.length() - caretOffset)),
+                        y + 2, 2,
+                        height - 4);
             }
 
-            g2d.setFont(fieldFont);
+            g2d.setFont(fontMetrics.getFont());
             g2d.setColor(Color.BLACK);
-            g2d.drawString(text.toString(), x + 10,
-                    y + g2d.getFontMetrics(fieldFont).getHeight() - g2d.getFontMetrics(fieldFont).getDescent());
-            GraphicsTools.debugShape(g2d, x,
-                    y + g2d.getFontMetrics(fieldFont).getHeight() - g2d.getFontMetrics(fieldFont).getDescent());
+            g2d.drawString(text.toString(), x + 10, y + fontMetrics.getHeight() - fontMetrics.getDescent());
+            GraphicsTools.debugShape(g2d, x, y + fontMetrics.getHeight() - fontMetrics.getDescent());
 
         });
     }
@@ -377,10 +383,6 @@ public class TextField
 
         transform.rotate(Math.toRadians(angle), middle.x, middle.y);
         rotatedShape = transform.createTransformedShape(baseShape);
-    }
-
-    private void updateFont() {
-
     }
 
     @Override
@@ -439,22 +441,43 @@ public class TextField
     }
 
     @Override
-    public void keyNotification() {
+    public void keyTypedNotification() {
         if (!focused)
             return;
+
+        cursorTimer = 0;
+        cursorVisible = true;
 
         Character input = keys.pollTypedCharacter();
 
         if (input != null) {
-            text.append(input);
+            text.insert(text.length() - caretOffset, input);
         }
 
         if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE)) {
             if (text.length() == 0)
                 return;
 
-            text.deleteCharAt(text.length() - 1);
-            return;
+            if (caretOffset != text.length()) {
+                text.deleteCharAt(text.length() - 1 - caretOffset);
+                return;
+            }
         }
+
+    }
+
+    @Override
+    public void keyPressedNotification() {
+        cursorTimer = 0;
+        cursorVisible = true;
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT) && caretOffset < text.length()) {
+            caretOffset++;
+        }
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_RIGHT) && caretOffset > 0) {
+            caretOffset--;
+        }
+
     }
 }

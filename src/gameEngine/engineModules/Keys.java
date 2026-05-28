@@ -44,24 +44,22 @@ public class Keys implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        /*
-         * This is necessary since keyPressed is repeatedly called when a button is
-         * being held
-         */
-        if (!keysPressed.contains(keyCode)) {
 
-            keysPressed.add(keyCode);
+        keysPressed.add(keyCode);
 
-            if (!state.data().debugVerbose)
-                return;
-
-            if (Character.isISOControl(e.getKeyChar()))
-                System.out.println("ISO Control key: %s was pressed".formatted(keyCode));
-
-            if (!Character.isISOControl(e.getKeyChar()))
-                System.out.println("Key: %s %s was pressed".formatted(e.getKeyChar(),
-                        keyCode));
+        for (KeyNotifier notifier : context.getKeyNotifiers()) {
+            notifier.keyPressedNotification();
         }
+
+        if (!state.data().debugVerbose)
+            return;
+
+        if (Character.isISOControl(e.getKeyChar()))
+            System.out.println("ISO Control key: %s was pressed".formatted(keyCode));
+
+        if (!Character.isISOControl(e.getKeyChar()))
+            System.out.println("Key: %s %s was pressed".formatted(e.getKeyChar(),
+                    keyCode));
 
     }
 
@@ -77,6 +75,10 @@ public class Keys implements KeyListener {
         int keyCode = e.getKeyCode();
 
         keysPressed.remove(keyCode);
+
+        for (KeyNotifier notifier : context.getKeyNotifiers()) {
+            notifier.keyReleasedNotification();
+        }
 
         if (!state.data().debugVerbose)
             return;
@@ -106,7 +108,7 @@ public class Keys implements KeyListener {
         }
 
         for (KeyNotifier notifier : context.getKeyNotifiers()) {
-            notifier.keyNotification();
+            notifier.keyTypedNotification();
         }
     }
 
@@ -126,6 +128,11 @@ public class Keys implements KeyListener {
      * Returns the first character in the queue of pressed keys. Characters are case
      * sensitive and will be capitalized if applicable. Non-Unicode characters are
      * ignored.
+     * <p>
+     * <b>Note:</b>
+     * Control characters such as backspace, delete, escape, tab, enter, and
+     * modifier keys are filtered out and will not trigger character insertion
+     * behavior.
      * 
      * @return The first character in the queue of pressed keys
      */

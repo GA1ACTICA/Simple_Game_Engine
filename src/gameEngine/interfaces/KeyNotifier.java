@@ -1,19 +1,42 @@
 package gameEngine.interfaces;
 
-@FunctionalInterface
 public interface KeyNotifier {
     /**
-     * A simple notification method that is invoked when a key is pressed.
+     * Invoked when a key input produces a printable character.
      * <p>
-     * It is invoked either once when a key if first pressed or repeatedly when a
-     * key is held down.
+     * This event is intended for text input handling rather than physical key
+     * state tracking.
      * <p>
-     * <b>Note:</b> The time from the first press has a longer delay than the rest
-     * of the invocations when a keys is being held. The time between invocations
-     * when a key is held down is also dependent on the individual users setting on
-     * their device.
-     * 
-     * @see gameEngine.engineModules.Keys#getKeysTyped() getKeysTyped()
+     * <b>Note:</b>
+     * Control characters such as backspace, delete, escape, tab, enter, and
+     * modifier keys are filtered out and will not trigger character insertion
+     * behavior.
+     * <p>
+     * Depending on the platform and user keyboard repeat settings, this method
+     * may be invoked repeatedly while a key is held down.
+     *
+     * @see gameEngine.engineModules.Keys#getKeysTyped()
      */
-    void keyNotification();
+    default void keyTypedNotification() {
+    };
+
+    /**
+     * Invoked when a physical key is pressed down.
+     * <p>
+     * Intended for gameplay controls, hotkeys, and input state handling.
+     * <p>
+     * This method may repeatedly fire while a key is held down depending on the
+     * operating system keyboard repeat settings.
+     */
+    default void keyPressedNotification() {
+    };
+
+    /**
+     * Invoked when a physical key is released.
+     * <p>
+     * Intended for gameplay controls and input state handling.
+     */
+    default void keyReleasedNotification() {
+    };
+
 }

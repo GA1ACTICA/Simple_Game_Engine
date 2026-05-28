@@ -15,13 +15,14 @@ import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -342,26 +343,44 @@ public class GraphicsTools {
         g2d.drawRect(x, y, width, height);
     }
 
-    public static Font createFontWithPixelHeight(
-            String name,
-            int style,
-            int targetPixels) {
+    /**
+     * Returns a resized version of the supplied {@link java.awt.Font Font} whose
+     * rendered height is greater than or equal to the target height.
+     * <p>
+     * The font size is increased one point at a time starting from size {@code 1}
+     * until the measured height of the font reaches or exceeds the target height.
+     * <p>
+     * Font height is measured using
+     * {@link java.awt.font.LineMetrics LineMetrics} with the supplied dummy text.
+     * <p>
+     * <b>Note:</b> The returned font may exceed the target height since the first
+     * font size whose height is greater than or equal to the target is returned.
+     *
+     * @param font         the base font used to derive resized fonts
+     *
+     * @param dummyText    the text used when calculating font metrics
+     *
+     * @param targetHeight the minimum desired rendered font height
+     *
+     * @return a resized font whose rendered height is greater than or equal to the
+     *         target height
+     */
+    public static Font matchFontToHeight(Font font, String dummyText, int targetHeight) {
 
         int size = 1;
-        Font font;
-
-        BufferedImage buffer = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = buffer.createGraphics();
+        FontRenderContext renderContext = new FontRenderContext(null, true, true);
 
         while (true) {
-            font = new Font(name, style, size);
-            FontMetrics fontMetrics = g.getFontMetrics(font);
+            LineMetrics metrics = font.getLineMetrics(dummyText, renderContext);
 
-            if (fontMetrics.getHeight() >= targetPixels) {
+            if (metrics.getHeight() >= targetHeight) {
                 return font;
             }
 
             size++;
+
+            font = font.deriveFont((float) size);
+
         }
     }
 
