@@ -464,6 +464,17 @@ public class TextField
             }
         }
 
+        if (keys.getKeysPressed().contains(KeyEvent.VK_DELETE)) {
+            if (text.length() == 0)
+                return;
+
+            if (caretOffset != 0) {
+                text.deleteCharAt(text.length() - caretOffset);
+                caretOffset--;
+                return;
+            }
+        }
+
     }
 
     @Override
