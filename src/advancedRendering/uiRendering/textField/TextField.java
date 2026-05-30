@@ -23,6 +23,7 @@ import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
+import java.awt.image.BufferedImage;
 
 import gameEngine.interfaces.*;
 import gameEngine.engineModules.*;
@@ -30,9 +31,10 @@ import gameEngine.engineModules.cursor.*;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
 import utils.GraphicsTools;
+import utils.GraphicsTools.MaskType;
 
 public class TextField
-        implements KeyNotifier, Clickable, Hoverable, UIDrawable, Updatable, MenuInterface, MenuSetSize,
+        implements MouseNotifier, KeyNotifier, Clickable, Hoverable, UIDrawable, Updatable, MenuInterface, MenuSetSize,
         MenuSetPosition, MenuSetColor, MenuSetImage, MenuSetHoverVisual {
 
     private int zIndex = 0;
@@ -317,7 +319,7 @@ public class TextField
 
         Graphics2D g2d = (Graphics2D) g;
 
-        GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), () -> {
+        GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), (gRotate) -> {
 
             if (!isHovered) {
                 // Background
@@ -342,19 +344,20 @@ public class TextField
                     g2d.drawImage(pressedImage, x, y, width, height, null);
             }
 
-            if (cursorVisible && focused) {
-                g2d.setColor(Color.BLACK);
-                g2d.fillRect(
-                        x + 10 + fontMetrics.stringWidth(text.substring(0, text.length() - caretOffset)),
-                        y + 2, 2,
-                        height - 4);
-            }
+            GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
 
-            g2d.setFont(fontMetrics.getFont());
-            g2d.setColor(Color.BLACK);
-            g2d.drawString(text.toString(), x + 10, y + fontMetrics.getHeight() - fontMetrics.getDescent());
-            GraphicsTools.debugShape(g2d, x, y + fontMetrics.getHeight() - fontMetrics.getDescent());
+                if (cursorVisible && focused) {
+                    gMask.setColor(Color.BLACK);
+                    gMask.fillRect(
+                            x + 10 + fontMetrics.stringWidth(text.substring(0, text.length() - caretOffset)),
+                            y + 2, 2,
+                            height - 4);
+                }
 
+                gMask.setFont(fontMetrics.getFont());
+                gMask.setColor(Color.BLACK);
+                gMask.drawString(text.toString(), x + 10, y + fontMetrics.getHeight() - fontMetrics.getDescent());
+            });
         });
     }
 
@@ -490,5 +493,13 @@ public class TextField
             caretOffset--;
         }
 
+    }
+
+    @Override
+    public void clickNotification(int x, int y) {
+        if (!contains(x, y))
+            return;
+
+        System.out.println("Hello from textField");
     }
 }

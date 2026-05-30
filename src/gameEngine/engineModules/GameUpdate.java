@@ -17,7 +17,7 @@ import java.awt.Point;
 
 import javax.swing.JFrame;
 
-import advancedRendering.uiRendering.button.RectButton;
+import advancedRendering.uiRendering.button.OvalButton;
 import advancedRendering.uiRendering.misc.UPSCounter;
 import advancedRendering.uiRendering.slider.Slider;
 import advancedRendering.uiRendering.textField.TextField;
@@ -58,7 +58,7 @@ public class GameUpdate implements Runnable {
         TextField t = new TextField(context, mouse, keys, 50, 100, 400, 60);
         t.show();
 
-        RectButton b = new RectButton(context, panel, mouse, new Point(500, 500), new Point(600, 600));
+        OvalButton b = new OvalButton(context, panel, mouse, new Point(500, 500), 50);
         b.show();
 
         ClassFactory.create(new MainGameClass(), context, 8);

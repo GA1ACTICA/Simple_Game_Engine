@@ -18,6 +18,7 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
 import game.configs.gameState.GameState;
+import gameEngine.interfaces.MouseNotifier;
 import gameEngine.interfaces.Updatable;
 import utils.ErrorManagement;
 
@@ -71,6 +72,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
         MouseManager.handlePriority(context, getPoint());
         MouseManager.handleHover(context, getPoint());
+
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.movementNotification(x, y);
+        }
     }
     // MouseListener
 
@@ -84,7 +89,9 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        // unused
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.clickNotification(x, y);
+        }
     }
 
     /**
@@ -208,6 +215,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         float delta = (float) e.getPreciseWheelRotation();
 
         mouseWheelDelta += delta;
+
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.scrollNotification(mouseWheelDelta);
+        }
 
     }
 

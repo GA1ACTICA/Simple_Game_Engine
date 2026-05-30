@@ -20,7 +20,6 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.awt.image.BufferedImage;
 
 import gameEngine.engineModules.ClassFactory;
 import gameEngine.engineModules.EngineContext;
@@ -34,6 +33,7 @@ import gameEngine.interfaces.MenuInterface;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
 import utils.GraphicsTools;
+import utils.GraphicsTools.MaskType;
 
 public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize,
         MenuSetHoverVisual, MenuSetToggleVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
@@ -471,7 +471,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawn inside
-        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), () -> {
+        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), (gRotate) -> {
 
             if (!enabled) {
                 if (disabledImage == null) {
@@ -490,16 +490,9 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
                     g2d.fill(baseShape);
 
                 } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-
-                                gMask.drawImage(image, 0, 0, width, height, null);
-                            });
-                    g2d.drawImage(buffer, x, y, null);
+                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                        gMask.drawImage(image, x, y, width, height, null);
+                    });
                 }
 
             } else {
@@ -510,17 +503,9 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
                     g2d.fill(baseShape);
 
                 } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-
-                                gMask.drawImage(toggleImage, 0, 0, width, height, null);
-                            });
-                    g2d.drawImage(buffer, x, y, null);
-
+                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                        gMask.drawImage(toggleImage, x, y, width, height, null);
+                    });
                 }
             }
 
@@ -532,17 +517,9 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
                     g2d.fill(baseShape);
 
                 } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-
-                                gMask.drawImage(hoverImage, 0, 0, width, height, null);
-                            });
-                    g2d.drawImage(buffer, x, y, null);
-
+                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                        gMask.drawImage(hoverImage, x, y, width, height, null);
+                    });
                 }
             }
 
@@ -553,22 +530,12 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
                     g2d.fill(baseShape);
 
                 } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-
-                                gMask.drawImage(clickImage, 0, 0, width, height, null);
-
-                            });
-                    g2d.drawImage(buffer, x, y, null);
+                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                        gMask.drawImage(clickImage, x, y, width, height, null);
+                    });
                 }
             }
-
         });
-
     }
 
     /**

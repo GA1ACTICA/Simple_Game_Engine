@@ -15,6 +15,7 @@ import java.util.List;
 
 import gameEngine.interfaces.Hoverable;
 import gameEngine.interfaces.KeyNotifier;
+import gameEngine.interfaces.MouseNotifier;
 import gameEngine.interfaces.Updatable;
 import gameEngine.interfaces.ZIndexable;
 import gameEngine.interfaces.drawables.CursorDrawable;
@@ -107,7 +108,11 @@ public class ClassFactory {
         }
 
         if (object instanceof KeyNotifier keyNotifier) {
-            context.getBackBufferKeyNotifier().add(keyNotifier);
+            context.getBackBufferKeyNotifiers().add(keyNotifier);
+        }
+
+        if (object instanceof MouseNotifier mouseNotifier) {
+            context.getBackBufferMouseNotifiers().add(mouseNotifier);
         }
 
         if (object instanceof Hoverable hoverable) {

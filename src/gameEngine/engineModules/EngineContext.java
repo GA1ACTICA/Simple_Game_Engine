@@ -18,6 +18,7 @@ import gameEngine.interfaces.drawables.*;
 import gameEngine.interfaces.Updatable;
 import gameEngine.interfaces.Hoverable;
 import gameEngine.interfaces.KeyNotifier;
+import gameEngine.interfaces.MouseNotifier;
 
 public class EngineContext {
 
@@ -39,13 +40,17 @@ public class EngineContext {
     private final List<KeyNotifier> backBufferKeyNotifiers = new ArrayList<>();
     private volatile List<KeyNotifier> frontBufferKeyNotifiers = new ArrayList<>();
 
+    private final List<MouseNotifier> backBufferMouseNotifiers = new ArrayList<>();
+    private volatile List<MouseNotifier> frontBufferMouseNotifiers = new ArrayList<>();
+
     private List<List<?>> allLists = List.of(
             backBufferDrawable,
             backBufferUIDrawable,
             backBufferCursorDrawable,
             backBufferUpdatables,
             backBufferHoverables,
-            backBufferKeyNotifiers);
+            backBufferKeyNotifiers,
+            backBufferMouseNotifiers);
 
     List<List<?>> getAllLists() {
         return allLists;
@@ -111,6 +116,16 @@ public class EngineContext {
         return frontBufferKeyNotifiers;
     }
 
+    /**
+     * Returns the internal list of objects registered with the game engine during
+     * the current frame that also implement {@link MouseNotifier}.
+     *
+     * @return the mutable list of objects implementing MouseNotifier
+     */
+    public List<MouseNotifier> getFrontBufferMouseNotifiers() {
+        return frontBufferMouseNotifiers;
+    }
+
     List<Drawable> getBackBufferDrawable() {
         return backBufferDrawable;
     }
@@ -131,8 +146,12 @@ public class EngineContext {
         return backBufferHoverables;
     }
 
-    List<KeyNotifier> getBackBufferKeyNotifier() {
+    public List<KeyNotifier> getBackBufferKeyNotifiers() {
         return backBufferKeyNotifiers;
+    }
+
+    public List<MouseNotifier> getBackBufferMouseNotifiers() {
+        return backBufferMouseNotifiers;
     }
 
     void endFrame() {

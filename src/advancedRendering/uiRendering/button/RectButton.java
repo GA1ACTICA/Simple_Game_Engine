@@ -20,7 +20,6 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.awt.image.BufferedImage;
 
 import gameEngine.engineModules.*;
 import gameEngine.engineModules.cursor.CursorManager;
@@ -29,6 +28,7 @@ import gameEngine.interfaces.*;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
 import utils.GraphicsTools;
+import utils.GraphicsTools.MaskType;
 
 public class RectButton implements
         UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
@@ -382,14 +382,14 @@ public class RectButton implements
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawn inside
-        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), () -> {
+        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), (gRotate) -> {
 
             if (!enabled) {
                 if (disabledImage == null) {
-                    g2d.setColor(disabledColor);
-                    g2d.fill(baseShape);
+                    gRotate.setColor(disabledColor);
+                    gRotate.fill(baseShape);
                 } else {
-                    g2d.drawImage(disabledImage, 0, 0, width, height, null);
+                    gRotate.drawImage(disabledImage, 0, 0, width, height, null);
                 }
                 return;
             }
@@ -397,62 +397,41 @@ public class RectButton implements
             if (isHovered && showHover) {
 
                 // Draw if the button is hovered
-                if (image == null) {
-                    g2d.setColor(hoverColor);
-                    g2d.fill(baseShape);
+                if (hoverImage == null) {
+                    gRotate.setColor(hoverColor);
+                    gRotate.fill(baseShape);
 
                 } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-                                gMask.drawImage(hoverImage, 0, 0, width, height, null);
-                            });
-                    g2d.drawImage(buffer, x, y, null);
+                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                        gMask.drawImage(hoverImage, x, y, width, height, null);
+                    });
                 }
 
             } else {
 
                 // Draws this if button is not hovered
-                if (hoverImage == null) {
-                    g2d.setColor(color);
-                    g2d.fill(baseShape);
+                if (image == null) {
+                    gRotate.setColor(color);
+                    gRotate.fill(baseShape);
 
                 } else {
-
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-
-                                gMask.drawImage(image, 0, 0, width, height, null);
-
-                            });
-                    g2d.drawImage(buffer, x, y, null);
+                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                        gMask.drawImage(image, x, y, width, height, null);
+                    });
                 }
             }
 
             if (clickEffect && clicked) {
                 // Draws this if button is clicked
                 if (clickImage == null) {
-                    g2d.setColor(clickColor);
-                    g2d.fill(baseShape);
+                    gRotate.setColor(clickColor);
+                    gRotate.fill(baseShape);
 
                 } else {
 
-                    BufferedImage buffer = GraphicsTools.createMask(
-                            baseShape,
-                            width,
-                            height,
-                            gMask -> {
-
-                                gMask.drawImage(clickImage, 0, 0, width, height, null);
-
-                            });
-                    g2d.drawImage(buffer, x, y, null);
+                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                        gMask.drawImage(clickImage, x, y, width, height, null);
+                    });
                 }
             }
         });

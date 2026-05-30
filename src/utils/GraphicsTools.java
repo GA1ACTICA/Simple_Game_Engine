@@ -24,6 +24,7 @@ import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -31,6 +32,11 @@ import java.util.Objects;
 import gameEngine.interfaces.Painter;
 
 public class GraphicsTools {
+
+    public enum MaskType {
+        INSIDE,
+        OUTSIDE
+    }
 
     /**
      * Returns a new {@link BufferedImage} containing the given image rotated
@@ -114,7 +120,7 @@ public class GraphicsTools {
             Graphics2D g2d,
             double angle,
             Point rotationPoint,
-            Runnable drawAction) {
+            Painter drawAction) {
 
         Objects.requireNonNull(rotationPoint, "rotationPoint must not be null");
         Objects.requireNonNull(drawAction, "drawAction must not be null");
@@ -128,7 +134,7 @@ public class GraphicsTools {
                 rotationPoint.getY());
 
         // Draw
-        drawAction.run();
+        drawAction.paint(g2d);
 
         // Restore original transform
         g2d.setTransform(oldTransform);
@@ -151,50 +157,53 @@ public class GraphicsTools {
      * 
      * @throws NullPointerException if {@code mask} is {@code null}
      */
-    public static BufferedImage createMask(
+    public static void createMask(
+            Graphics2D g2d,
             Shape mask,
-            int width,
-            int height,
+            MaskType type,
             Painter painter) {
 
+        Objects.requireNonNull(g2d, "g2d must not be null");
         Objects.requireNonNull(mask, "mask must not be null");
+        Objects.requireNonNull(painter, "painter must not be null");
+
+        int x = (int) mask.getBounds2D().getX();
+        int y = (int) mask.getBounds2D().getY();
+        int width = (int) mask.getBounds2D().getWidth();
+        int height = (int) mask.getBounds2D().getHeight();
 
         BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         // Get Graphics2D from the new image
-        Graphics2D g2d = buffer.createGraphics();
+        Graphics2D bufferG2d = buffer.createGraphics();
 
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+        bufferG2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+        bufferG2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
                 RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-        Shape localMask = mask;
+        AffineTransform tx = new AffineTransform(g2d.getTransform());
+        bufferG2d.setTransform(tx);
+        bufferG2d.translate(-x, -y);
 
-        // Transform mask from "world space" to "local space"
-        if (mask.getBounds2D().getX() != 0 || mask.getBounds().getY() != 0) {
+        // Create mask alpha
+        bufferG2d.setComposite(AlphaComposite.Src);
+        bufferG2d.setColor(Color.WHITE);
+        bufferG2d.fill(mask);
 
-            Rectangle2D boundingBox = mask.getBounds2D();
+        // Draw content through mask
+        switch (type) {
+            case MaskType.INSIDE:
+                bufferG2d.setComposite(AlphaComposite.SrcIn);
+                break;
 
-            // Translate to "local space" x: 0 -> getX() y: 0 -> getY()
-            AffineTransform transform = AffineTransform.getTranslateInstance(-boundingBox.getX(),
-                    -boundingBox.getY());
-
-            localMask = transform.createTransformedShape(mask);
+            case MaskType.OUTSIDE:
+                bufferG2d.setComposite(AlphaComposite.SrcOut);
+                break;
         }
+        painter.paint(bufferG2d);
 
-        // Paint mask alpha
-        g2d.setComposite(AlphaComposite.Src);
-        g2d.setColor(Color.WHITE);
-        g2d.fill(localMask);
-
-        // Mask content
-        g2d.setComposite(AlphaComposite.SrcIn);
-        painter.paint(g2d);
-
-        g2d.dispose();
-
-        return buffer;
+        g2d.drawImage(buffer, x, y, width, height, null);
     }
 
     /**
