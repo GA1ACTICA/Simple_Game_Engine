@@ -18,11 +18,11 @@ import gameEngine.interfaces.Hoverable;
 
 public class MouseManager {
 
-    private static Hoverable lastHovered = null;
-    private static Hoverable topMost = null;
-    private static Clickable currentTopMost = null;
+    static Hoverable lastHovered = null;
+    static Hoverable topMost = null;
+    static Clickable currentTopMost = null;
 
-    public static void handlePriority(EngineContext context, Point mousePoint) {
+    static void handlePriority(EngineContext context, Point mousePoint) {
 
         // Find the topmost hoverable under the mouse
         for (Hoverable hoverable : context.getHoverables()) {
@@ -39,7 +39,7 @@ public class MouseManager {
 
     }
 
-    public static void handleClick(EngineContext context, Point mousePoint, boolean mouseState) {
+    static void handleClick(EngineContext context, Point mousePoint, boolean mouseState) {
 
         // mouse DOWN
         if (mouseState) {
@@ -73,7 +73,7 @@ public class MouseManager {
 
     }
 
-    public static void handleHover(EngineContext context, Point mousePoint) {
+    static void handleHover(EngineContext context, Point mousePoint) {
 
         // If hover target changed
         if (lastHovered != topMost) {

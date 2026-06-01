@@ -24,8 +24,6 @@ import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
@@ -201,7 +199,12 @@ public class GraphicsTools {
                 bufferG2d.setComposite(AlphaComposite.SrcOut);
                 break;
         }
-        painter.paint(bufferG2d);
+
+        try {
+            painter.paint(bufferG2d);
+        } finally {
+            bufferG2d.dispose();
+        }
 
         g2d.drawImage(buffer, x, y, width, height, null);
     }
@@ -413,8 +416,8 @@ public class GraphicsTools {
      * 
      * @see #rgb(int, int, int)
      */
-    public static Color rgba(int r, int g, int b, int a) {
-        return new Color(r, g, b, a);
+    public static Color rgba(int r, int g, int b, double a) {
+        return new Color(r, g, b, (int) (a * 255));
     }
 
     /**

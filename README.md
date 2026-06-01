@@ -59,7 +59,6 @@ GameEngine
 - [x] EngineContext.java
 - [x] Keys.java
 - [x] Mouse.java
-- [ ] MouseManager.java
 
 Cursor
 
@@ -76,6 +75,8 @@ Interfaces
 - [x] MenuInterface.java
 - [x] Updatable.java
 - [x] ZIndexable.java
+- [x] KeyNotifier.java
+- [x] MouseNotifier.java
 
 Records
 

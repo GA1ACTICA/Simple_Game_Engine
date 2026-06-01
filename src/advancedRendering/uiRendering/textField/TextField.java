@@ -11,7 +11,9 @@
 
 package advancedRendering.uiRendering.textField;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Composite;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
@@ -62,6 +64,7 @@ public class TextField
 
     private Font fieldFont = new Font(Font.SANS_SERIF, Font.PLAIN, 0);
     private StringBuffer text = new StringBuffer("");
+    private FontMetrics fontMetrics;
 
     private Runnable clickAction;
 
@@ -76,6 +79,8 @@ public class TextField
     private boolean pressed;
 
     private int caretOffset;
+    private int highlightStartX = 0;
+    private int highlightWidth = 0;
 
     /**
      * 
@@ -315,7 +320,7 @@ public class TextField
         if (!show)
             return;
 
-        FontMetrics fontMetrics = g.getFontMetrics(fieldFont);
+        fontMetrics = g.getFontMetrics(fieldFont);
 
         Graphics2D g2d = (Graphics2D) g;
 
@@ -324,27 +329,32 @@ public class TextField
             if (!isHovered) {
                 // Background
                 if (image == null) {
-                    g2d.setColor(color);
-                    g2d.fillRect(x, y, width, height);
+                    gRotate.setColor(color);
+                    gRotate.fillRect(x, y, width, height);
                 } else
-                    g2d.drawImage(image, x, y, width, height, null);
+                    gRotate.drawImage(image, x, y, width, height, null);
             } else if (!pressed) {
                 // Background when hovered
                 if (hoverImage == null) {
-                    g2d.setColor(hoverColor);
-                    g2d.fillRect(x, y, width, height);
+                    gRotate.setColor(hoverColor);
+                    gRotate.fillRect(x, y, width, height);
                 } else
-                    g2d.drawImage(hoverImage, x, y, width, height, null);
+                    gRotate.drawImage(hoverImage, x, y, width, height, null);
             } else {
                 // Background when hovered and pressed
                 if (pressedImage == null) {
-                    g2d.setColor(pressedColor);
-                    g2d.fillRect(x, y, width, height);
+                    gRotate.setColor(pressedColor);
+                    gRotate.fillRect(x, y, width, height);
                 } else
-                    g2d.drawImage(pressedImage, x, y, width, height, null);
+                    gRotate.drawImage(pressedImage, x, y, width, height, null);
             }
 
             GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
+                Composite old = gMask.getComposite();
+                gMask.setComposite(AlphaComposite.SrcOver);
+
+                gMask.setColor(GraphicsTools.rgba(0, 174, 255, 0.16));
+                gMask.fillRect(highlightStartX, y, highlightWidth, height);
 
                 if (cursorVisible && focused) {
                     gMask.setColor(Color.BLACK);
@@ -357,6 +367,8 @@ public class TextField
                 gMask.setFont(fontMetrics.getFont());
                 gMask.setColor(Color.BLACK);
                 gMask.drawString(text.toString(), x + 10, y + fontMetrics.getHeight() - fontMetrics.getDescent());
+
+                gMask.setComposite(old);
             });
         });
     }
@@ -500,6 +512,54 @@ public class TextField
         if (!contains(x, y))
             return;
 
-        System.out.println("Hello from textField");
+        cursorTimer = 0;
+        cursorVisible = true;
+
+        int caretPosition = 0;
+        int closestDistance = Integer.MAX_VALUE;
+
+        int caretX = this.x + 10;
+
+        for (int i = 0; i <= text.length(); i++) {
+
+            int distance = Math.abs(x - caretX);
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                caretPosition = i;
+            }
+
+            if (i < text.length()) {
+                caretX += fontMetrics.charWidth(text.charAt(i));
+            }
+        }
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
+            setMarkedCharacters(caretPosition, text.length() - caretOffset);
+            return;
+        } else
+            clearMarkedCharacters();
+
+        caretOffset = text.length() - caretPosition;
+    }
+
+    private void setMarkedCharacters(int start, int end) {
+
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+
+        highlightStartX = x + 10
+                + fontMetrics.stringWidth(text.substring(0, start));
+
+        highlightWidth = fontMetrics.stringWidth(
+                text.substring(start, end));
+    }
+
+    private void clearMarkedCharacters() {
+        highlightStartX = 0;
+        highlightWidth = 0;
     }
 }
