@@ -52,15 +52,15 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     // MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent arg0) {
-        updateMouseMovement(arg0);
+        updateMouseMovement(arg0, true);
     }
 
     @Override
     public void mouseMoved(MouseEvent arg0) {
-        updateMouseMovement(arg0);
+        updateMouseMovement(arg0, false);
     }
 
-    private void updateMouseMovement(MouseEvent arg0) {
+    private void updateMouseMovement(MouseEvent arg0, boolean dragging) {
         x = arg0.getX();
         y = arg0.getY();
 
@@ -74,7 +74,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         MouseManager.handleHover(context, getPoint());
 
         for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
-            object.movementNotification(x, y);
+            object.movementNotification(x, y, dragging);
         }
     }
     // MouseListener
@@ -274,7 +274,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
         } catch (NoninvertibleTransformException e) {
 
-            ErrorManagement.reportError(e, "The provided transform is not invertible");
+            ErrorManagement.throwError(e, "The provided transform is not invertible");
             return null;
         }
     }

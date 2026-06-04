@@ -1,5 +1,7 @@
 package gameEngine.interfaces;
 
+import java.awt.event.KeyEvent;
+
 public interface KeyNotifier {
     /**
      * Invoked when a key input produces a printable character.
@@ -17,7 +19,7 @@ public interface KeyNotifier {
      *
      * @see gameEngine.engineModules.Keys#getKeysTyped()
      */
-    default void keyTypedNotification() {
+    default void keyTypedNotification(KeyEvent e) {
     };
 
     /**
@@ -28,7 +30,7 @@ public interface KeyNotifier {
      * This method may repeatedly fire while a key is held down depending on the
      * operating system keyboard repeat settings.
      */
-    default void keyPressedNotification() {
+    default void keyPressedNotification(KeyEvent e) {
     };
 
     /**
@@ -36,7 +38,7 @@ public interface KeyNotifier {
      * <p>
      * Intended for gameplay controls and input state handling.
      */
-    default void keyReleasedNotification() {
+    default void keyReleasedNotification(KeyEvent e) {
     };
 
 }

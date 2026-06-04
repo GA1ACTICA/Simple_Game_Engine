@@ -48,7 +48,7 @@ public class Keys implements KeyListener {
         keysPressed.add(keyCode);
 
         for (KeyNotifier notifier : context.getKeyNotifiers()) {
-            notifier.keyPressedNotification();
+            notifier.keyPressedNotification(e);
         }
 
         if (!state.data().debugVerbose)
@@ -77,7 +77,7 @@ public class Keys implements KeyListener {
         keysPressed.remove(keyCode);
 
         for (KeyNotifier notifier : context.getKeyNotifiers()) {
-            notifier.keyReleasedNotification();
+            notifier.keyReleasedNotification(e);
         }
 
         if (!state.data().debugVerbose)
@@ -108,7 +108,7 @@ public class Keys implements KeyListener {
         }
 
         for (KeyNotifier notifier : context.getKeyNotifiers()) {
-            notifier.keyTypedNotification();
+            notifier.keyTypedNotification(e);
         }
     }
 

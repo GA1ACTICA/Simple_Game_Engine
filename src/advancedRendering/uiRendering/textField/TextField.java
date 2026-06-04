@@ -21,17 +21,24 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RectangularShape;
-import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 import gameEngine.interfaces.*;
 import gameEngine.engineModules.*;
 import gameEngine.engineModules.cursor.*;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
+import utils.ErrorManagement;
 import utils.GraphicsTools;
 import utils.GraphicsTools.MaskType;
 
@@ -70,7 +77,6 @@ public class TextField
 
     private EngineContext context;
     private Keys keys;
-    private Mouse mouse;
 
     // Behavioral variables
     private boolean isHovered;
@@ -81,6 +87,9 @@ public class TextField
     private int caretOffset;
     private int highlightStartX = 0;
     private int highlightWidth = 0;
+    private Integer highlightStartIndex = null;
+    private Integer highlightEndIndex = null;
+    private boolean resetStartIndex = false;
 
     /**
      * 
@@ -106,7 +115,6 @@ public class TextField
         this.y = y;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
         this.keys = keys;
 
         this(context);
@@ -132,7 +140,6 @@ public class TextField
         y = (int) topLeft.getY();
         width = (int) bottomRight.getX() - (int) topLeft.getX();
         height = (int) bottomRight.getY() - (int) topLeft.getY();
-        this.mouse = mouse;
         this.keys = keys;
 
         this(context);
@@ -160,7 +167,6 @@ public class TextField
         y = (int) middle.getY() - height / 2;
         this.width = width;
         this.height = height;
-        this.mouse = mouse;
         this.keys = keys;
 
         this(context);
@@ -456,7 +462,7 @@ public class TextField
     }
 
     @Override
-    public void keyTypedNotification() {
+    public void keyTypedNotification(KeyEvent e) {
         if (!focused)
             return;
 
@@ -489,13 +495,56 @@ public class TextField
                 return;
             }
         }
-
     }
 
     @Override
-    public void keyPressedNotification() {
+    public void keyPressedNotification(KeyEvent e) {
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_CONTROL)) {
+            resetStartIndex = false;
+
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            if (keys.getKeysPressed().contains(KeyEvent.VK_V)
+                    && clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+                try {
+                    System.out.println(((String) clipboard.getData(DataFlavor.stringFlavor)));
+                } catch (UnsupportedFlavorException | IOException exception) {
+                    exception.printStackTrace();
+                }
+
+            } else if (keys.getKeysPressed().contains(KeyEvent.VK_C)) {
+                try {
+                    clipboard.setContents(new StringSelection(getMarkedCharacters()), null);
+                } catch (IllegalStateException exception) {
+                    ErrorManagement.reportError(exception,
+                            "Clipboard may be occupied by another program and could not be accessed.");
+                }
+            }
+
+            return;
+        }
+
         cursorTimer = 0;
         cursorVisible = true;
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
+            resetStartIndex = false;
+
+            if (highlightStartIndex == null) {
+                highlightStartIndex = text.length() - caretOffset;
+            }
+
+            if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT)) {
+                highlightEndIndex = text.length() - caretOffset - 1;
+                setMarkedCharacters(highlightStartIndex, highlightEndIndex);
+
+            } else if (keys.getKeysPressed().contains(KeyEvent.VK_RIGHT)) {
+                highlightEndIndex = text.length() - caretOffset + 1;
+                setMarkedCharacters(highlightStartIndex, highlightEndIndex);
+            }
+
+        } else
+            clearMarkedCharacters();
 
         if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT) && caretOffset < text.length()) {
             caretOffset++;
@@ -504,7 +553,13 @@ public class TextField
         if (keys.getKeysPressed().contains(KeyEvent.VK_RIGHT) && caretOffset > 0) {
             caretOffset--;
         }
+    }
 
+    @Override
+    public void keyReleasedNotification(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+            resetStartIndex = true;
+        }
     }
 
     @Override
@@ -515,6 +570,69 @@ public class TextField
         cursorTimer = 0;
         cursorVisible = true;
 
+        setCaretAtClick(x, y);
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
+            if (highlightStartIndex == null) {
+                highlightStartIndex = text.length() - caretOffset;
+                resetStartIndex = false;
+            }
+            highlightEndIndex = text.length() - caretOffset;
+            setMarkedCharacters(highlightStartIndex, highlightEndIndex);
+        } else
+            clearMarkedCharacters();
+    }
+
+    @Override
+    public void movementNotification(int x, int y, boolean dragging) {
+
+    }
+
+    private void setMarkedCharacters(int start, int end) {
+
+        if (start > end) {
+            int tmp = start;
+            start = end;
+            end = tmp;
+        }
+
+        highlightStartX = x + 10
+                + fontMetrics.stringWidth(text.substring(0, start));
+
+        highlightWidth = fontMetrics.stringWidth(
+                text.substring(start, end));
+    }
+
+    private String getMarkedCharacters() {
+        int start;
+        int end;
+
+        if (highlightStartIndex > highlightEndIndex) {
+            int tmp = highlightStartIndex;
+            start = highlightEndIndex;
+            end = tmp;
+        } else {
+            start = highlightStartIndex;
+            end = highlightEndIndex;
+        }
+
+        try {
+            System.out.println("Start : %s End: %s".formatted(start, end));
+            return text.substring(start, end);
+        } catch (NullPointerException e) {
+            ErrorManagement.reportError(e, "No text is highlighted");
+            return null;
+        }
+    }
+
+    private void clearMarkedCharacters() {
+        highlightStartX = 0;
+        highlightWidth = 0;
+        highlightStartIndex = null;
+        highlightEndIndex = null;
+    }
+
+    private void setCaretAtClick(int x, int y) {
         int caretPosition = 0;
         int closestDistance = Integer.MAX_VALUE;
 
@@ -534,32 +652,6 @@ public class TextField
             }
         }
 
-        if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
-            setMarkedCharacters(caretPosition, text.length() - caretOffset);
-            return;
-        } else
-            clearMarkedCharacters();
-
         caretOffset = text.length() - caretPosition;
-    }
-
-    private void setMarkedCharacters(int start, int end) {
-
-        if (start > end) {
-            int tmp = start;
-            start = end;
-            end = tmp;
-        }
-
-        highlightStartX = x + 10
-                + fontMetrics.stringWidth(text.substring(0, start));
-
-        highlightWidth = fontMetrics.stringWidth(
-                text.substring(start, end));
-    }
-
-    private void clearMarkedCharacters() {
-        highlightStartX = 0;
-        highlightWidth = 0;
     }
 }

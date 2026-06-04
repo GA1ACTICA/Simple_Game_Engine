@@ -33,7 +33,7 @@ public class FileTools {
         try {
             return new ImageIcon(FileTools.class.getClassLoader().getResource(path.toString())).getImage();
         } catch (Exception e) {
-            ErrorManagement.reportError(e, "Failed to load image at %s".formatted(path));
+            ErrorManagement.throwError(e, "Failed to load image at %s".formatted(path));
             return null;
         }
 

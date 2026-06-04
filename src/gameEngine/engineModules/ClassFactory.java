@@ -152,7 +152,7 @@ public class ClassFactory {
             IllegalArgumentException e = new IllegalArgumentException(
                     object.getClass().getSimpleName() + " must implement ZIndexable");
 
-            ErrorManagement.reportError(e, "Invalid object passed to getPriority");
+            ErrorManagement.throwError(e, "Invalid object passed to getPriority");
             throw e;
         }
 
