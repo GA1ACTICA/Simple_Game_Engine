@@ -49,6 +49,14 @@ public class MouseManager {
                 clickable.onPressed();
             }
 
+            for (Hoverable hoverable : context.getHoverables()) {
+                if (!hoverable.isVisible())
+                    continue;
+                if (hoverable instanceof Clickable clickable)
+                    clickable.notifyPress((Clickable) topMost);
+
+            }
+
             // mouse UP
         } else {
 
@@ -66,7 +74,7 @@ public class MouseManager {
                 if (!hoverable.isVisible())
                     continue;
                 if (hoverable instanceof Clickable clickable)
-                    clickable.notifyClick(topMost);
+                    clickable.notifyClick((Clickable) topMost);
 
             }
         }

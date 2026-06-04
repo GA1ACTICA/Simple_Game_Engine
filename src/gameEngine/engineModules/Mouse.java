@@ -131,6 +131,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     @Override
     public void mousePressed(MouseEvent e) {
         setButton(e.getButton(), true);
+
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.pressNotification(e);
+        }
     }
 
     /**
@@ -144,6 +148,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     @Override
     public void mouseReleased(MouseEvent e) {
         setButton(e.getButton(), false);
+
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.releaseNotification(e);
+        }
     }
 
     private void setButton(int button, boolean down) {

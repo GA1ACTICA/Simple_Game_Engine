@@ -58,6 +58,9 @@ public class GameUpdate implements Runnable {
         TextField t = new TextField(context, mouse, keys, 50, 100, 400, 60);
         t.show();
 
+        TextField t2 = new TextField(context, mouse, keys, 500, 100, 400, 60);
+        t2.show();
+
         OvalButton b = new OvalButton(context, panel, mouse, new Point(500, 500), 50);
         b.show();
 
