@@ -445,15 +445,6 @@ public class TextField
     public void onPressed() {
         focused = true;
         pressed = true;
-
-        if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
-            if (highlightStartIndex == null) {
-                highlightStartIndex = text.length() - caretOffset;
-            }
-            highlightEndIndex = text.length() - caretOffset;
-            setMarkedCharacters(highlightStartIndex, highlightEndIndex);
-        } else
-            clearMarkedCharacters();
     }
 
     @Override
@@ -488,27 +479,6 @@ public class TextField
         if (input != null) {
             text.insert(text.length() - caretOffset, input);
         }
-
-        if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE)) {
-            if (text.length() == 0)
-                return;
-
-            if (caretOffset != text.length()) {
-                text.deleteCharAt(text.length() - 1 - caretOffset);
-                return;
-            }
-        }
-
-        if (keys.getKeysPressed().contains(KeyEvent.VK_DELETE)) {
-            if (text.length() == 0)
-                return;
-
-            if (caretOffset != 0) {
-                text.deleteCharAt(text.length() - caretOffset);
-                caretOffset--;
-                return;
-            }
-        }
     }
 
     @Override
@@ -522,7 +492,7 @@ public class TextField
             if (keys.getKeysPressed().contains(KeyEvent.VK_V)
                     && clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 try {
-                    System.out.println(((String) clipboard.getData(DataFlavor.stringFlavor)));
+                    paste((String) clipboard.getData(DataFlavor.stringFlavor));
                 } catch (UnsupportedFlavorException | IOException exception) {
                     exception.printStackTrace();
                 }
@@ -542,22 +512,36 @@ public class TextField
         cursorTimer = 0;
         cursorVisible = true;
 
-        if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
-            if (highlightStartIndex == null) {
-                highlightStartIndex = text.length() - caretOffset;
+        if (keys.getKeysPressed().contains(KeyEvent.VK_BACK_SPACE)) {
+            if (text.length() == 0)
+                return;
+
+            if (caretOffset != text.length()) {
+                if (highlightStartIndex != null) {
+                    removeMarkedCharacters();
+                    return;
+                }
+
+                text.deleteCharAt(text.length() - 1 - caretOffset);
+                return;
             }
+        }
 
-            if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT)) {
-                highlightEndIndex = text.length() - caretOffset - 1;
-                setMarkedCharacters(highlightStartIndex, highlightEndIndex);
+        if (keys.getKeysPressed().contains(KeyEvent.VK_DELETE)) {
+            if (text.length() == 0)
+                return;
 
-            } else if (keys.getKeysPressed().contains(KeyEvent.VK_RIGHT)) {
-                highlightEndIndex = text.length() - caretOffset + 1;
-                setMarkedCharacters(highlightStartIndex, highlightEndIndex);
+            if (caretOffset != 0) {
+                if (highlightStartIndex != null) {
+                    removeMarkedCharacters();
+                    return;
+                }
+
+                text.deleteCharAt(text.length() - caretOffset);
+                caretOffset--;
+                return;
             }
-
-        } else
-            clearMarkedCharacters();
+        }
 
         if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT) && caretOffset < text.length()) {
             caretOffset++;
@@ -566,23 +550,41 @@ public class TextField
         if (keys.getKeysPressed().contains(KeyEvent.VK_RIGHT) && caretOffset > 0) {
             caretOffset--;
         }
-    }
 
-    @Override
-    public void clickNotification(int x, int y) {
-        if (!contains(x, y) || !focused || !show)
-            return;
+        if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
+            if (highlightStartIndex == null)
+                highlightStartIndex = text.length() - caretOffset;
 
-        cursorTimer = 0;
-        cursorVisible = true;
+            if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT) || keys.getKeysPressed().contains(KeyEvent.VK_RIGHT)) {
+                highlightEndIndex = text.length() - caretOffset;
+                setMarkedCharacters(highlightStartIndex, highlightEndIndex);
+            }
 
-        setCaretAt(x, y);
+        } else
+            clearMarkedCharacters();
+
     }
 
     @Override
     public void pressNotification(MouseEvent e) {
-        if (!contains(e.getX(), e.getY()))
+        if (!contains(e.getX(), e.getY()) || !focused || !show) {
             focused = false;
+            return;
+        } else {
+            cursorTimer = 0;
+            cursorVisible = true;
+            setCaretAt(e.getX(), e.getY());
+
+            if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
+                if (highlightStartIndex == null)
+                    highlightStartIndex = text.length() - caretOffset;
+                else
+                    highlightEndIndex = text.length() - caretOffset;
+
+                setMarkedCharacters(highlightStartIndex, highlightEndIndex);
+            } else
+                clearMarkedCharacters();
+        }
     }
 
     @Override
@@ -596,10 +598,11 @@ public class TextField
 
             setCaretAt(x, y);
 
-            if (highlightStartIndex == null) {
-                highlightStartIndex = text.length() - caretOffset;
-            }
-            highlightEndIndex = text.length() - caretOffset;
+            if (highlightStartIndex == null)
+                highlightEndIndex = highlightStartIndex = text.length() - caretOffset;
+            else
+                highlightEndIndex = text.length() - caretOffset;
+
             setMarkedCharacters(highlightStartIndex, highlightEndIndex);
         }
     }
@@ -667,5 +670,37 @@ public class TextField
         }
 
         caretOffset = text.length() - caretPosition;
+    }
+
+    private void paste(String content) {
+
+        if (highlightStartIndex != null) {
+            removeMarkedCharacters();
+        }
+
+        text = new StringBuffer(text.substring(0, text.length() - caretOffset) + content
+                + text.substring(text.length() - caretOffset, text.length()));
+
+    }
+
+    private void removeMarkedCharacters() {
+        int start;
+        int end;
+
+        if (highlightStartIndex > highlightEndIndex) {
+            int tmp = highlightStartIndex;
+            start = highlightEndIndex;
+            end = tmp;
+        } else {
+            start = highlightStartIndex;
+            end = highlightEndIndex;
+        }
+
+        System.out.println("Start: " + start + " End: " + end);
+        text = new StringBuffer(
+                text.substring(0, start) + text.substring(end, text.length()));
+
+        caretOffset = text.length() - start;
+        clearMarkedCharacters();
     }
 }
