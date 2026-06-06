@@ -25,7 +25,7 @@ public class GameStateData {
      * An example update interval expressed in nanoseconds
      */
     public float exampleUpdateInterval = 1000000000 / 60; // ≈60fps expressed in nanoseconds
-    public Color backgroundColor = Color.LIGHT_GRAY;
+    public Color backgroundColor = Color.WHITE;
 
     // first used to set window dimension and then later used for window scaling
     // and drawing alignment

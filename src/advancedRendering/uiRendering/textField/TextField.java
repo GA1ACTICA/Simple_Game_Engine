@@ -353,32 +353,34 @@ public class TextField
                 } else
                     gRotate.drawImage(pressedImage, x, y, width, height, null);
             }
+            GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE,
+                    (gMask) -> {
 
-            GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                Composite old = gMask.getComposite();
-                gMask.setComposite(AlphaComposite.SrcOver);
+                        Composite old = gMask.getComposite();
+                        gMask.setComposite(AlphaComposite.SrcOver);
 
-                if (focused)
-                    gMask.setColor(GraphicsTools.rgba(0, 174, 255, 0.16));
-                else
-                    gMask.setColor(GraphicsTools.rgba(0, 0, 0, 0.16));
+                        if (focused)
+                            gMask.setColor(GraphicsTools.rgba(0, 174, 255, 0.16));
+                        else
+                            gMask.setColor(GraphicsTools.rgba(0, 0, 0, 0.16));
 
-                gMask.fillRect(highlightStartX, y, highlightWidth, height);
+                        gMask.fillRect(highlightStartX, y, highlightWidth, height);
 
-                if (cursorVisible && focused) {
-                    gMask.setColor(Color.BLACK);
-                    gMask.fillRect(
-                            x + 10 + fontMetrics.stringWidth(text.substring(0, text.length() - caretOffset)),
-                            y + 2, 2,
-                            height - 4);
-                }
+                        if (cursorVisible && focused) {
+                            gMask.setColor(Color.BLACK);
+                            gMask.fillRect(
+                                    x + 10 + fontMetrics.stringWidth(text.substring(0, text.length() - caretOffset)),
+                                    y + 2, 2,
+                                    height - 4);
+                        }
 
-                gMask.setFont(fontMetrics.getFont());
-                gMask.setColor(Color.BLACK);
-                gMask.drawString(text.toString(), x + 10, y + fontMetrics.getHeight() - fontMetrics.getDescent());
+                        gMask.setFont(fontMetrics.getFont());
+                        gMask.setColor(Color.BLACK);
+                        gMask.drawString(text.toString(), x + 10,
+                                y + fontMetrics.getHeight() - fontMetrics.getDescent());
 
-                gMask.setComposite(old);
-            });
+                        gMask.setComposite(old);
+                    });
         });
     }
 
@@ -461,8 +463,6 @@ public class TextField
     public void notifyPress(Clickable press) {
         if (press != this) {
             focused = false;
-            if (press instanceof TextField)
-                clearMarkedCharacters();
         }
     }
 
@@ -471,13 +471,12 @@ public class TextField
         if (!focused || !show)
             return;
 
-        cursorTimer = 0;
-        cursorVisible = true;
-
-        Character input = keys.pollTypedCharacter();
-
-        if (input != null) {
-            text.insert(text.length() - caretOffset, input);
+        if (highlightStartIndex == null)
+            insertCharacter();
+        else {
+            removeMarkedCharacters();
+            clearHighlight();
+            insertCharacter();
         }
     }
 
@@ -504,6 +503,16 @@ public class TextField
                     ErrorManagement.reportError(exception,
                             "Clipboard may be occupied by another program and could not be accessed.");
                 }
+
+            } else if (keys.getKeysPressed().contains(KeyEvent.VK_X)) {
+                try {
+                    clipboard.setContents(new StringSelection(getMarkedCharacters()), null);
+                } catch (IllegalStateException exception) {
+                    ErrorManagement.reportError(exception,
+                            "Clipboard may be occupied by another program and could not be accessed.");
+                }
+
+                removeMarkedCharacters();
             }
 
             return;
@@ -516,12 +525,12 @@ public class TextField
             if (text.length() == 0)
                 return;
 
-            if (caretOffset != text.length()) {
-                if (highlightStartIndex != null) {
-                    removeMarkedCharacters();
-                    return;
-                }
+            if (highlightStartIndex != null) {
+                removeMarkedCharacters();
+                return;
+            }
 
+            if (caretOffset != text.length()) {
                 text.deleteCharAt(text.length() - 1 - caretOffset);
                 return;
             }
@@ -531,12 +540,12 @@ public class TextField
             if (text.length() == 0)
                 return;
 
-            if (caretOffset != 0) {
-                if (highlightStartIndex != null) {
-                    removeMarkedCharacters();
-                    return;
-                }
+            if (highlightStartIndex != null) {
+                removeMarkedCharacters();
+                return;
+            }
 
+            if (caretOffset != 0) {
                 text.deleteCharAt(text.length() - caretOffset);
                 caretOffset--;
                 return;
@@ -560,8 +569,9 @@ public class TextField
                 setMarkedCharacters(highlightStartIndex, highlightEndIndex);
             }
 
-        } else
-            clearMarkedCharacters();
+        } else if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT)
+                || keys.getKeysPressed().contains(KeyEvent.VK_RIGHT))
+            clearHighlight();
 
     }
 
@@ -583,7 +593,7 @@ public class TextField
 
                 setMarkedCharacters(highlightStartIndex, highlightEndIndex);
             } else
-                clearMarkedCharacters();
+                clearHighlight();
         }
     }
 
@@ -642,7 +652,7 @@ public class TextField
 
     }
 
-    private void clearMarkedCharacters() {
+    private void clearHighlight() {
         highlightStartX = 0;
         highlightWidth = 0;
         highlightStartIndex = null;
@@ -701,6 +711,14 @@ public class TextField
                 text.substring(0, start) + text.substring(end, text.length()));
 
         caretOffset = text.length() - start;
-        clearMarkedCharacters();
+        clearHighlight();
+    }
+
+    private void insertCharacter() {
+        Character input = keys.pollTypedCharacter();
+
+        if (input != null) {
+            text.insert(text.length() - caretOffset, input);
+        }
     }
 }

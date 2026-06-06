@@ -105,10 +105,10 @@ public class Keys implements KeyListener {
 
         if (!Character.isISOControl(c)) {
             typedCharacters.offer(c);
-        }
 
-        for (KeyNotifier notifier : context.getKeyNotifiers()) {
-            notifier.keyTypedNotification(e);
+            for (KeyNotifier notifier : context.getKeyNotifiers()) {
+                notifier.keyTypedNotification(e);
+            }
         }
     }
 

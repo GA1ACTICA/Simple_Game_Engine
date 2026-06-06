@@ -24,6 +24,7 @@ import java.awt.Shape;
 import java.awt.font.FontRenderContext;
 import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
@@ -165,48 +166,64 @@ public class GraphicsTools {
         Objects.requireNonNull(mask, "mask must not be null");
         Objects.requireNonNull(painter, "painter must not be null");
 
-        int x = (int) mask.getBounds2D().getX();
-        int y = (int) mask.getBounds2D().getY();
-        int width = (int) mask.getBounds2D().getWidth();
-        int height = (int) mask.getBounds2D().getHeight();
+        Rectangle2D bounds = mask.getBounds2D();
+        int x = (int) bounds.getX();
+        int y = (int) bounds.getY();
+        int width = (int) Math.ceil(bounds.getWidth());
+        int height = (int) Math.ceil(bounds.getHeight());
 
-        BufferedImage buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage maskImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        // Get Graphics2D from the new image
-        Graphics2D bufferG2d = buffer.createGraphics();
+        BufferedImage contentImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        bufferG2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        bufferG2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
-                RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-        AffineTransform tx = new AffineTransform(g2d.getTransform());
-        bufferG2d.setTransform(tx);
-        bufferG2d.translate(-x, -y);
-
-        // Create mask alpha
-        bufferG2d.setComposite(AlphaComposite.Src);
-        bufferG2d.setColor(Color.WHITE);
-        bufferG2d.fill(mask);
-
-        // Draw content through mask
-        switch (type) {
-            case MaskType.INSIDE:
-                bufferG2d.setComposite(AlphaComposite.SrcIn);
-                break;
-
-            case MaskType.OUTSIDE:
-                bufferG2d.setComposite(AlphaComposite.SrcOut);
-                break;
-        }
-
+        // Creating the mask
+        Graphics2D mg = maskImage.createGraphics();
         try {
-            painter.paint(bufferG2d);
+            mg.setRenderingHint(
+                    RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+            mg.translate(-x, -y);
+            mg.fill(mask);
         } finally {
-            bufferG2d.dispose();
+            mg.dispose();
         }
 
-        g2d.drawImage(buffer, x, y, width, height, null);
+        // Render Painter content
+        Graphics2D cg = contentImage.createGraphics();
+        try {
+            cg.setRenderingHints(g2d.getRenderingHints());
+
+            AffineTransform tx = g2d.getTransform();
+            cg.setTransform(tx);
+            cg.translate(-x, -y);
+
+            painter.paint(cg);
+        } finally {
+            cg.dispose();
+        }
+
+        // Applying the mask
+        Graphics2D rg = contentImage.createGraphics();
+        try {
+            switch (type) {
+                case INSIDE:
+                    rg.setComposite((AlphaComposite.getInstance(AlphaComposite.DST_IN)));
+                    break;
+
+                case OUTSIDE:
+                    rg.setComposite((AlphaComposite.getInstance(AlphaComposite.DST_OUT)));
+                    break;
+            }
+
+            rg.drawImage(maskImage, 0, 0, null);
+        } finally {
+            rg.dispose();
+        }
+
+        // Draw result to normal graphics context
+        g2d.drawImage(contentImage, x, y, null);
+
     }
 
     /**
