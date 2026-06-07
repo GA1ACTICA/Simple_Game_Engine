@@ -74,7 +74,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         MouseManager.handleHover(context, getPoint());
 
         for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
-            object.movementNotification(x, y, dragging);
+            object.mouseMovementNotification(x, y, dragging);
         }
     }
     // MouseListener
@@ -90,7 +90,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     @Override
     public void mouseClicked(MouseEvent e) {
         for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
-            object.clickNotification(x, y);
+            object.mouseClickNotification(x, y);
         }
     }
 
@@ -133,7 +133,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         setButton(e.getButton(), true);
 
         for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
-            object.pressNotification(e);
+            object.mousePressNotification(e);
         }
     }
 
@@ -150,7 +150,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         setButton(e.getButton(), false);
 
         for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
-            object.releaseNotification(e);
+            object.mouseReleaseNotification(e);
         }
     }
 
@@ -225,7 +225,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         mouseWheelDelta += delta;
 
         for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
-            object.scrollNotification(mouseWheelDelta);
+            object.mouseScrollNotification(mouseWheelDelta);
         }
 
     }

@@ -485,37 +485,45 @@ public class TextField
         if (!focused || !show)
             return;
 
+        System.out.println("Start: " + highlightStartIndex + " End: " + highlightEndIndex);
+        System.out.println(highlightStartIndex != highlightEndIndex);
+
+        // <Control> dependent combinations
         if (keys.getKeysPressed().contains(KeyEvent.VK_CONTROL)) {
 
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-            if (keys.getKeysPressed().contains(KeyEvent.VK_V)
+            if (highlightStartIndex != highlightEndIndex) {
+
+                // Copy
+                if (keys.getKeysPressed().contains(KeyEvent.VK_C)) {
+                    try {
+                        clipboard.setContents(new StringSelection(getMarkedCharacters()), null);
+                    } catch (IllegalStateException exception) {
+                        ErrorManagement.reportError(exception,
+                                "Clipboard may be occupied by another program and could not be accessed.");
+                    }
+
+                    // Paste
+                } else if (keys.getKeysPressed().contains(KeyEvent.VK_X)) {
+                    try {
+                        clipboard.setContents(new StringSelection(getMarkedCharacters()), null);
+                    } catch (IllegalStateException exception) {
+                        ErrorManagement.reportError(exception,
+                                "Clipboard may be occupied by another program and could not be accessed.");
+                    }
+
+                    removeMarkedCharacters();
+                }
+                // Cut
+            } else if (keys.getKeysPressed().contains(KeyEvent.VK_V)
                     && clipboard.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
                 try {
                     paste((String) clipboard.getData(DataFlavor.stringFlavor));
                 } catch (UnsupportedFlavorException | IOException exception) {
                     exception.printStackTrace();
                 }
-
-            } else if (keys.getKeysPressed().contains(KeyEvent.VK_C)) {
-                try {
-                    clipboard.setContents(new StringSelection(getMarkedCharacters()), null);
-                } catch (IllegalStateException exception) {
-                    ErrorManagement.reportError(exception,
-                            "Clipboard may be occupied by another program and could not be accessed.");
-                }
-
-            } else if (keys.getKeysPressed().contains(KeyEvent.VK_X)) {
-                try {
-                    clipboard.setContents(new StringSelection(getMarkedCharacters()), null);
-                } catch (IllegalStateException exception) {
-                    ErrorManagement.reportError(exception,
-                            "Clipboard may be occupied by another program and could not be accessed.");
-                }
-
-                removeMarkedCharacters();
+                return;
             }
-
-            return;
         }
 
         cursorTimer = 0;
@@ -552,6 +560,13 @@ public class TextField
             }
         }
 
+        // Caret manipulation
+        if (keys.getKeysPressed().contains(KeyEvent.VK_HOME))
+            caretOffset = text.length();
+
+        if (keys.getKeysPressed().contains(KeyEvent.VK_END))
+            caretOffset = 0;
+
         if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT) && caretOffset < text.length()) {
             caretOffset++;
         }
@@ -560,23 +575,23 @@ public class TextField
             caretOffset--;
         }
 
+        // Highlighting
         if (keys.getKeysPressed().contains(KeyEvent.VK_SHIFT)) {
             if (highlightStartIndex == null)
                 highlightStartIndex = text.length() - caretOffset;
 
-            if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT) || keys.getKeysPressed().contains(KeyEvent.VK_RIGHT)) {
-                highlightEndIndex = text.length() - caretOffset;
-                setMarkedCharacters(highlightStartIndex, highlightEndIndex);
-            }
+            highlightEndIndex = text.length() - caretOffset;
+            setMarkedCharacters(highlightStartIndex, highlightEndIndex);
 
-        } else if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT)
-                || keys.getKeysPressed().contains(KeyEvent.VK_RIGHT))
+        } else if (keys.getKeysPressed().contains(KeyEvent.VK_LEFT) || keys.getKeysPressed().contains(KeyEvent.VK_RIGHT)
+                || keys.getKeysPressed().contains(KeyEvent.VK_END) || keys.getKeysPressed().contains(KeyEvent.VK_HOME))
+
             clearHighlight();
 
     }
 
     @Override
-    public void pressNotification(MouseEvent e) {
+    public void mousePressNotification(MouseEvent e) {
         if (!contains(e.getX(), e.getY()) || !focused || !show) {
             focused = false;
             return;
@@ -598,7 +613,7 @@ public class TextField
     }
 
     @Override
-    public void movementNotification(int x, int y, boolean dragging) {
+    public void mouseMovementNotification(int x, int y, boolean dragging) {
         if (!focused || !show)
             return;
 
