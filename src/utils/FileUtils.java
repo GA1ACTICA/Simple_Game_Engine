@@ -18,7 +18,7 @@ import java.nio.file.Path;
 
 import javax.swing.ImageIcon;
 
-public class FileTools {
+public class FileUtils extends Utils {
 
     /**
      * Get an image from the specified file path of the type {@code Image}.
@@ -31,7 +31,7 @@ public class FileTools {
      */
     public static Image getImage(Path path) {
         try {
-            return new ImageIcon(FileTools.class.getClassLoader().getResource(path.toString())).getImage();
+            return new ImageIcon(FileUtils.class.getClassLoader().getResource(path.toString())).getImage();
         } catch (Exception e) {
             ErrorManagement.throwError(e, "Failed to load image at %s".formatted(path));
             return null;

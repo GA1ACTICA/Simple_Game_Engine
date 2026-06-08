@@ -11,7 +11,7 @@
 
 package utils;
 
-public class ErrorManagement {
+public class ErrorManagement extends Utils {
 
     /**
      * @param exception
@@ -20,8 +20,8 @@ public class ErrorManagement {
      */
     public static void throwError(Exception exception, String message) {
         System.err.println(
-                '\n' + ConsoleColors.RED + message + ": " + ConsoleColors.YELLOW + exception.getMessage()
-                        + ConsoleColors.RESET + '\n');
+                '\n' + Utils.RED + message + ": " + Utils.YELLOW + exception.getMessage()
+                        + Utils.RESET + '\n');
 
         exception.printStackTrace();
         System.exit(1);
@@ -34,8 +34,8 @@ public class ErrorManagement {
      */
     public static void reportError(Exception exception, String message) {
         System.err.println(
-                '\n' + ConsoleColors.RED + message + ": " + ConsoleColors.YELLOW + exception.getMessage()
-                        + ConsoleColors.RESET + '\n');
+                '\n' + Utils.RED + message + ": " + Utils.YELLOW + exception.getMessage()
+                        + Utils.RESET + '\n');
 
         exception.printStackTrace();
     }

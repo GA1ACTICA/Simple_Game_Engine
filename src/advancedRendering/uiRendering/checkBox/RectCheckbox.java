@@ -32,8 +32,9 @@ import gameEngine.interfaces.Hoverable;
 import gameEngine.interfaces.MenuInterface;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
-import utils.GraphicsTools;
-import utils.GraphicsTools.MaskType;
+import utils.GraphicsUtils;
+import utils.GraphicsUtils.MaskType;
+import utils.Utils;
 
 public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize,
         MenuSetHoverVisual, MenuSetToggleVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
@@ -49,7 +50,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
 
     private Color color = Color.GREEN;
     private Color hoverColor = Color.ORANGE;
-    private Color toggleColorTrue = Color.RED;
+    private Color toggleColor = Color.RED;
     private Color disabledColor = Color.LIGHT_GRAY;
     private Color clickColor = new Color(255, 255, 255, 150);
 
@@ -63,15 +64,15 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     private Runnable onToggleTrueAction;
     private Runnable onToggleFalseAction;
 
-    private boolean enabled = true;
-    private boolean clickEffect = true;
+    private boolean isEnabled = true;
+    private boolean showPress = true;
     private boolean clicked = false;
 
     private boolean toggled = false;
 
     // private Runnable hoverAction; // TODO: look into this
     private boolean isHovered = false;
-    private boolean showHover = false;
+    private boolean showHover = true;
 
     private Mouse mouse;
     private EngineContext context;
@@ -252,8 +253,8 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     @Override
-    public void setToggleColor(Color toggleColorTrue) {
-        this.toggleColorTrue = toggleColorTrue;
+    public void setToggleColor(Color toggleColor) {
+        this.toggleColor = toggleColor;
     }
 
     @Override
@@ -263,6 +264,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
 
     public void setDisabledColor(Color disabledColor) {
         this.disabledColor = disabledColor;
+    }
+
+    public void setClickColor(Color clickColor) {
+        this.clickColor = clickColor;
     }
 
     // —————————— Set images ——————————
@@ -322,10 +327,10 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
      * Enables or disables the visual click effect (color or image change)
      * when the button is pressed.
      *
-     * @param clickEffect true to enable the click effect, false to disable it
+     * @param showPress true to enable the click effect, false to disable it
      */
-    public void setClickEffectEnabled(boolean enabled) {
-        clickEffect = enabled;
+    public void setClickEffectEnabled(boolean isEnabled) {
+        showPress = isEnabled;
     }
 
     /**
@@ -342,13 +347,13 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
      * Set the ability to interact with the checkbox. This also changes the
      * appearances to the disabled state.
      * 
-     * @param enabled true to disable the checkbox, false to enable it
+     * @param isEnabled true to disable the checkbox, false to enable it
      * 
      * @see #setDisabledColor(Color)
      * @see #setDisabledImage(Image)
      */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     /**
@@ -363,7 +368,7 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return isEnabled;
     }
 
     public int getX() {
@@ -471,68 +476,55 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawn inside
-        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), (gRotate) -> {
+        GraphicsUtils.rotateGraphics(g2d, angle, getCenter(), (gRotate) -> {
 
-            if (!enabled) {
-                if (disabledImage == null) {
-                    g2d.setColor(disabledColor);
-                    g2d.fill(baseShape);
-                } else {
-                    g2d.drawImage(disabledImage, 0, 0, width, height, null);
-                }
+            if (showPress && clicked && clickColor != null) {
+                gRotate.setColor(clickColor);
+                gRotate.fill(baseShape);
                 return;
             }
 
-            if (!toggled) {
-                // Draw if the image is not set
-                if (image == null) {
-                    g2d.setColor(color);
-                    g2d.fill(baseShape);
+            Color color;
+            Image image;
 
-                } else {
-                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                        gMask.drawImage(image, x, y, width, height, null);
-                    });
-                }
+            if (!isEnabled) {
+                // Disabled checkbox
+                image = disabledImage;
+                color = disabledColor;
+
+            } else if (isHovered && showHover) {
+                // Hovered checkbox
+                image = hoverImage;
+                color = hoverColor;
+
+            } else if (toggled) {
+                // Toggled checkbox
+                image = toggleImage;
+                color = toggleColor;
 
             } else {
-
-                // Draw if the toggleImage is not set
-                if (image == null) {
-                    g2d.setColor(toggleColorTrue);
-                    g2d.fill(baseShape);
-
-                } else {
-                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                        gMask.drawImage(toggleImage, x, y, width, height, null);
-                    });
-                }
+                // Normal checkbox
+                image = this.image;
+                color = this.color;
             }
 
-            if (isHovered && showHover) {
-
-                // Draw if the hoverImage is not set and inside is true
-                if (hoverImage == null) {
-                    g2d.setColor(hoverColor);
-                    g2d.fill(baseShape);
-
-                } else {
-                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                        gMask.drawImage(hoverImage, x, y, width, height, null);
-                    });
-                }
+            // Draw base state
+            if (image == null) {
+                gRotate.setColor(color);
+                gRotate.fill(baseShape);
+            } else {
+                GraphicsUtils.createMask(gRotate, baseShape, MaskType.INSIDE,
+                        gMask -> gMask.drawImage(image, x, y, width, height, null));
             }
 
-            if (clickEffect && clicked) {
-                // Draws this if checkbox is clicked
+            // Draw pressed overlay
+            if (showPress && clicked) {
                 if (clickImage == null) {
-                    g2d.setColor(clickColor);
-                    g2d.fill(baseShape);
-
+                    gRotate.setColor(Utils.mergeRGBColor(hoverColor, Utils.rgba(255, 255, 255, 0.5)));
+                    gRotate.fill(baseShape);
                 } else {
-                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                        gMask.drawImage(clickImage, x, y, width, height, null);
-                    });
+                    GraphicsUtils.createMask(gRotate, baseShape, MaskType.INSIDE,
+                            gMask -> gMask.drawImage(clickImage, x, y, width, height, null));
                 }
             }
         });

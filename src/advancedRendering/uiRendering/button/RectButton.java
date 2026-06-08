@@ -27,8 +27,9 @@ import gameEngine.engineModules.cursor.CursorType;
 import gameEngine.interfaces.*;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
-import utils.GraphicsTools;
-import utils.GraphicsTools.MaskType;
+import utils.GraphicsUtils;
+import utils.Utils;
+import utils.GraphicsUtils.MaskType;
 
 public class RectButton implements
         UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
@@ -45,7 +46,7 @@ public class RectButton implements
 
     private Color color = Color.GREEN;
     private Color hoverColor = Color.ORANGE;
-    private Color clickColor = new Color(255, 255, 255, 150);
+    private Color clickColor; // Used to override the normal white overlay when clicked
     private Color disabledColor = Color.LIGHT_GRAY;
 
     private Image image;
@@ -53,9 +54,9 @@ public class RectButton implements
     private Image clickImage;
     private Image disabledImage;
 
-    private boolean enabled = true;
+    private boolean isEnabled = true;
     private boolean clicked = false;
-    private boolean clickEffect = true;
+    private boolean showPress = true;
 
     private Runnable clickAction;
 
@@ -312,8 +313,8 @@ public class RectButton implements
      *
      * @param clickEffect true to enable the click effect, false to disable it
      */
-    public void setClickEffectEnabled(boolean enabled) {
-        clickEffect = enabled;
+    public void setClickEffectEnabled(boolean clickEffect) {
+        showPress = clickEffect;
     }
 
     /**
@@ -326,13 +327,13 @@ public class RectButton implements
         showHover = hoverEffect;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return isEnabled;
     }
 
     public int getX() {
@@ -382,56 +383,46 @@ public class RectButton implements
         Graphics2D g2d = (Graphics2D) g;
 
         // Rotate everything drawn inside
-        GraphicsTools.rotateGraphics(g2d, angle, getCenter(), (gRotate) -> {
+        GraphicsUtils.rotateGraphics(g2d, angle, getCenter(), gRotate -> {
 
-            if (!enabled) {
-                if (disabledImage == null) {
-                    gRotate.setColor(disabledColor);
-                    gRotate.fill(baseShape);
-                } else {
-                    gRotate.drawImage(disabledImage, 0, 0, width, height, null);
-                }
+            // Pressed state completely overrides everything
+            if (showPress && clicked && clickColor != null) {
+                gRotate.setColor(clickColor);
+                gRotate.fill(baseShape);
                 return;
             }
 
-            if (isHovered && showHover) {
+            Image image;
+            Color color;
 
-                // Draw if the button is hovered
-                if (hoverImage == null) {
-                    gRotate.setColor(hoverColor);
-                    gRotate.fill(baseShape);
-
-                } else {
-                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                        gMask.drawImage(hoverImage, x, y, width, height, null);
-                    });
-                }
-
+            if (!isEnabled) {
+                image = disabledImage;
+                color = disabledColor;
+            } else if (isHovered && showHover) {
+                image = hoverImage;
+                color = hoverColor;
             } else {
-
-                // Draws this if button is not hovered
-                if (image == null) {
-                    gRotate.setColor(color);
-                    gRotate.fill(baseShape);
-
-                } else {
-                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                        gMask.drawImage(image, x, y, width, height, null);
-                    });
-                }
+                image = this.image;
+                color = this.color;
             }
 
-            if (clickEffect && clicked) {
-                // Draws this if button is clicked
+            // Draw base state
+            if (image == null) {
+                gRotate.setColor(color);
+                gRotate.fill(baseShape);
+            } else {
+                GraphicsUtils.createMask(gRotate, baseShape, MaskType.INSIDE,
+                        gMask -> gMask.drawImage(image, x, y, width, height, null));
+            }
+
+            // Draw pressed overlay
+            if (showPress && clicked) {
                 if (clickImage == null) {
-                    gRotate.setColor(clickColor);
+                    gRotate.setColor(Utils.mergeRGBColor(hoverColor, Utils.rgba(255, 255, 255, 0.5)));
                     gRotate.fill(baseShape);
-
                 } else {
-
-                    GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE, (gMask) -> {
-                        gMask.drawImage(clickImage, x, y, width, height, null);
-                    });
+                    GraphicsUtils.createMask(gRotate, baseShape, MaskType.INSIDE,
+                            gMask -> gMask.drawImage(clickImage, x, y, width, height, null));
                 }
             }
         });

@@ -16,7 +16,7 @@ import java.util.Objects;
 
 import gameEngine.records.FixResult;
 
-public class MathTools {
+public class MathUtils extends Utils {
 
     /**
      * 

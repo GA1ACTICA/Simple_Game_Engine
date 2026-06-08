@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import advancedRendering.uiRendering.button.RectButton;
 import gameEngine.engineModules.ClassFactory;
-import utils.MathTools;
+import utils.MathUtils;
 import gameEngine.engineModules.EngineContext;
 import gameEngine.engineModules.EnginePanel;
 import gameEngine.engineModules.Mouse;
@@ -105,7 +105,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
     }
 
     public double getLength() {
-        return MathTools.pythagoras(pointOne, pointTwo);
+        return MathUtils.pythagoras(pointOne, pointTwo);
     }
 
     /**
@@ -345,7 +345,7 @@ public class Slider implements UIDrawable, Updatable, MenuInterface {
         // Only run when holding / dragging
         if (handle.isPressed()) {
 
-            FixResult sliderResult = MathTools.fixToLine(mouse.getPoint(), pointOne, pointTwo);
+            FixResult sliderResult = MathUtils.fixToLine(mouse.getPoint(), pointOne, pointTwo);
 
             sliderPercentage = sliderResult.progress();
             handle.setCenter(sliderResult.point());

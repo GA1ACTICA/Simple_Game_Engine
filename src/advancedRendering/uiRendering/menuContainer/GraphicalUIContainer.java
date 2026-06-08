@@ -18,7 +18,7 @@ import gameEngine.engineModules.EngineContext;
 import gameEngine.interfaces.Painter;
 import gameEngine.interfaces.drawables.UIDrawable;
 
-public class GameMenu extends UIContainer
+public class GraphicalUIContainer extends UIContainer
         implements UIDrawable {
 
     private boolean show;
@@ -29,7 +29,6 @@ public class GameMenu extends UIContainer
     private int y = 100;
     private int width = 200;
     private int height = 200;
-
     private Painter customDrawAction = (g) -> {
         g.setColor(new Color(10, 10, 10, 125));
         g.fillRect(x, y, width, height);
@@ -56,7 +55,7 @@ public class GameMenu extends UIContainer
      * @param context the engine context containing objects used for rendering,
      *                updating, and input handling
      */
-    public GameMenu(EngineContext context) {
+    public GraphicalUIContainer(EngineContext context) {
         ClassFactory.create(this, context, zIndex);
     };
 

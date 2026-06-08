@@ -39,8 +39,8 @@ import gameEngine.engineModules.cursor.*;
 import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.drawables.UIDrawable;
 import utils.ErrorManagement;
-import utils.GraphicsTools;
-import utils.GraphicsTools.MaskType;
+import utils.GraphicsUtils;
+import utils.GraphicsUtils.MaskType;
 
 public class TextField
         implements MouseNotifier, KeyNotifier, Clickable, Hoverable, UIDrawable, Updatable, MenuInterface, MenuSetSize,
@@ -60,9 +60,9 @@ public class TextField
     private RectangularShape baseShape;
     private Shape rotatedShape;
     // Colors
-    private Color color = GraphicsTools.rgb(155, 155, 155);
-    private Color hoverColor = GraphicsTools.rgb(180, 180, 180);
-    private Color pressedColor = GraphicsTools.rgb(196, 196, 196);
+    private Color color = GraphicsUtils.rgb(187, 187, 187);
+    private Color hoverColor = GraphicsUtils.rgb(209, 209, 209);
+    private Color pressedColor = GraphicsUtils.rgb(230, 230, 230);
 
     // Images
     private Image image;
@@ -80,9 +80,12 @@ public class TextField
 
     // Behavioral variables
     private boolean isHovered;
-    private boolean focused;
-    private boolean enabled;
-    private boolean pressed;
+    private boolean isFocused;
+    private boolean isEnabled;
+    private boolean isPressed;
+
+    private boolean showPress = true;
+    private boolean showHover = true;
 
     private int caretOffset;
     private int highlightStartX = 0;
@@ -179,7 +182,7 @@ public class TextField
         this.rotatedShape = baseShape;
         updateRotatedShape();
 
-        fieldFont = GraphicsTools.matchFontToHeight(fieldFont, "ÅÄÖgjpqÉÁÂÂÂÂ",
+        fieldFont = GraphicsUtils.matchFontToHeight(fieldFont, "ÅÄÖgjpqÉÁÂÂÂÂ",
                 height - 2);
     }
 
@@ -288,10 +291,31 @@ public class TextField
     }
 
     public void setFont(Font font) {
-        fieldFont = GraphicsTools.matchFontToHeight(fieldFont, "ÅÄÖgjpqÉÁÂÂÂÂ",
+        fieldFont = GraphicsUtils.matchFontToHeight(fieldFont, "ÅÄÖgjpqÉÁÂÂÂÂ",
                 height - 2);
     }
 
+    /**
+     * Enables or disables the visual click effect (color or image change)
+     * when the button is pressed.
+     *
+     * @param showPress true to enable the click effect, false to disable it
+     */
+    public void setClickEffectEnabled(boolean isEnabled) {
+        showPress = isEnabled;
+    }
+
+    /**
+     * Enables or disables the visual hover effect (color or image change)
+     * when the button is hovered.
+     *
+     * @param hoverEffect true to enable the hover effect, false to disable it
+     */
+    public void setHoverEffectEnabled(boolean hoverEffect) {
+        showHover = hoverEffect;
+    }
+
+    // Get methods
     public int getX() {
         return x;
     }
@@ -316,8 +340,34 @@ public class TextField
         return angle;
     }
 
+    // Get color
     public Color getColor() {
         return color;
+    }
+
+    public Color getHoverColor() {
+        return hoverColor;
+    }
+
+    public Color getPressedColor() {
+        return pressedColor;
+    }
+
+    // Get image
+    public Image getImage() {
+        return image;
+    }
+
+    public Image getHoverImage() {
+        return hoverImage;
+    }
+
+    public Image getPressedImage() {
+        return pressedImage;
+    }
+
+    public StringBuffer getText() {
+        return text;
     }
 
     @Override
@@ -329,44 +379,43 @@ public class TextField
 
         Graphics2D g2d = (Graphics2D) g;
 
-        GraphicsTools.rotateGraphics(g2d, angle, getMiddlePoint(), (gRotate) -> {
+        GraphicsUtils.rotateGraphics(g2d, angle, getMiddlePoint(), (gRotate) -> {
+            Image image;
+            Color color;
 
-            if (!isHovered) {
-                // Background
-                if (image == null) {
-                    gRotate.setColor(color);
-                    gRotate.fillRect(x, y, width, height);
-                } else
-                    gRotate.drawImage(image, x, y, width, height, null);
-            } else if (!pressed) {
-                // Background when hovered
-                if (hoverImage == null) {
-                    gRotate.setColor(hoverColor);
-                    gRotate.fillRect(x, y, width, height);
-                } else
-                    gRotate.drawImage(hoverImage, x, y, width, height, null);
+            if (isPressed && showPress) {
+                color = pressedColor;
+                image = pressedImage;
+
+            } else if (isHovered && showHover) {
+                color = hoverColor;
+                image = hoverImage;
+
             } else {
-                // Background when hovered and pressed
-                if (pressedImage == null) {
-                    gRotate.setColor(pressedColor);
-                    gRotate.fillRect(x, y, width, height);
-                } else
-                    gRotate.drawImage(pressedImage, x, y, width, height, null);
+                color = this.color;
+                image = this.image;
             }
-            GraphicsTools.createMask(gRotate, baseShape, MaskType.INSIDE,
+
+            if (image == null) {
+                gRotate.setColor(color);
+                gRotate.fillRect(x, y, width, height);
+            } else
+                gRotate.drawImage(image, x, y, width, height, null);
+
+            GraphicsUtils.createMask(gRotate, baseShape, MaskType.INSIDE,
                     (gMask) -> {
 
                         Composite old = gMask.getComposite();
                         gMask.setComposite(AlphaComposite.SrcOver);
 
-                        if (focused)
-                            gMask.setColor(GraphicsTools.rgba(0, 174, 255, 0.16));
+                        if (isFocused)
+                            gMask.setColor(GraphicsUtils.rgba(0, 174, 255, 0.16));
                         else
-                            gMask.setColor(GraphicsTools.rgba(0, 0, 0, 0.16));
+                            gMask.setColor(GraphicsUtils.rgba(0, 0, 0, 0.16));
 
                         gMask.fillRect(highlightStartX, y, highlightWidth, height);
 
-                        if (cursorVisible && focused) {
+                        if (cursorVisible && isFocused) {
                             gMask.setColor(Color.BLACK);
                             gMask.fillRect(
                                     x + 10 + fontMetrics.stringWidth(text.substring(0, text.length() - caretOffset)),
@@ -445,30 +494,30 @@ public class TextField
 
     @Override
     public void onPressed() {
-        focused = true;
-        pressed = true;
+        isFocused = true;
+        isPressed = true;
     }
 
     @Override
     public void onReleased() {
-        pressed = false;
+        isPressed = false;
     }
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return isEnabled;
     }
 
     @Override
     public void notifyPress(Clickable press) {
         if (press != this) {
-            focused = false;
+            isFocused = false;
         }
     }
 
     @Override
     public void keyTypedNotification(KeyEvent e) {
-        if (!focused || !show)
+        if (!isFocused || !show)
             return;
 
         if (highlightStartIndex == null)
@@ -482,7 +531,7 @@ public class TextField
 
     @Override
     public void keyPressedNotification(KeyEvent e) {
-        if (!focused || !show)
+        if (!isFocused || !show)
             return;
 
         System.out.println("Start: " + highlightStartIndex + " End: " + highlightEndIndex);
@@ -592,8 +641,8 @@ public class TextField
 
     @Override
     public void mousePressNotification(MouseEvent e) {
-        if (!contains(e.getX(), e.getY()) || !focused || !show) {
-            focused = false;
+        if (!contains(e.getX(), e.getY()) || !isFocused || !show) {
+            isFocused = false;
             return;
         } else {
             cursorTimer = 0;
@@ -614,7 +663,7 @@ public class TextField
 
     @Override
     public void mouseMovementNotification(int x, int y, boolean dragging) {
-        if (!focused || !show)
+        if (!isFocused || !show)
             return;
 
         if (dragging) {

@@ -14,11 +14,11 @@ package gameEngine.records;
 import java.awt.Point;
 import java.util.Objects;
 
-import utils.MathTools;
+import utils.MathUtils;
 
 /**
  * The {@code FixResult} record encapsulates the result of the
- * {@link MathTools#fixToLine(Point, Point, Point)
+ * {@link MathUtils#fixToLine(Point, Point, Point)
  * fixToLine(Point, Point, Point)}
  * method.
  * <p>
