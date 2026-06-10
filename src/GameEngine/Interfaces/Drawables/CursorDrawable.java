@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces.Drawables;
+package gameEngine.interfaces.drawables;
 
 import java.awt.Graphics;
 

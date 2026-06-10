@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package Utils.JsonUtils;
+package utils.jsonUtils;
 
 import java.awt.Color;
 import java.io.FileReader;
@@ -18,8 +18,8 @@ import java.io.FileWriter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import Utils.ErrorManagement;
-import Utils.JsonUtils.Adapters.ColorAdapter;
+import utils.ErrorManagement;
+import utils.jsonUtils.adapters.ColorAdapter;
 
 public abstract class JsonBacked<T> {
 
@@ -72,7 +72,7 @@ public abstract class JsonBacked<T> {
             successfulExportLog(object, path);
 
         } catch (Exception e) {
-            ErrorManagement.reportError(e, "Error exporting JSON file ('%s')".formatted(path));
+            ErrorManagement.throwError(e, "Error exporting JSON file ('%s')".formatted(path));
         }
     }
 
@@ -93,7 +93,7 @@ public abstract class JsonBacked<T> {
             successfulImportLog(data, path);
 
         } catch (Exception e) {
-            ErrorManagement.reportError(e, "Error importing JSON file ('%s')".formatted(path));
+            ErrorManagement.throwError(e, "Error importing JSON file ('%s')".formatted(path));
         }
     }
 }

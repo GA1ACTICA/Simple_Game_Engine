@@ -9,16 +9,34 @@
  * Copyright © 2026 Galactica
  */
 
-package Utils;
+package utils;
 
-public class ErrorManagement {
+public class ErrorManagement extends Utils {
 
     /**
      * @param exception
      * @param message
+     * 
+     */
+    public static void throwError(Exception exception, String message) {
+        System.err.println(
+                '\n' + Utils.RED + message + ": " + Utils.YELLOW + exception.getMessage()
+                        + Utils.RESET + '\n');
+
+        exception.printStackTrace();
+        System.exit(1);
+    }
+
+    /**
+     * @param exception
+     * @param message
+     * 
      */
     public static void reportError(Exception exception, String message) {
-        System.err.println('\n' + message + ": " + exception.getMessage() + '\n');
+        System.err.println(
+                '\n' + Utils.RED + message + ": " + Utils.YELLOW + exception.getMessage()
+                        + Utils.RESET + '\n');
+
         exception.printStackTrace();
     }
 

@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 public interface Clickable {
 
@@ -63,5 +63,41 @@ public interface Clickable {
     void onReleased();
 
     boolean isEnabled();
+
+    /**
+     * Called whenever a click is detected on another {@link Clickable}.
+     * <p>
+     * This can be used as a notifier when behavior should change after
+     * clicking somewhere other than the current {@code Clickable}.
+     * <p>
+     * The provided {@code Clickable} represents the object that was clicked,
+     * or {@code null} if the click did not target any {@code Clickable}.
+     * <p>
+     * This method is invoked by the input handling system and should not
+     * be called directly by user code.
+     *
+     * @param click the {@code Clickable} that was clicked, or {@code null}
+     *              if no {@code Clickable} was pressed
+     */
+    default void notifyClick(Clickable click) {
+    };
+
+    /**
+     * Called whenever a press is detected on another {@link Clickable}.
+     * <p>
+     * This can be used as a notifier when behavior should change after
+     * pressing somewhere other than the current {@code Clickable}.
+     * <p>
+     * The provided {@code Clickable} represents the object that was pressed,
+     * or {@code null} if the press did not target any {@code Clickable}.
+     * <p>
+     * This method is invoked by the input handling system and should not
+     * be called directly by user code.
+     *
+     * @param press the {@code Clickable} that was pressed, or {@code null}
+     *              if no {@code Clickable} was pressed
+     */
+    default void notifyPress(Clickable press) {
+    };
 
 }

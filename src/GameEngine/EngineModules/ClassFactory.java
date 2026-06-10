@@ -9,15 +9,19 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.util.List;
 
-import GameEngine.Interfaces.*;
-import GameEngine.Interfaces.Drawables.CursorDrawable;
-import GameEngine.Interfaces.Drawables.Drawable;
-import GameEngine.Interfaces.Drawables.UIDrawable;
-import Utils.ErrorManagement;
+import gameEngine.interfaces.Hoverable;
+import gameEngine.interfaces.KeyNotifier;
+import gameEngine.interfaces.MouseNotifier;
+import gameEngine.interfaces.Updatable;
+import gameEngine.interfaces.ZIndexable;
+import gameEngine.interfaces.drawables.CursorDrawable;
+import gameEngine.interfaces.drawables.Drawable;
+import gameEngine.interfaces.drawables.UIDrawable;
+import utils.ErrorManagement;
 
 public class ClassFactory {
 
@@ -48,7 +52,7 @@ public class ClassFactory {
      * <b>Tip:</b> If this method is used outside the object's class, it is
      * generally
      * recommended to use the object's own z-index. This can be retrieved via
-     * {@link GameEngine.Interfaces.ZIndexable#getZIndex()}.
+     * {@link gameEngine.Interfaces.ZIndexable#getZIndex()}.
      *
      * <pre>{@code
      * Entity player = new Entity(...);
@@ -80,9 +84,9 @@ public class ClassFactory {
             List<Drawable> list;
 
             if (object instanceof UIDrawable) {
-                list = context.getUiDrawables();
+                list = context.getBackBufferUIDrawable();
             } else {
-                list = context.getWorldDrawables();
+                list = context.getBackBufferDrawable();
             }
 
             int index = 0;
@@ -96,15 +100,23 @@ public class ClassFactory {
         }
 
         if (object instanceof Updatable updatable) {
-            context.getUpdatables().add(updatable);
+            context.getBackBufferUpdatables().add(updatable);
         }
 
         if (object instanceof CursorDrawable cursorDrawable) {
-            context.getCursorDrawables().add(cursorDrawable);
+            context.getBackBufferCursorDrawable().add(cursorDrawable);
+        }
+
+        if (object instanceof KeyNotifier keyNotifier) {
+            context.getBackBufferKeyNotifiers().add(keyNotifier);
+        }
+
+        if (object instanceof MouseNotifier mouseNotifier) {
+            context.getBackBufferMouseNotifiers().add(mouseNotifier);
         }
 
         if (object instanceof Hoverable hoverable) {
-            List<Hoverable> list = context.getHoverables();
+            List<Hoverable> list = context.getBackBufferHoverables();
 
             // Find the appropriate index for insertion (Descending order)
             int index = 0;
@@ -131,7 +143,7 @@ public class ClassFactory {
      * @param zIndex  the new z-index assigned to the object
      *
      * @throws IllegalArgumentException if {@code object} does not implement
-     *                                  {@link GameEngine.Interfaces.ZIndexable
+     *                                  {@link gameEngine.Interfaces.ZIndexable
      *                                  ZIndexable}
      */
     public static void updatePriority(Object object, EngineContext context, int zIndex)
@@ -140,7 +152,7 @@ public class ClassFactory {
             IllegalArgumentException e = new IllegalArgumentException(
                     object.getClass().getSimpleName() + " must implement ZIndexable");
 
-            ErrorManagement.reportError(e, "Invalid object passed to getPriority");
+            ErrorManagement.throwError(e, "Invalid object passed to getPriority");
             throw e;
         }
 
@@ -149,9 +161,9 @@ public class ClassFactory {
             List<Drawable> list;
 
             if (object instanceof UIDrawable) {
-                list = context.getUiDrawables();
+                list = context.getBackBufferUIDrawable();
             } else {
-                list = context.getWorldDrawables();
+                list = context.getBackBufferDrawable();
             }
 
             // Remove old entry
@@ -171,7 +183,7 @@ public class ClassFactory {
 
             List<Hoverable> list;
 
-            list = context.getHoverables();
+            list = context.getBackBufferHoverables();
 
             // Remove old entry
             list.removeIf(entry -> entry == hoverable);
@@ -201,20 +213,4 @@ public class ClassFactory {
             list.remove(object);
         }
     }
-
-    /**
-     * Removes an object from a specific context list, making it ineligible to
-     * receive engine calls such as updates or drawing.
-     * <p>
-     * The available lists can be accessed using the {@code get} methods in
-     * {@link GameEngine.EngineModules.EngineContext EngineContext}.
-     *
-     * @param object the object to remove from the list
-     * 
-     * @param list   the list from which the object is removed
-     */
-    public static void remove(Object object, List<?> list) {
-        list.remove(object);
-    }
-
 }

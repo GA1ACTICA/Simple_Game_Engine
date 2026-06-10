@@ -9,24 +9,29 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
 
-import Game.Configs.GameState.GameState;
+import gameEngine.engineState.EngineState;
+import gameEngine.interfaces.KeyNotifier;
 
 public class Keys implements KeyListener {
 
     private Set<Integer> keysPressed = new HashSet<>();
-    private Set<Character> keysTyped = new HashSet<>();
+    private final Queue<Character> typedCharacters = new LinkedList<>();
 
-    private final GameState state;
+    private final EngineState state;
+    private final EngineContext context;
 
-    public Keys(GameState state) {
+    public Keys(EngineState state, EngineContext context) {
         this.state = state;
+        this.context = context;
     }
 
     /**
@@ -39,17 +44,23 @@ public class Keys implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
-        /*
-         * This is necessary since keyPressed is repeatedly called when a button is
-         * being held
-         */
-        if (!keysPressed.contains(keyCode)) {
 
-            if (state.data().debugVerbose)
-                System.out.println("Key: %s %s was pressed".formatted(e.getKeyChar(), keyCode));
+        keysPressed.add(keyCode);
 
-            keysPressed.add(keyCode);
+        for (KeyNotifier notifier : context.getKeyNotifiers()) {
+            notifier.keyPressedNotification(e);
         }
+
+        if (!state.data().debugVerbose)
+            return;
+
+        if (Character.isISOControl(e.getKeyChar()))
+            System.out.println("ISO Control key: %s was pressed".formatted(keyCode));
+
+        if (!Character.isISOControl(e.getKeyChar()))
+            System.out.println("Key: %s %s was pressed".formatted(e.getKeyChar(),
+                    keyCode));
+
     }
 
     /**
@@ -61,12 +72,23 @@ public class Keys implements KeyListener {
      */
     @Override
     public void keyReleased(KeyEvent e) {
+        int keyCode = e.getKeyCode();
 
-        if (state.data().debugVerbose && keysPressed.contains(e.getKeyCode()))
-            System.out.println("Key: %s %s was released".formatted(e.getKeyChar(), e.getKeyCode()));
+        keysPressed.remove(keyCode);
 
-        keysPressed.remove(e.getKeyCode());
-        keysTyped.remove(e.getKeyChar());
+        for (KeyNotifier notifier : context.getKeyNotifiers()) {
+            notifier.keyReleasedNotification(e);
+        }
+
+        if (!state.data().debugVerbose)
+            return;
+
+        if (Character.isISOControl(e.getKeyChar()))
+            System.out.println("ISO Control key: %s was pressed".formatted(keyCode));
+
+        if (!Character.isISOControl(e.getKeyChar()))
+            System.out.println("Key: %s %s was pressed".formatted(e.getKeyChar(),
+                    keyCode));
     }
 
     /**
@@ -78,7 +100,16 @@ public class Keys implements KeyListener {
      */
     @Override
     public void keyTyped(KeyEvent e) {
-        keysTyped.add(e.getKeyChar());
+
+        char c = e.getKeyChar();
+
+        if (!Character.isISOControl(c)) {
+            typedCharacters.offer(c);
+
+            for (KeyNotifier notifier : context.getKeyNotifiers()) {
+                notifier.keyTypedNotification(e);
+            }
+        }
     }
 
     /**
@@ -94,14 +125,18 @@ public class Keys implements KeyListener {
     }
 
     /**
-     * Returns a set of characters representing all currently pressed keys.
-     * Characters are case sensitive and will be capitalized if applicable.
-     * Non-Unicode characters are ignored.
+     * Returns the first character in the queue of pressed keys. Characters are case
+     * sensitive and will be capitalized if applicable. Non-Unicode characters are
+     * ignored.
+     * <p>
+     * <b>Note:</b>
+     * Control characters such as backspace, delete, escape, tab, enter, and
+     * modifier keys are filtered out and will not trigger character insertion
+     * behavior.
      * 
-     * @return {@code Set<Character>} a Set of Characters for the currently pressed
-     *         keys
+     * @return The first character in the queue of pressed keys
      */
-    public Set<Character> getKeysTyped() {
-        return keysTyped;
+    public Character pollTypedCharacter() {
+        return typedCharacters.poll();
     }
 }

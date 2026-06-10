@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 /**
  * Represents an object that participates in the game loop and updates
@@ -29,5 +29,5 @@ public interface Updatable {
      * This method is typically called once per frame by the game loop.
      * </p>
      */
-    void update();
+    void update(float deltaTime);
 }

@@ -9,10 +9,11 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.Interfaces;
+package gameEngine.interfaces;
 
 import java.awt.Graphics2D;
-import AdvancedRendering.uiRendering.MenuContainer.GameMenu;
+
+import uiElements.menuContainer.GraphicalUIContainer;
 
 /**
  * Functional interface representing a custom drawing action.
@@ -24,21 +25,17 @@ import AdvancedRendering.uiRendering.MenuContainer.GameMenu;
  * arbitrary drawing operations using it.
  *
  * <p>
- * Example usage from {@link GameMenu}:
+ * Example usage from {@link GraphicalUIContainer}:
  * </p>
  *
  * <pre>{@code
  * private Painter customDrawAction = (g) -> {
  *     g.setColor(new Color(10, 10, 10, 125));
  *     g.fillRect(x, y, width, height);
- *
+ * 
  *     g.setColor(Color.BLACK);
  *     g.setFont(new Font("SansSerif", Font.PLAIN, 25));
- *     AdvancedGraphics.centerAlignedString(
- *             g,
- *             x + width / 2,
- *             (int) (y + height * 0.2),
- *             "This is a menu");
+ *     g.drawString("This is a menu", x + (int) (width / 2), y + (int) (height / 2));
  * };
  *
  * public void draw(Graphics g) {

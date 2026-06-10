@@ -9,24 +9,20 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.Point;
 
-import GameEngine.Interfaces.Clickable;
-import GameEngine.Interfaces.Hoverable;
+import gameEngine.interfaces.Clickable;
+import gameEngine.interfaces.Hoverable;
 
 public class MouseManager {
 
-    private static Hoverable lastHovered = null;
-    private static Hoverable topMost = null;
-    private static Clickable currentTopMost = null;
+    static Hoverable lastHovered = null;
+    static Hoverable topMost = null;
+    static Clickable currentTopMost = null;
 
-    /**
-     * @param context
-     * @param mousePoint
-     */
-    public static void handlePriority(EngineContext context, Point mousePoint) {
+    static void handlePriority(EngineContext context, Point mousePoint) {
 
         // Find the topmost hoverable under the mouse
         for (Hoverable hoverable : context.getHoverables()) {
@@ -43,7 +39,7 @@ public class MouseManager {
 
     }
 
-    public static void handleClick(EngineContext context, Point mousePoint, boolean mouseState) {
+    static void handleClick(EngineContext context, Point mousePoint, boolean mouseState) {
 
         // mouse DOWN
         if (mouseState) {
@@ -51,6 +47,14 @@ public class MouseManager {
             if (currentTopMost == null && topMost instanceof Clickable clickable) {
                 currentTopMost = clickable;
                 clickable.onPressed();
+            }
+
+            for (Hoverable hoverable : context.getHoverables()) {
+                if (!hoverable.isVisible())
+                    continue;
+                if (hoverable instanceof Clickable clickable)
+                    clickable.notifyPress((Clickable) topMost);
+
             }
 
             // mouse UP
@@ -65,11 +69,19 @@ public class MouseManager {
                 currentTopMost.onReleased();
                 currentTopMost = null;
             }
+
+            for (Hoverable hoverable : context.getHoverables()) {
+                if (!hoverable.isVisible())
+                    continue;
+                if (hoverable instanceof Clickable clickable)
+                    clickable.notifyClick((Clickable) topMost);
+
+            }
         }
+
     }
 
-    public static void handleHover(EngineContext context, Point mousePoint) {
-        Hoverable currentHovered = null;
+    static void handleHover(EngineContext context, Point mousePoint) {
 
         // If hover target changed
         if (lastHovered != topMost) {

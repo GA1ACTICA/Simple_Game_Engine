@@ -19,12 +19,7 @@
 
 #### (This README will also become more detailed on how to use it when I come closer to what I would consider a "release")
 
-<<<<<<< HEAD
-
-### Javadocs
-=======
 ### Javadoc
->>>>>>> dev
 
 #### Current progress:
 
@@ -64,31 +59,28 @@ GameEngine
 - [x] EngineContext.java
 - [x] Keys.java
 - [x] Mouse.java
-- [ ] MouseManager.java
+
+Cursor
+
+- [x] CursorType.java
+- [x] CursorManager.java
 
 Interfaces
 
-<<<<<<< HEAD
-- [ ] Drawable.java and UIDrawable.java
-- [ ] CursorDrawable.java
-- [x] Clickable.java
-- [ ] Hoverable.java
-- [ ] InterfacePainter.java
-=======
 - [x] Drawable.java and UIDrawable.java
 - [x] CursorDrawable.java
 - [x] Clickable.java
 - [x] Hoverable.java
 - [x] Painter.java
->>>>>>> dev
 - [x] MenuInterface.java
-- [ ] Updatable.java
-- [ ] ZIndexable.java
+- [x] Updatable.java
+- [x] ZIndexable.java
+- [x] KeyNotifier.java
+- [x] MouseNotifier.java
 
 Records
 
-- [x] CursorInformation.java
-- [ ] FixResult.java
+- [x] FixResult.java
 
 Json
 
@@ -97,7 +89,7 @@ Json
 Utils
 
 - [ ] ErrorManagement.java
-- [ ] FileTools.java
+- [x] FileTools.java
 - [ ] GraphicsTools.java
 - [ ] MathTools.java
 

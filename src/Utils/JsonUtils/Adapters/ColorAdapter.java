@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package Utils.JsonUtils.Adapters;
+package utils.jsonUtils.adapters;
 
 import java.io.IOException;
 

@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.Point;
 import java.awt.event.*;
@@ -17,9 +17,10 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
-import Game.Configs.GameState.GameState;
-import GameEngine.Interfaces.Updatable;
-import Utils.ErrorManagement;
+import gameEngine.engineState.EngineState;
+import gameEngine.interfaces.MouseNotifier;
+import gameEngine.interfaces.Updatable;
+import utils.ErrorManagement;
 
 public class Mouse implements MouseMotionListener, MouseListener, MouseWheelListener, Updatable {
 
@@ -37,38 +38,29 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     private float mouseWheelDelta;
 
-    private GameState state;
+    private EngineState state;
     private EngineContext context;
 
     public boolean moved;
 
-    public Mouse(GameState state, EngineContext context, EnginePanel panel) {
+    public Mouse(EngineState state, EngineContext context, EnginePanel panel) {
         ClassFactory.create(this, context);
         this.context = context;
         this.state = state;
     }
 
-    /**
-     * @param arg0
-     */
     // MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent arg0) {
-        updateMouseMovement(arg0);
+        updateMouseMovement(arg0, true);
     }
 
-    /**
-     * @param arg0
-     */
     @Override
     public void mouseMoved(MouseEvent arg0) {
-        updateMouseMovement(arg0);
+        updateMouseMovement(arg0, false);
     }
 
-    /**
-     * @param arg0
-     */
-    private void updateMouseMovement(MouseEvent arg0) {
+    private void updateMouseMovement(MouseEvent arg0, boolean dragging) {
         x = arg0.getX();
         y = arg0.getY();
 
@@ -80,6 +72,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
         MouseManager.handlePriority(context, getPoint());
         MouseManager.handleHover(context, getPoint());
+
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.mouseMovementNotification(x, y, dragging);
+        }
     }
     // MouseListener
 
@@ -93,7 +89,9 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-        // unused
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.mouseClickNotification(x, y);
+        }
     }
 
     /**
@@ -133,6 +131,10 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     @Override
     public void mousePressed(MouseEvent e) {
         setButton(e.getButton(), true);
+
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.mousePressNotification(e);
+        }
     }
 
     /**
@@ -146,12 +148,12 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
     @Override
     public void mouseReleased(MouseEvent e) {
         setButton(e.getButton(), false);
+
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.mouseReleaseNotification(e);
+        }
     }
 
-    /**
-     * @param button
-     * @param down
-     */
     private void setButton(int button, boolean down) {
         switch (button) {
             case MouseEvent.BUTTON1:
@@ -172,10 +174,6 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         }
     }
 
-    /**
-     * @param button
-     * @param down
-     */
     private void buttonPrintout(int button, boolean down) {
         if (!state.data().debugVerbose)
             return;
@@ -226,10 +224,14 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
         mouseWheelDelta += delta;
 
+        for (MouseNotifier object : context.getBackBufferMouseNotifiers()) {
+            object.mouseScrollNotification(mouseWheelDelta);
+        }
+
     }
 
     @Override
-    public void update() {
+    public void update(float deltaTime) {
 
         deltaX = 0;
         deltaY = 0;
@@ -280,7 +282,7 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
         } catch (NoninvertibleTransformException e) {
 
-            ErrorManagement.reportError(e, "The provided transform is not invertible");
+            ErrorManagement.throwError(e, "The provided transform is not invertible");
             return null;
         }
     }
@@ -301,23 +303,14 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
         return onScreen;
     }
 
-    /**
-     * @return int
-     */
     public int getDeltaX() {
         return deltaX;
     }
 
-    /**
-     * @return int
-     */
     public int getDeltaY() {
         return deltaY;
     }
 
-    /**
-     * @return float
-     */
     public float getMouseWheelDelta() {
         return mouseWheelDelta;
     }

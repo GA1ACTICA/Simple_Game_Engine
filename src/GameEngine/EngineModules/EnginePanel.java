@@ -9,15 +9,15 @@
  * Copyright © 2026 Galactica
  */
 
-package GameEngine.EngineModules;
+package gameEngine.engineModules;
 
 import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import Game.Configs.GameState.GameState;
-import GameEngine.Interfaces.Drawables.CursorDrawable;
-import GameEngine.Interfaces.Drawables.Drawable;
+import gameEngine.engineState.EngineState;
+import gameEngine.interfaces.drawables.CursorDrawable;
+import gameEngine.interfaces.drawables.Drawable;
 
 import java.awt.*;
 
@@ -27,14 +27,14 @@ public class EnginePanel extends JPanel {
     public final int logicalWidth = 1000;
     public final int logicalHeight = 1000;
 
-    private GameState state;
+    private EngineState state;
     private EngineContext context;
 
     private boolean exceptionReported;
 
     private AffineTransform viewportTransform;
 
-    public EnginePanel(GameState state, EngineContext context) {
+    public EnginePanel(EngineState state, EngineContext context) {
         this.state = state;
         this.context = context;
 
@@ -115,12 +115,7 @@ public class EnginePanel extends JPanel {
      * <p>
      * The transform is equivalent to:
      *
-     * <<<<<<< HEAD
-     * 
-     * <pre>
-    =======
      * <pre>{@code
-    >>>>>>> dev
      * double scaleX = getWidth() / (double) logicalWidth;
      * double scaleY = getHeight() / (double) logicalHeight;
      * double scale = Math.min(scaleX, scaleY);
@@ -131,13 +126,7 @@ public class EnginePanel extends JPanel {
      * g2d.scale(scale, scale);
      * 
      * AffineTransform viewportTransform = g2d.getTransform();
-    <<<<<<< HEAD
-     * </pre>
-    
-    =======
-     * }
-     * </pre>
-     * >>>>>>> dev
+     * }</pre>
      * 
      * The resulting transform corresponds to {@code g2d.getTransform()} after
      * these operations.
