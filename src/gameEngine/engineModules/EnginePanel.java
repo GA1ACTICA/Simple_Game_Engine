@@ -15,7 +15,7 @@ import java.awt.geom.AffineTransform;
 
 import javax.swing.*;
 
-import game.configs.gameState.GameState;
+import gameEngine.engineState.EngineState;
 import gameEngine.interfaces.drawables.CursorDrawable;
 import gameEngine.interfaces.drawables.Drawable;
 
@@ -27,14 +27,14 @@ public class EnginePanel extends JPanel {
     public final int logicalWidth = 1000;
     public final int logicalHeight = 1000;
 
-    private GameState state;
+    private EngineState state;
     private EngineContext context;
 
     private boolean exceptionReported;
 
     private AffineTransform viewportTransform;
 
-    public EnginePanel(GameState state, EngineContext context) {
+    public EnginePanel(EngineState state, EngineContext context) {
         this.state = state;
         this.context = context;
 

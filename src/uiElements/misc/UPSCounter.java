@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package advancedRendering.uiRendering.misc;
+package uiElements.misc;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -23,7 +23,7 @@ import gameEngine.interfaces.MenuInterface.*;
 import gameEngine.interfaces.Updatable;
 import gameEngine.interfaces.drawables.UIDrawable;
 
-public class UPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSetPosition, MenuSetColor {
+public class UPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSetPosition {
 
     private boolean show = false;
 
@@ -100,7 +100,6 @@ public class UPSCounter implements UIDrawable, Updatable, MenuInterface, MenuSet
         y += dy;
     }
 
-    @Override
     public void setColor(Color color) {
         this.color = color;
     }

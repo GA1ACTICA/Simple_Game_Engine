@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package advancedRendering.uiRendering.slider;
+package uiElements.slider;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -19,7 +19,6 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.util.Objects;
 
-import advancedRendering.uiRendering.button.RectButton;
 import gameEngine.engineModules.ClassFactory;
 import utils.MathUtils;
 import gameEngine.engineModules.EngineContext;
@@ -29,6 +28,7 @@ import gameEngine.interfaces.MenuInterface;
 import gameEngine.interfaces.Updatable;
 import gameEngine.interfaces.drawables.UIDrawable;
 import gameEngine.records.FixResult;
+import uiElements.button.RectButton;
 
 public class Slider implements UIDrawable, Updatable, MenuInterface {
 

@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package advancedRendering.uiRendering.textField;
+package uiElements.textField;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -44,7 +44,7 @@ import utils.GraphicsUtils.MaskType;
 
 public class TextField
         implements MouseNotifier, KeyNotifier, Clickable, Hoverable, UIDrawable, Updatable, MenuInterface, MenuSetSize,
-        MenuSetPosition, MenuSetColor, MenuSetImage, MenuSetHoverVisual {
+        MenuSetPosition {
 
     private int zIndex = 0;
 
@@ -256,22 +256,18 @@ public class TextField
         updateRotatedShape();
     }
 
-    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
-    @Override
     public void setHoverColor(Color hoverColor) {
         this.hoverColor = hoverColor;
     }
 
-    @Override
     public void setImage(Image image) {
         this.image = image;
     }
 
-    @Override
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }

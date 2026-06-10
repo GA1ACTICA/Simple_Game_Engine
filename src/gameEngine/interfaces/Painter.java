@@ -13,7 +13,7 @@ package gameEngine.interfaces;
 
 import java.awt.Graphics2D;
 
-import advancedRendering.uiRendering.menuContainer.GraphicalUIContainer;
+import uiElements.menuContainer.GraphicalUIContainer;
 
 /**
  * Functional interface representing a custom drawing action.

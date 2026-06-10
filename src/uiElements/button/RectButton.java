@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package advancedRendering.uiRendering.button;
+package uiElements.button;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -32,8 +32,7 @@ import utils.Utils;
 import utils.GraphicsUtils.MaskType;
 
 public class RectButton implements
-        UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize, MenuSetHoverVisual,
-        MenuSetImage, MenuSetColor, Clickable, Hoverable {
+        UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize, Clickable, Hoverable {
 
     private int zIndex = 0; // default zIndex
 
@@ -236,12 +235,10 @@ public class RectButton implements
     }
 
     // ————————— Set colors ——————————
-    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
-    @Override
     public void setHoverColor(Color hoverColor) {
         this.hoverColor = hoverColor;
     }
@@ -255,12 +252,10 @@ public class RectButton implements
     }
 
     // —————————— Set images ——————————
-    @Override
     public void setImage(Image image) {
         this.image = image;
     }
 
-    @Override
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }

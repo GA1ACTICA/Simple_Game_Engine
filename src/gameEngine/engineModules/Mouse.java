@@ -17,7 +17,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
-import game.configs.gameState.GameState;
+import gameEngine.engineState.EngineState;
 import gameEngine.interfaces.MouseNotifier;
 import gameEngine.interfaces.Updatable;
 import utils.ErrorManagement;
@@ -38,12 +38,12 @@ public class Mouse implements MouseMotionListener, MouseListener, MouseWheelList
 
     private float mouseWheelDelta;
 
-    private GameState state;
+    private EngineState state;
     private EngineContext context;
 
     public boolean moved;
 
-    public Mouse(GameState state, EngineContext context, EnginePanel panel) {
+    public Mouse(EngineState state, EngineContext context, EnginePanel panel) {
         ClassFactory.create(this, context);
         this.context = context;
         this.state = state;

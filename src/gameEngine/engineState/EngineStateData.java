@@ -9,11 +9,11 @@
  * Copyright © 2026 Galactica
  */
 
-package game.configs.gameState;
+package gameEngine.engineState;
 
 import java.awt.Color;
 
-public class GameStateData {
+public class EngineStateData {
 
     // here you can store variables that you use
     // for you game that should also be accessible in other classes

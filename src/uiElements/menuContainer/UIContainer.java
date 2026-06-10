@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package advancedRendering.uiRendering.menuContainer;
+package uiElements.menuContainer;
 
 import java.awt.Point;
 import java.util.ArrayList;

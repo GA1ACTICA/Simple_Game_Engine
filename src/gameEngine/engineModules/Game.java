@@ -1,3 +1,4 @@
+package gameEngine.engineModules;
 
 /**
  * Project: Simple_Game_Engine
@@ -13,31 +14,31 @@
 import java.awt.Dimension;
 import javax.swing.*;
 
-import game.configs.gameState.GameState;
-import gameEngine.engineModules.*;
 import gameEngine.engineModules.cursor.CursorManager;
+import gameEngine.engineState.EngineState;
 
-public class Game {
+public abstract class Game {
 
-    static final GameState state = new GameState();
+    protected final EngineState state = new EngineState();
 
-    static final EngineContext context = new EngineContext();
-    static final EnginePanel panel = new EnginePanel(state, context);
-    static final JFrame frame = new JFrame("Game_Title");
+    protected final EngineContext context = new EngineContext();
+    protected final EnginePanel panel = new EnginePanel(state, context);
+    protected final JFrame frame = new JFrame("Game_Title");
 
-    static final Keys keys = new Keys(state, context);
-    static final Mouse mouse = new Mouse(state, context, panel);
+    protected final Keys keys = new Keys(state, context);
+    protected final Mouse mouse = new Mouse(state, context, panel);
 
-    static final CursorManager cursor = new CursorManager(context, panel, mouse, state);
+    protected final CursorManager cursor = new CursorManager(context, panel, mouse, state);
 
-    static final GameUpdate gu = new GameUpdate(keys,
+    protected final GameUpdate gu = new GameUpdate(keys,
             mouse,
             state,
             panel,
             frame,
-            context);
+            context,
+            this);
 
-    public static void main(String[] args) {
+    public Game() {
 
         // PANEL setup
         panel.setLayout(null);
@@ -60,4 +61,11 @@ public class Game {
 
         new Thread(gu).start();
     }
+
+    protected abstract void init();
+
+    void start() {
+        init();
+    }
+
 }

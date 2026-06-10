@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package advancedRendering.uiRendering.checkBox;
+package uiElements.checkBox;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -36,8 +36,7 @@ import utils.GraphicsUtils;
 import utils.GraphicsUtils.MaskType;
 import utils.Utils;
 
-public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize,
-        MenuSetHoverVisual, MenuSetToggleVisual, MenuSetImage, MenuSetColor, Clickable, Hoverable {
+public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition, MenuSetSize, Clickable, Hoverable {
 
     private int zIndex = 0;
 
@@ -247,17 +246,14 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     // ————————— Set colors ——————————
-    @Override
     public void setColor(Color color) {
         this.color = color;
     }
 
-    @Override
     public void setToggleColor(Color toggleColor) {
         this.toggleColor = toggleColor;
     }
 
-    @Override
     public void setHoverColor(Color hoveColor) {
         this.hoverColor = hoveColor;
     }
@@ -271,17 +267,14 @@ public class RectCheckbox implements UIDrawable, MenuInterface, MenuSetPosition,
     }
 
     // —————————— Set images ——————————
-    @Override
     public void setImage(Image image) {
         this.image = image;
     }
 
-    @Override
     public void setToggleImage(Image toggleImage) {
         this.toggleImage = toggleImage;
     }
 
-    @Override
     public void setHoverImage(Image hoverImage) {
         this.hoverImage = hoverImage;
     }

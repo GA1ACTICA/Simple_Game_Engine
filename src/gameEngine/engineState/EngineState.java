@@ -9,41 +9,30 @@
  * Copyright © 2026 Galactica
  */
 
-package game.configs.gameState;
+package gameEngine.engineState;
 
 import utils.jsonUtils.JsonBacked;
 
-public class GameState extends JsonBacked<GameStateData> {
+public class EngineState extends JsonBacked<EngineStateData> {
 
-    GameState state;
+    EngineState state;
 
-    public GameState() {
-        super(new GameStateData());
+    public EngineState() {
+        super(new EngineStateData());
     }
 
-    /**
-     * @param state
-     */
-    public void setGameStateData(GameState state) {
+    public void setGameStateData(EngineState state) {
         this.state = state;
     }
 
-    /**
-     * @param object
-     * @param path
-     */
     @Override
-    protected void successfulExportLog(GameStateData object, String path) {
+    protected void successfulExportLog(EngineStateData object, String path) {
         if (state.data().debug)
             System.out.println('\n' + "Successfully exported ('%s') to %s".formatted(object, path));
     }
 
-    /**
-     * @param object
-     * @param path
-     */
     @Override
-    protected void successfulImportLog(GameStateData object, String path) {
+    protected void successfulImportLog(EngineStateData object, String path) {
         if (state.data().debug)
             System.out.println('\n' + "Successfully imported ('%s') to %s".formatted(path, object));
     }

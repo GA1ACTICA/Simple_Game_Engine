@@ -12,20 +12,10 @@
 
 package gameEngine.engineModules;
 
-import java.awt.Color;
-import java.awt.Point;
-
 import javax.swing.JFrame;
 
-import advancedRendering.uiRendering.button.OvalButton;
-import advancedRendering.uiRendering.checkBox.OvalCheckbox;
-import advancedRendering.uiRendering.misc.UPSCounter;
-import advancedRendering.uiRendering.slider.Slider;
-import advancedRendering.uiRendering.textField.TextField;
-import game.*;
-import game.configs.gameState.GameState;
+import gameEngine.engineState.EngineState;
 import gameEngine.interfaces.Updatable;
-import utils.Utils;
 
 public class GameUpdate implements Runnable {
 
@@ -33,50 +23,24 @@ public class GameUpdate implements Runnable {
     private long lastUpdateTime;
     private long currentTime;
 
-    private GameState state;
+    private final EngineState state;
     private final EnginePanel panel;
     private final EngineContext context;
-
-    Slider s;
 
     public GameUpdate(
             Keys keys,
             Mouse mouse,
-            GameState state,
+            EngineState state,
             EnginePanel panel,
             JFrame frame,
-            EngineContext context) {
+            EngineContext context,
+            Game game) {
         this.state = state;
         this.panel = panel;
         this.context = context;
         state.setGameStateData(state);
 
-        // constructors from engine
-        UPSCounter fps = new UPSCounter(context);
-        fps.setColor(Color.RED);
-        fps.show();
-        fps.setZIndex(100);
-
-        TextField t = new TextField(context, mouse, keys, 50, 100, 400, 60);
-        t.show();
-
-        TextField t2 = new TextField(context, mouse, keys, 500, 100, 400, 60);
-        t2.show();
-
-        OvalButton b = new OvalButton(context, panel, mouse, new Point(500, 600), 50);
-        b.show();
-        b.setClickColor(Utils.mergeRGBAColor(Color.MAGENTA, Utils.rgba(255, 255, 255, 0.48)));
-
-        OvalCheckbox c = new OvalCheckbox(context, panel, mouse, new Point(600, 600), 50);
-        c.show();
-        c.setClickColor(Utils.mergeRGBAColor(Color.MAGENTA, Utils.rgba(255, 255, 255, 0.48)));
-
-        Slider s = new Slider(context, panel, mouse, new Point(475, 700), new Point(625, 700));
-        s.show();
-
-        ClassFactory.create(new MainGameClass(), context, 8);
-        ClassFactory.create(new SecondGameClass(), context, 8);
-
+        game.start();
     }
 
     @Override

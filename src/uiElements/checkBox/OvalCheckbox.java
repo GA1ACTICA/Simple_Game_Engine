@@ -9,7 +9,7 @@
  * Copyright © 2026 Galactica
  */
 
-package advancedRendering.uiRendering.button;
+package uiElements.checkBox;
 
 import java.awt.Point;
 import java.awt.geom.Ellipse2D;
@@ -18,59 +18,59 @@ import gameEngine.engineModules.EngineContext;
 import gameEngine.engineModules.EnginePanel;
 import gameEngine.engineModules.Mouse;
 
-public class OvalButton extends RectButton {
+public class OvalCheckbox extends RectCheckbox {
 
     /**
-     * Creates and registers a oval button with the specified dimensions.
+     * Creates and registers a oval checkbox with the specified dimensions.
      * 
      * @param context The engine context containing objects involved in rendering,
      *                updating, and input handling.
      * 
-     * @param panel   The panel on which the button is drawn to.
+     * @param panel   The panel on which the checkbox is drawn to.
      * 
      * @param mouse   The mouse input handler used for interaction with the
-     *                button.
+     *                checkbox.
      * 
-     * @param x       The x-coordinate of the oval's top-left point.
+     * @param x       The x-coordinate of the oval's topLeft point.
      * 
-     * @param y       The y-coordinate of the oval's top-left point.
+     * @param y       The y-coordinate of the oval's topLeft point.
      * 
      * @param width   The width of the oval.
      * 
      * @param height  The height of the oval.
      */
-    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
-
+    public OvalCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, int x, int y, int width, int height) {
         super(context, panel, mouse, x, y, width, height);
 
         this.baseShape = new Ellipse2D.Float(x, y, width, height);
         this.rotatedShape = baseShape;
 
         updateRotatedShape();
-
     }
 
     /**
-     * Creates and registers a oval button with the specified points.
+     * Creates and registers a oval checkbox with the specified points.
      * 
      * @param context     The engine context containing objects involved in
-     *                    rendering, updating, and input handling.
+     *                    rendering,
+     *                    updating, and input handling.
      * 
-     * @param panel       The panel on which the button is drawn to.
+     * @param panel       The panel on which the checkbox is drawn to.
      * 
      * @param mouse       The mouse input handler used for interaction with the
-     *                    button.
+     *                    checkbox.
      * 
-     * @param topLeft     The top-left point of the oval.
+     * @param topLeft     The top left point of the oval.
      * 
-     * @param bottomRight The bottom-left point of the oval.
+     * @param bottomRight The bottom left point of the oval.
      */
-    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
+
+    public OvalCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point topLeft, Point bottomRight) {
 
         int x = (int) topLeft.getX();
         int y = (int) topLeft.getY();
-        int width = (int) bottomRight.getX() - (int) topLeft.getX();
-        int height = (int) bottomRight.getY() - (int) topLeft.getY();
+        int width = (int) bottomRight.getX();
+        int height = (int) bottomRight.getY();
 
         super(context, panel, mouse, x, y, width, height);
 
@@ -78,20 +78,20 @@ public class OvalButton extends RectButton {
         this.rotatedShape = baseShape;
 
         updateRotatedShape();
-
     }
 
     /**
-     * Creates and registers a oval button with the specified dimensions and center
+     * Creates and registers a oval checkbox with the specified dimensions and
+     * center
      * point.
      *
      * @param context The engine context containing objects involved in rendering,
      *                updating, and input handling.
      * 
-     * @param panel   The panel on which the button is drawn to.
+     * @param panel   The panel on which the checkbox is drawn to.
      * 
      * @param mouse   The mouse input handler used for interaction with the
-     *                button.
+     *                checkbox.
      * 
      * @param center  The center point of the oval.
      * 
@@ -99,7 +99,8 @@ public class OvalButton extends RectButton {
      * 
      * @param height  The height of the oval.
      */
-    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int width, int height) {
+
+    public OvalCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int width, int height) {
 
         int x = (int) center.getX() - width / 2;
         int y = (int) center.getY() - height / 2;
@@ -110,26 +111,25 @@ public class OvalButton extends RectButton {
         this.rotatedShape = baseShape;
 
         updateRotatedShape();
-
     }
 
     /**
-     * Creates and registers a circular button with the specified dimensions and
+     * Creates and registers a circular checkbox with the specified dimensions and
      * center point.
      *
      * @param context The engine context containing objects involved in rendering,
      *                updating, and input handling.
      * 
-     * @param panel   The panel on which the button is drawn to.
+     * @param panel   The panel on which the checkbox is drawn to.
      * 
      * @param mouse   The mouse input handler used for interaction with the
-     *                button.
+     *                checkbox.
      * 
      * @param center  The circle's center point.
      * 
      * @param radius  The circle's radius.
      */
-    public OvalButton(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int radius) {
+    public OvalCheckbox(EngineContext context, EnginePanel panel, Mouse mouse, Point center, int radius) {
 
         int x = (int) center.getX() - radius;
         int y = (int) center.getY() - radius;
@@ -142,6 +142,7 @@ public class OvalButton extends RectButton {
         this.rotatedShape = baseShape;
 
         updateRotatedShape();
+
     }
 
 }

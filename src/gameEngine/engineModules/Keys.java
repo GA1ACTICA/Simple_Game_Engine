@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Set;
 
-import game.configs.gameState.GameState;
+import gameEngine.engineState.EngineState;
 import gameEngine.interfaces.KeyNotifier;
 
 public class Keys implements KeyListener {
@@ -26,10 +26,10 @@ public class Keys implements KeyListener {
     private Set<Integer> keysPressed = new HashSet<>();
     private final Queue<Character> typedCharacters = new LinkedList<>();
 
-    private final GameState state;
+    private final EngineState state;
     private final EngineContext context;
 
-    public Keys(GameState state, EngineContext context) {
+    public Keys(EngineState state, EngineContext context) {
         this.state = state;
         this.context = context;
     }

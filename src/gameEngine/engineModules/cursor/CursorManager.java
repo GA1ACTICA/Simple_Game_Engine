@@ -18,9 +18,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Objects;
-
-import game.configs.gameState.GameState;
-
 import java.util.List;
 
 import gameEngine.engineModules.ClassFactory;
@@ -28,6 +25,7 @@ import gameEngine.engineModules.EngineContext;
 import gameEngine.engineModules.EnginePanel;
 import gameEngine.engineModules.Mouse;
 import gameEngine.engineModules.cursor.AnimatedCursorData.Frame;
+import gameEngine.engineState.EngineState;
 import gameEngine.interfaces.Updatable;
 import gameEngine.interfaces.drawables.CursorDrawable;
 import utils.FileUtils;
@@ -57,10 +55,10 @@ public class CursorManager implements CursorDrawable, Updatable {
     private static BufferedImage cursorImage = null;
     private static Point hotspot = null;
 
-    private static GameState state;
+    private static EngineState state;
     private Mouse mouse;
 
-    public CursorManager(EngineContext context, EnginePanel panel, Mouse mouse, GameState state) {
+    public CursorManager(EngineContext context, EnginePanel panel, Mouse mouse, EngineState state) {
         CursorManager.state = state;
         this.mouse = mouse;
         ClassFactory.create(this, context);
