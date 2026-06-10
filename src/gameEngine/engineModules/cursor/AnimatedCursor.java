@@ -8,6 +8,7 @@
  *
  * Copyright © 2026 Galactica
  */
+
 package gameEngine.engineModules.cursor;
 
 import utils.jsonUtils.JsonBacked;

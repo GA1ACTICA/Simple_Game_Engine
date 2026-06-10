@@ -11,12 +11,9 @@
 
 package gameEngine.interfaces;
 
-import java.awt.Color;
-import java.awt.Image;
 import java.awt.Point;
 
 import uiElements.button.RectButton;
-import uiElements.checkBox.RectCheckbox;
 import uiElements.misc.UPSCounter;
 
 /**

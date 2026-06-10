@@ -1,5 +1,3 @@
-package gameEngine.engineModules;
-
 /**
  * Project: Simple_Game_Engine
  *
@@ -10,6 +8,8 @@ package gameEngine.engineModules;
  *
  * Copyright © 2026 Galactica
  */
+
+package gameEngine.engineModules;
 
 import java.awt.Dimension;
 import javax.swing.*;

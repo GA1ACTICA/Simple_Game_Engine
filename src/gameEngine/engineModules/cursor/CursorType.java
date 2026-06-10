@@ -8,6 +8,7 @@
  *
  * Copyright © 2026 Galactica
  */
+
 package gameEngine.engineModules.cursor;
 
 import java.awt.Point;
